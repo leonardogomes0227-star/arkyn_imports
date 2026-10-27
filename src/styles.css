@@ -17,7 +17,7 @@ h1,h2,h3 { font-family:Georgia,'Times New Roman',serif; font-weight:500 }
 .logo.light small { color:#aaa }
 .hero { background:#fdf8f5; padding:48px max(24px,calc((100% - 1100px)/2)) 80px }
 .hero-in { display:grid; grid-template-columns:1.1fr .9fr; align-items:center; gap:24px }
-.hero-img { width:100%; max-width:420px; justify-self:center; aspect-ratio:1; object-fit:cover; mix-blend-mode:multiply; -webkit-mask-image:radial-gradient(circle,#000 62%,transparent 71%); mask-image:radial-gradient(circle,#000 62%,transparent 71%) }
+.hero-img { width:100%; max-width:300px; justify-self:center; aspect-ratio:1; object-fit:cover; mix-blend-mode:multiply; -webkit-mask-image:radial-gradient(circle,#000 62%,transparent 71%); mask-image:radial-gradient(circle,#000 62%,transparent 71%) }
 .hero-text > * { max-width:460px }
 .hero small,.promo small,.sec-head a { font-size:11px; letter-spacing:.14em }
 .hero h1 { font-size:clamp(34px,6vw,56px); line-height:1.08; margin:14px 0 }
