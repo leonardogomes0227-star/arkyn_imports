@@ -19,11 +19,14 @@ export default function Home() {
   return (
     <>
       <section className="hero">
+        <div className="hero-in">
         <div className="hero-text">
           <small>PERFUMES ÁRABES E IMPORTADOS</small>
           <h1>Fragrâncias que deixam uma marca.</h1>
           <p>Lattafa, Armaf, Maison Alhambra, French Avenue e mais, direto de Coxim - MS.</p>
           <Link to="/catalogo" className="btn dark">EXPLORAR CATÁLOGO →</Link>
+        </div>
+        <img className="hero-img" src="/logo.jpg" alt="Arkyn Imports" />
         </div>
       </section>
 
