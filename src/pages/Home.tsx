@@ -26,7 +26,7 @@ export default function Home() {
           <p>Lattafa, Armaf, Maison Alhambra, French Avenue e mais, direto de Coxim - MS.</p>
           <Link to="/catalogo" className="btn dark">EXPLORAR CATÁLOGO →</Link>
         </div>
-        <img className="hero-img" src="/logo-full.jpg" alt="Arkyn Imports" />
+        <img className="hero-img" src="/logo-full.png" alt="Arkyn Imports" />
         </div>
       </section>
 
