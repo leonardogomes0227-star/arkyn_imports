@@ -17,6 +17,7 @@ h1,h2,h3 { font-family:Georgia,'Times New Roman',serif; font-weight:500 }
 .logo.light small { color:#aaa }
 .hero { background:#fdf8f5; padding:48px max(24px,calc((100% - 1100px)/2)) 80px }
 .hero-in { display:grid; grid-template-columns:1.1fr .9fr; align-items:center; gap:24px }
+.hero-img { justify-self:center; width:100%; max-width:520px; height:auto; mix-blend-mode:multiply; -webkit-mask-image:radial-gradient(ellipse at center,#000 72%,transparent 92%); mask-image:radial-gradient(ellipse at center,#000 72%,transparent 92%) }
 .hero-art { justify-self:center; width:100%; max-width:340px; padding:30px; border-radius:50%; background:radial-gradient(circle,#fff3d6 0,#f1dfc2 55%,transparent 72%) }
 .bottle { width:78%; height:auto; display:block; filter:drop-shadow(0 8px 14px rgba(0,0,0,.18)) }
 .bottle.big { width:100%; max-height:340px }
@@ -82,4 +83,4 @@ input,select { background:#fff; color:var(--ink); border:1px solid var(--line); 
 .footer .logo b { color:#fff }
 .footer a:hover { color:#fff }
 .copy { text-align:center; font-size:12px; color:#888; margin-top:32px }
-@media (max-width:720px) { .hero-in { grid-template-columns:1fr } .hero-art { max-width:230px; order:-1 } .header nav { display:none } .cat { border-right:0 } }
+@media (max-width:720px) { .hero-in { grid-template-columns:1fr } .hero-img { max-width:300px; order:-1 } .header nav { display:none } .cat { border-right:0 } }
