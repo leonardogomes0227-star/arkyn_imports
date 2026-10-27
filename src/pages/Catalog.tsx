@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import ProductCard from '../components/ProductCard'
 import { useStore } from '../lib/store'
 import type { Category } from '../lib/types'
@@ -9,7 +10,8 @@ const tabs: [Category | 'todos', string][] = [
 
 export default function Catalog() {
   const { products } = useStore()
-  const [tab, setTab] = useState<Category | 'todos'>('todos')
+  const [sp] = useSearchParams()
+  const [tab, setTab] = useState<Category | 'todos'>((sp.get('cat') as Category) || 'todos')
   const [q, setQ] = useState('')
   const list = products.filter(p => (tab === 'todos' || p.category === tab) && `${p.brand} ${p.name}`.toLowerCase().includes(q.toLowerCase()))
   return (
