@@ -14,6 +14,7 @@ export default function Catalog() {
   const [tab, setTab] = useState<Category | 'todos'>((sp.get('cat') as Category) || 'todos')
   const [q, setQ] = useState('')
   const list = products.filter(p => (tab === 'todos' || p.category === tab) && `${p.brand} ${p.name}`.toLowerCase().includes(q.toLowerCase()))
+    .sort((a, b) => Number(!!b.image) - Number(!!a.image))
   return (
     <section className="section">
       <h2>Catálogo</h2>

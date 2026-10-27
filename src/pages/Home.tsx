@@ -38,19 +38,21 @@ export default function Home() {
 
       <section className="section">
         <div className="sec-head"><h2>DESTAQUES</h2><Link to="/catalogo">VER TODOS →</Link></div>
-        <div className="grid">{products.slice(0, 10).map(p => <ProductCard key={p.id} p={p} />)}</div>
+        <div className="grid">{[...products].sort((a, b) => Number(!!b.image) - Number(!!a.image)).slice(0, 10).map(p => <ProductCard key={p.id} p={p} />)}</div>
       </section>
 
       <section className="section promos">
         <div className="promo darkp">
           <small>PERFUMES MASCULINOS</small><h3>Encontre sua assinatura.</h3>
-          <p>De Club de Nuit a Fakhar, as fragrâncias mais pedidas.</p>
+          <p>Asad, Fakhar, Salvo e Liquid Brun: as fragrâncias mais pedidas.</p>
           <Link to="/catalogo?cat=masculino" className="btn light">VER MASCULINOS →</Link>
+          <img src="/produtos/lattafa-asad-elixir-100ml.jpg" alt="Lattafa Asad Elixir" loading="lazy" />
         </div>
         <div className="promo beige">
           <small>PERFUMES FEMININOS</small><h3>Presentes que falam por você.</h3>
-          <p>Yara, Dalal, Tharwah e outras queridinhas.</p>
+          <p>Afeef, Atheeri, Tharwah e outras queridinhas.</p>
           <Link to="/catalogo?cat=feminino" className="btn light">VER FEMININOS →</Link>
+          <img src="/produtos/lattafa-afeef-100ml.jpg" alt="Lattafa Afeef" loading="lazy" />
         </div>
       </section>
 
