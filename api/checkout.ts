@@ -3,7 +3,7 @@ import { DEFAULT_SETTINGS, SEED_PRODUCTS } from '../src/lib/seed'
 import type { Product, Settings } from '../src/lib/types'
 
 const SB = process.env.SUPABASE_URL
-const SK = process.env.SUPABASE_SERVICE_KEY
+const SK = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY
 const sb = (path: string, init?: RequestInit) =>
   fetch(`${SB}/rest/v1/${path}`, { ...init, headers: { apikey: SK!, Authorization: `Bearer ${SK}`, 'Content-Type': 'application/json', Prefer: 'return=representation', ...init?.headers } })
 
