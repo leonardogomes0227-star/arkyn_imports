@@ -39,6 +39,7 @@ function Login({ inline = false }: { inline?: boolean }) {
   const [email, setEmail] = useState('')
   const [pass, setPass] = useState('')
   const [err, setErr] = useState('')
+  const [showPass, setShowPass] = useState(false)
   async function submit(e: FormEvent) {
     e.preventDefault()
     const { error } = await supabase!.auth.signInWithPassword({ email, password: pass })
@@ -58,7 +59,8 @@ function Login({ inline = false }: { inline?: boolean }) {
         <h2>{inline ? 'Entre para ver esta área' : 'Painel Arkyn'}</h2>
         {inline && <p className="muted">Pedidos, clientes e cupons têm dados sensíveis, por isso exigem login.</p>}
         <input type="email" placeholder="E-mail" value={email} onChange={e => setEmail(e.target.value.trim())} required />
-        <input type="password" placeholder="Senha" value={pass} onChange={e => setPass(e.target.value.trim())} required />
+        <input type={showPass ? 'text' : 'password'} placeholder="Senha" value={pass} onChange={e => setPass(e.target.value.trim())} required />
+        <label className="chk" style={{ alignSelf: 'flex-start', fontSize: 13 }}><input type="checkbox" style={{ width: 'auto' }} checked={showPass} onChange={e => setShowPass(e.target.checked)} /> Mostrar senha</label>
         {err && <p className="err">{err}</p>}
         <button className="btn">ENTRAR</button>
       </form>
