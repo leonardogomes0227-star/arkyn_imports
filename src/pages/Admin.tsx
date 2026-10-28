@@ -42,7 +42,14 @@ function Login({ inline = false }: { inline?: boolean }) {
   async function submit(e: FormEvent) {
     e.preventDefault()
     const { error } = await supabase!.auth.signInWithPassword({ email, password: pass })
-    if (error) setErr('E-mail ou senha incorretos.')
+    if (error) {
+      const m = error.message.toLowerCase()
+      setErr(m.includes('invalid login') ? 'E-mail ou senha incorretos.'
+        : m.includes('not confirmed') ? 'E-mail ainda não confirmado no Supabase (abra o usuário e clique em Confirm user).'
+        : m.includes('api key') ? 'Chave do Supabase inválida na Vercel (confira a anon/publishable key e faça Redeploy).'
+        : m.includes('fetch') ? 'Não consegui falar com o Supabase (confira a URL na Vercel).'
+        : `Erro: ${error.message}`)
+    }
   }
   return (
     <div className={inline ? '' : 'adm-wrap'}>
@@ -50,8 +57,8 @@ function Login({ inline = false }: { inline?: boolean }) {
         <img src="/logo.jpg" alt="Arkyn" className="login-logo" />
         <h2>{inline ? 'Entre para ver esta área' : 'Painel Arkyn'}</h2>
         {inline && <p className="muted">Pedidos, clientes e cupons têm dados sensíveis, por isso exigem login.</p>}
-        <input type="email" placeholder="E-mail" value={email} onChange={e => setEmail(e.target.value)} required />
-        <input type="password" placeholder="Senha" value={pass} onChange={e => setPass(e.target.value)} required />
+        <input type="email" placeholder="E-mail" value={email} onChange={e => setEmail(e.target.value.trim())} required />
+        <input type="password" placeholder="Senha" value={pass} onChange={e => setPass(e.target.value.trim())} required />
         {err && <p className="err">{err}</p>}
         <button className="btn">ENTRAR</button>
       </form>
