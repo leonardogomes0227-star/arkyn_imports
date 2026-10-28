@@ -1,12 +1,14 @@
-import { Route, Routes } from 'react-router-dom'
+import { Route, Routes, useLocation } from 'react-router-dom'
 import Layout from './components/Layout'
 import Home from './pages/Home'
 import Catalog from './pages/Catalog'
 import Cart from './pages/Cart'
 import Product from './pages/Product'
 import Quiz from './pages/Quiz'
+import Admin from './pages/Admin'
 
 export default function App() {
+  if (useLocation().pathname.startsWith('/admin')) return <Admin />
   return (
     <Layout>
       <Routes>

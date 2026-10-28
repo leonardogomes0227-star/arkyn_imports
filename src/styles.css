@@ -108,3 +108,24 @@ input,select { background:#fff; color:var(--ink); border:1px solid var(--line); 
 .quiz-cta small { letter-spacing:.14em; font-size:11px }
 .quiz-cta p { opacity:.75; font-size:14px }
 @media (max-width:720px) { .pdp { grid-template-columns:1fr } .pdp-info h1 { font-size:26px } .grid { grid-template-columns:repeat(2,1fr); gap:10px } .info h3 { font-size:12px } .promo { padding:24px 42% 24px 18px; min-height:240px } .promo h3 { font-size:21px } .promo img { width:40% } .hero-in { grid-template-columns:1fr } .hero-img { max-width:300px; order:-1 } .header nav { display:none } .cat { border-right:0 } }
+.adm-wrap { min-height:100vh; display:grid; place-items:center; padding:16px; background:var(--bg) }
+.adm-box { display:flex; flex-direction:column; gap:12px; width:100%; max-width:380px; background:#fff; border:1px solid var(--line); border-radius:8px; padding:28px }
+.adm { min-height:100vh; background:var(--bg) }
+.adm-head { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px; padding:14px 24px; background:#111; color:#fff }
+.adm-head nav { display:flex; gap:8px }
+.adm-head .chip { color:#fff; border-color:#555 } .adm-head .chip.on { background:#fff; color:#000 }
+.adm-head a,.adm-head .link { color:#ddd; font-size:13px }
+.adm-body { max-width:1000px; margin:0 auto; padding:24px 16px }
+.adm-stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:12px; margin-bottom:20px }
+.adm-stats div,.adm-card { background:#fff; border:1px solid var(--line); border-radius:8px; padding:16px; display:flex; flex-direction:column; gap:6px }
+.adm-stats b { font-size:24px } .adm-stats small { color:var(--muted) }
+.adm-card { margin-bottom:12px } .adm-card ul { padding-left:18px; font-size:14px }
+.adm-row { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:12px }
+.adm-form { display:flex; flex-direction:column; gap:12px; max-width:560px } .adm-form label { display:flex; flex-direction:column; gap:4px; font-size:13px; color:var(--muted) }
+.adm-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:12px }
+.adm-table { display:flex; flex-direction:column; gap:8px }
+.adm-line { display:flex; align-items:center; gap:12px; flex-wrap:wrap; background:#fff; border:1px solid var(--line); border-radius:8px; padding:8px 12px }
+.adm-line .grow { flex:1; min-width:160px } .adm-line small { color:var(--muted); font-size:11px; text-transform:uppercase }
+.adm-line label { display:flex; flex-direction:column; font-size:11px; color:var(--muted) } .adm-line input { width:92px; padding:6px }
+.adm-thumb { width:48px; height:60px; object-fit:cover; border-radius:4px; background:var(--beige) } .adm-thumb.big { width:140px; height:175px }
+.link { background:none; border:0; cursor:pointer; text-decoration:underline; color:inherit; font-size:13px }

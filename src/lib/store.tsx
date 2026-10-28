@@ -1,11 +1,7 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
-import { createClient } from '@supabase/supabase-js'
+import { supabase } from './supabase'
 import { DEFAULT_SETTINGS, SEED_PRODUCTS } from './seed'
 import type { CartItem, Product, Settings } from './types'
-
-const url = import.meta.env.VITE_SUPABASE_URL as string | undefined
-const key = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined
-const supabase = url && key ? createClient(url, key) : null
 
 interface Ctx {
   products: Product[]
