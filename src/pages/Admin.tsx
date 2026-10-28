@@ -54,7 +54,7 @@ function Login({ inline = false }: { inline?: boolean }) {
 }
 
 function Panel({ session, onLogout }: { session: Session | null; onLogout: () => void }) {
-  const [tab, setTab] = useState<'orders' | 'products' | 'settings'>('orders')
+  const [tab, setTab] = useState<'orders' | 'products' | 'settings'>(session ? 'orders' : 'products')
   return (
     <div className="adm">
       <header className="adm-head">
