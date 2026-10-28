@@ -50,6 +50,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     body: JSON.stringify({
       items: mpItems, external_reference: orderId, payer: { name },
       back_urls: { success: site, failure: `${site}/carrinho`, pending: site }, auto_return: 'approved',
+      payment_methods: settings.installments > 1 ? { installments: settings.installments } : undefined,
       notification_url: `${site}/api/webhook`,
     }),
   })

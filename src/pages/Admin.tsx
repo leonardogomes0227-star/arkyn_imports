@@ -210,6 +210,7 @@ function SettingsTab() {
       <label>WhatsApp (com DDI e DDD)<input value={s.whatsapp} onChange={e => setS({ ...s, whatsapp: e.target.value })} /></label>
       <label>Endereço de retirada<input value={s.pickupAddress} onChange={e => setS({ ...s, pickupAddress: e.target.value })} /></label>
       <label>Frete grátis a partir de R$ (0 = desativado)<input type="number" min="0" step="0.01" value={s.freeShippingFrom} onChange={e => setS({ ...s, freeShippingFrom: Number(e.target.value) })} /></label>
+      <label>Parcelas máximas no cartão (1 = sem parcelamento)<input type="number" min="1" max="12" value={s.installments} onChange={e => setS({ ...s, installments: Number(e.target.value) || 1 })} /></label>
       <h4>Entrega por cidade</h4>
       {s.shipping.map((x, i) => (
         <div className="adm-row" key={i}>

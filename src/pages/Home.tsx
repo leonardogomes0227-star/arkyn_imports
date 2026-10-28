@@ -22,9 +22,9 @@ export default function Home() {
         <div className="hero-in">
         <div className="hero-text">
           <small>PERFUMES ÁRABES E IMPORTADOS</small>
-          <h1>Fragrâncias que deixam uma marca.</h1>
+          <h1>Seu cheiro, do jeito que você quer ser lembrado.</h1>
           <p>Lattafa, Armaf, Maison Alhambra, French Avenue e mais, direto de Coxim - MS.</p>
-          <Link to="/catalogo" className="btn dark">EXPLORAR CATÁLOGO →</Link>
+          <div className="hero-btns"><Link to="/quiz" className="btn dark">DESCOBRIR MEU PERFUME</Link><Link to="/catalogo" className="btn ghost">VER CATÁLOGO</Link></div>
         </div>
         <img className="hero-img" src="/logo-full.png" alt="Arkyn Imports" />
         </div>
@@ -34,6 +34,15 @@ export default function Home() {
         {cats.map(([k, l, i]) => (
           <Link key={k} to={`/catalogo?cat=${k}`} className="cat"><span>{i}</span>{l.split('\n').map(t => <em key={t}>{t}</em>)}</Link>
         ))}
+      </section>
+
+      <section className="section">
+        <div className="sec-head"><h2>COMPRE POR OCASIÃO</h2></div>
+        <div className="occ">
+          {[['doce', 'Encontro', 'Doces e envolventes'], ['noite', 'Noite', 'Fragrâncias intensas'], ['calor', 'Calor', 'Frescos e leves'], ['dia', 'Dia a dia', 'Versáteis para o trabalho']].map(([t, n, d]) => (
+            <Link key={n} to={`/catalogo?tag=${t}`}><b>{n}</b><small>{d}</small></Link>
+          ))}
+        </div>
       </section>
 
       <section className="section">

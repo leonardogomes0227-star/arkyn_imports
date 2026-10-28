@@ -11,6 +11,8 @@ interface Ctx {
   setQty: (id: string, qty: number) => void
   clear: () => void
   count: number
+  open: boolean
+  setOpen: (v: boolean) => void
 }
 const StoreCtx = createContext<Ctx>(null!)
 export const useStore = () => useContext(StoreCtx)
@@ -18,6 +20,7 @@ export const brl = (n: number) => n.toLocaleString('pt-BR', { style: 'currency',
 
 export function StoreProvider({ children }: { children: ReactNode }) {
   const [products, setProducts] = useState<Product[]>(SEED_PRODUCTS)
+  const [open, setOpen] = useState(false)
   const [settings, setSettings] = useState<Settings>(DEFAULT_SETTINGS)
   const [cart, setCart] = useState<CartItem[]>(() => {
     try { return JSON.parse(localStorage.getItem('cart') || '[]') } catch { return [] }
@@ -35,11 +38,12 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   const value = useMemo<Ctx>(() => ({
     products, settings, cart,
-    add: id => setCart(c => c.some(i => i.id === id) ? c.map(i => i.id === id ? { ...i, qty: i.qty + 1 } : i) : [...c, { id, qty: 1 }]),
+    open, setOpen,
+    add: id => { setOpen(true); setCart(c => c.some(i => i.id === id) ? c.map(i => i.id === id ? { ...i, qty: i.qty + 1 } : i) : [...c, { id, qty: 1 }]) },
     setQty: (id, qty) => setCart(c => qty <= 0 ? c.filter(i => i.id !== id) : c.map(i => i.id === id ? { ...i, qty } : i)),
     clear: () => setCart([]),
     count: cart.reduce((s, i) => s + i.qty, 0),
-  }), [products, settings, cart])
+  }), [products, settings, cart, open])
 
   return <StoreCtx.Provider value={value}>{children}</StoreCtx.Provider>
 }

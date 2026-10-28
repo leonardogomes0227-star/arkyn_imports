@@ -1,5 +1,6 @@
 import { useState, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
+import CartDrawer from './CartDrawer'
 import { useStore } from '../lib/store'
 
 export function Logo({ light = false }: { light?: boolean }) {
@@ -13,7 +14,7 @@ export function Logo({ light = false }: { light?: boolean }) {
 }
 
 export default function Layout({ children }: { children: ReactNode }) {
-  const { count, settings } = useStore()
+  const { count, settings, setOpen } = useStore()
   return (
     <>
       <div className="topbar">Pix e cartão de crédito &nbsp;|&nbsp; Atendimento em Coxim - MS</div>
@@ -27,12 +28,13 @@ export default function Layout({ children }: { children: ReactNode }) {
           <Link to="/quiz">Qual é o seu cheiro?</Link>
         </nav>
         <Link to="/admin" className="adm-btn">ADMIN</Link>
-        <Link to="/carrinho" className="cart-link" aria-label="Carrinho">
+        <button className="cart-link" aria-label="Carrinho" onClick={() => setOpen(true)}>
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M6 7h12l-1 13H7L6 7z" /><path d="M9 7a3 3 0 0 1 6 0" /></svg>
           {count > 0 && <em>{count}</em>}
-        </Link>
+        </button>
       </header>
       <main>{children}</main>
+      <CartDrawer />
       <footer className="footer">
         <div className="footer-in">
           <div><Logo light /><p>Perfumes árabes e importados.<br />Coxim - MS</p></div>

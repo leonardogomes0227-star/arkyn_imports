@@ -19,6 +19,7 @@ export interface Settings {
   whatsapp: string
   pickupAddress: string
   freeShippingFrom: number
+  installments: number // parcelas máximas no cartão (1 = sem parcelamento)
   shipping: { city: string; price: number }[]
 }
 

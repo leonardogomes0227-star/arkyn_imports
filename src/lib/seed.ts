@@ -84,6 +84,7 @@ export const SEED_PRODUCTS: Product[] = [
 export const DEFAULT_SETTINGS: Settings = {
   whatsapp: '5567996277503',
   pickupAddress: 'Coxim - MS (combinar endereço pelo WhatsApp)',
+  installments: 1, // ex.: 3 para exibir/permitir até 3x no cartão
   freeShippingFrom: 0, // 0 = sem frete grátis. Ajuste quando definir o valor.
   shipping: [{ city: 'Coxim', price: 0 }], // TODO: confirmar cidades e valores
 }
