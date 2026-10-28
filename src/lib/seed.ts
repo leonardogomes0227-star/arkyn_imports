@@ -21,8 +21,35 @@ const WITH_PHOTO = new Set([
   'maison-alhambra-salvo-elixir-60ml',
 ])
 
+const TAGS: Record<string, string[]> = {
+  'armaf-club-de-nuit-intense-man-edt-105ml': ['amadeirado', 'intenso', 'noite'],
+  'jacques-bogart-silver-scent-intense-100ml': ['fresco', 'amadeirado', 'dia'],
+  'lattafa-the-kingdom-masculino-100ml': ['fresco', 'amadeirado', 'dia'],
+  'maison-alhambra-victorioso-nero-100ml': ['doce', 'especiado', 'noite'],
+  'lattafa-fakhar-extrait-gold-100ml': ['doce', 'amadeirado', 'intenso', 'noite'],
+  'lattafa-al-noble-wazeer-100ml': ['amadeirado', 'especiado', 'intenso', 'noite'],
+  'al-wataniah-attar-al-wesal-gold-100ml': ['doce', 'intenso', 'noite'],
+  'lattafa-fakhar-black-100ml': ['fresco', 'amadeirado', 'dia'],
+  'french-avenue-liquid-brun-100ml': ['doce', 'amadeirado', 'intenso', 'noite'],
+  'lattafa-asad-elixir-100ml': ['amadeirado', 'especiado', 'intenso', 'noite'],
+  'maison-alhambra-no-2-men-80ml': ['fresco', 'dia'],
+  'maison-alhambra-salvo-elixir-60ml': ['amadeirado', 'especiado', 'intenso', 'noite'],
+  'french-avenue-vulcan-feu-100ml': ['especiado', 'amadeirado', 'noite'],
+  'lattafa-yara-rosa-100ml': ['doce', 'floral', 'dia'],
+  'maison-alhambra-pink-eclipse-100ml': ['doce', 'floral', 'noite'],
+  'paris-corner-marshmallow-blush-100ml': ['doce', 'floral', 'dia'],
+  'lattafa-dalal-100ml': ['doce', 'floral', 'intenso', 'noite'],
+  'lattafa-fakhar-rose-100ml': ['floral', 'doce', 'dia'],
+  'armaf-club-de-nuit-maleka-105ml': ['doce', 'floral', 'noite'],
+  'lattafa-tharwah-gold-100ml': ['doce', 'intenso', 'noite'],
+  'lattafa-atheeri-100ml': ['doce', 'intenso', 'noite'],
+  'lattafa-eclaire-100ml': ['doce', 'dia'],
+  'lattafa-afeef-100ml': ['doce', 'intenso', 'noite'],
+  'ard-al-zaafaran-sahebat-al-jamal-70ml': ['doce', 'floral', 'dia'],
+}
+
 const p = (id: string, brand: string, name: string, price: number, category: Category, gender: Gender): Product =>
-  ({ id, brand, name, price, stock: 5, category, gender, family: '', notes: [], image: WITH_PHOTO.has(id) ? `/produtos/${id}.jpg` : '' })
+  ({ id, brand, name, price, stock: 5, category, gender, family: '', notes: [], tags: TAGS[id] ?? [], image: WITH_PHOTO.has(id) ? `/produtos/${id}.jpg` : '' })
 
 export const SEED_PRODUCTS: Product[] = [
   p('armaf-club-de-nuit-intense-man-edt-105ml', 'Armaf', 'Club de Nuit Intense Man EDT 105ml', 259.90, 'masculino', 'masculino'),

@@ -11,6 +11,7 @@ export interface Product {
   gender: Gender
   family?: string
   notes?: string[]
+  tags?: string[] // perfil usado no quiz: doce, amadeirado, fresco, floral, especiado, intenso, dia, noite
   image?: string
 }
 

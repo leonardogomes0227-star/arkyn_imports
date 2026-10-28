@@ -57,6 +57,13 @@ export default function Home() {
       </section>
 
       <section className="section">
+        <div className="quiz-cta">
+          <div><small>QUIZ</small><h3>Qual é o seu cheiro?</h3><p>Responda 5 perguntas e receba 3 indicações para você.</p></div>
+          <Link to="/quiz" className="btn light">FAZER O QUIZ →</Link>
+        </div>
+      </section>
+
+      <section className="section">
         <div className="sec-head"><h2>COMO COMPRAR</h2></div>
         <div className="steps">
           {steps.map(([n, t, d]) => <div key={n} className="step"><span>{n}</span><h3>{t}</h3><p>{d}</p></div>)}
