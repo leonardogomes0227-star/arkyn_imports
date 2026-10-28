@@ -63,6 +63,7 @@ function Login({ inline = false }: { inline?: boolean }) {
         <label className="chk" style={{ alignSelf: 'flex-start', fontSize: 13 }}><input type="checkbox" style={{ width: 'auto' }} checked={showPass} onChange={e => setShowPass(e.target.checked)} /> Mostrar senha</label>
         {err && <p className="err">{err}</p>}
         <button className="btn">ENTRAR</button>
+        <small className="muted">Projeto Supabase deste site: <b>{(url || '').replace(/^https?:\/\//, '').replace('.supabase.co', '')}</b></small>
       </form>
     </div>
   )
