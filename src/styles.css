@@ -164,3 +164,4 @@ input,select { background:#fff; color:var(--ink); border:1px solid var(--line); 
 .hero-3d canvas { touch-action:pan-y }
 .hero-poster { height:100%; display:grid; place-items:center } .hero-poster .bottle { width:auto; height:90%; max-width:60%; filter:drop-shadow(0 10px 16px rgba(0,0,0,.2)) }
 @media (max-width:720px) { .hero-3d { height:320px } }
+.adm-warn { background:#fff3cd; color:#664d03; padding:10px 24px; font-size:13px; text-align:center }

@@ -9,6 +9,7 @@ import type { Category, Gender, Product, Settings } from '../lib/types'
 interface Order { id: number; customer_name: string; phone: string; delivery: string; items: { id: string; qty: number }[]; total: number; status: string; created_at: string }
 const STATUS: [string, string][] = [['pending', 'Aguardando pagamento'], ['paid', 'Pago'], ['shipped', 'Enviado/Entregue'], ['canceled', 'Cancelado']]
 const EMPTY: Product = { id: '', name: '', brand: '', price: 0, stock: 0, category: 'masculino', gender: 'masculino', family: '', notes: [], tags: [], image: '' }
+const REQUIRE_LOGIN = (import.meta.env as Record<string, string | undefined>).VITE_ADMIN_LOGIN === 'true'
 const slug = (s: string) => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
 const list = (s: string) => s.split(',').map(x => x.trim()).filter(Boolean)
 
@@ -24,10 +25,12 @@ export default function Admin() {
 
   if (!supabase) return <div className="adm-wrap"><div className="adm-box"><h2>Painel Arkyn</h2><p className="muted">Falta: <b>{[!url && 'VITE_SUPABASE_URL (ou NEXT_PUBLIC_SUPABASE_URL)', !key && 'VITE_SUPABASE_ANON_KEY (ou NEXT_PUBLIC_SUPABASE_ANON_KEY)'].filter(Boolean).join(' e ')}</b> (a Vercel só aplica depois de um Redeploy).</p><p className="muted">Configure <b>VITE_SUPABASE_URL</b> e <b>VITE_SUPABASE_ANON_KEY</b> na Vercel e rode <code>supabase/schema.sql</code> para ativar o painel.</p><Link to="/" className="btn">Voltar à loja</Link></div></div>
   if (!ready) return null
-  return session ? <Panel onLogout={() => supabase!.auth.signOut()} /> : <Login />
+  // Modo sem senha (temporário): painel abre sem login, a menos que VITE_ADMIN_LOGIN=true. Pedidos sempre exigem login.
+  if (REQUIRE_LOGIN && !session) return <Login />
+  return <Panel session={session} onLogout={() => supabase!.auth.signOut()} />
 }
 
-function Login() {
+function Login({ inline = false }: { inline?: boolean }) {
   const [email, setEmail] = useState('')
   const [pass, setPass] = useState('')
   const [err, setErr] = useState('')
@@ -37,9 +40,10 @@ function Login() {
     if (error) setErr('E-mail ou senha incorretos.')
   }
   return (
-    <div className="adm-wrap">
+    <div className={inline ? '' : 'adm-wrap'}>
       <form className="adm-box" onSubmit={submit}>
-        <h2>Painel Arkyn</h2>
+        <h2>{inline ? 'Entre para ver os pedidos' : 'Painel Arkyn'}</h2>
+        {inline && <p className="muted">Pedidos têm dados dos clientes (nome e telefone), por isso exigem login.</p>}
         <input type="email" placeholder="E-mail" value={email} onChange={e => setEmail(e.target.value)} required />
         <input type="password" placeholder="Senha" value={pass} onChange={e => setPass(e.target.value)} required />
         {err && <p className="err">{err}</p>}
@@ -49,7 +53,7 @@ function Login() {
   )
 }
 
-function Panel({ onLogout }: { onLogout: () => void }) {
+function Panel({ session, onLogout }: { session: Session | null; onLogout: () => void }) {
   const [tab, setTab] = useState<'orders' | 'products' | 'settings'>('orders')
   return (
     <div className="adm">
@@ -60,10 +64,11 @@ function Panel({ onLogout }: { onLogout: () => void }) {
             <button key={k} className={tab === k ? 'chip on' : 'chip'} onClick={() => setTab(k)}>{l}</button>
           ))}
         </nav>
-        <span><Link to="/">Ver loja</Link> · <button className="link" onClick={onLogout}>Sair</button></span>
+        <span><Link to="/">Ver loja</Link>{session && <> · <button className="link" onClick={onLogout}>Sair</button></>}</span>
       </header>
+      {!session && <div className="adm-warn">Modo sem senha: quem tiver o link /admin consegue editar produtos e configurações. Ative o login antes de divulgar o site.</div>}
       <div className="adm-body">
-        {tab === 'orders' && <Orders />}
+        {tab === 'orders' && (session ? <Orders /> : <Login inline />)}
         {tab === 'products' && <Products />}
         {tab === 'settings' && <SettingsTab />}
       </div>
