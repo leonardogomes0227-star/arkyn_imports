@@ -22,7 +22,7 @@ export default function Admin() {
     return () => data.subscription.unsubscribe()
   }, [])
 
-  if (!supabase) return <div className="adm-wrap"><div className="adm-box"><h2>Painel Arkyn</h2><p className="muted">Configure <b>VITE_SUPABASE_URL</b> e <b>VITE_SUPABASE_ANON_KEY</b> na Vercel e rode <code>supabase/schema.sql</code> para ativar o painel.</p><Link to="/" className="btn">Voltar à loja</Link></div></div>
+  if (!supabase) return <div className="adm-wrap"><div className="adm-box"><h2>Painel Arkyn</h2><p className="muted">Falta: <b>{[!import.meta.env.VITE_SUPABASE_URL && 'VITE_SUPABASE_URL', !import.meta.env.VITE_SUPABASE_ANON_KEY && 'VITE_SUPABASE_ANON_KEY'].filter(Boolean).join(' e ')}</b> (a Vercel só aplica depois de um Redeploy).</p><p className="muted">Configure <b>VITE_SUPABASE_URL</b> e <b>VITE_SUPABASE_ANON_KEY</b> na Vercel e rode <code>supabase/schema.sql</code> para ativar o painel.</p><Link to="/" className="btn">Voltar à loja</Link></div></div>
   if (!ready) return null
   return session ? <Panel onLogout={() => supabase!.auth.signOut()} /> : <Login />
 }
