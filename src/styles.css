@@ -131,3 +131,4 @@ input,select { background:#fff; color:var(--ink); border:1px solid var(--line); 
 .link { background:none; border:0; cursor:pointer; text-decoration:underline; color:inherit; font-size:13px }
 .wa-float { position:fixed; right:18px; bottom:18px; z-index:20; width:56px; height:56px; border-radius:50%; background:#25d366; display:grid; place-items:center; box-shadow:0 6px 18px rgba(0,0,0,.25) }
 .copy a { text-decoration:underline }
+.adm-btn { background:#000; color:#fff; font-size:11px; letter-spacing:.12em; font-weight:600; padding:8px 14px; border-radius:6px; margin-left:auto; margin-right:8px }
