@@ -11,11 +11,11 @@ import SettingsTab from '../admin/SettingsTab'
 
 const REQUIRE_LOGIN = (import.meta.env as Record<string, string | undefined>).VITE_ADMIN_LOGIN === 'true'
 // protected = dados de clientes/cupons: sempre exigem login
-const TABS: { id: string; label: string; protected?: boolean }[] = [
-  { id: 'dash', label: 'Dashboard', protected: true }, { id: 'orders', label: 'Pedidos', protected: true },
-  { id: 'products', label: 'Produtos' }, { id: 'stock', label: 'Estoque' },
-  { id: 'customers', label: 'Clientes', protected: true }, { id: 'coupons', label: 'Cupons', protected: true },
-  { id: 'settings', label: 'Configurações' },
+const TABS: { id: string; label: string; icon: string; protected?: boolean }[] = [
+  { id: 'dash', label: 'Dashboard', icon: '📊', protected: true }, { id: 'orders', label: 'Pedidos', icon: '🧾', protected: true },
+  { id: 'products', label: 'Produtos', icon: '🧴' }, { id: 'stock', label: 'Estoque', icon: '📦' },
+  { id: 'customers', label: 'Clientes', icon: '👥', protected: true }, { id: 'coupons', label: 'Cupons', icon: '🏷️', protected: true },
+  { id: 'settings', label: 'Configurações', icon: '⚙️' },
 ]
 
 export default function Admin() {
@@ -45,7 +45,8 @@ function Login({ inline = false }: { inline?: boolean }) {
   }
   return (
     <div className={inline ? '' : 'adm-wrap'}>
-      <form className="adm-box" onSubmit={submit}>
+      <form className="adm-box login" onSubmit={submit}>
+        <img src="/logo.jpg" alt="Arkyn" className="login-logo" />
         <h2>{inline ? 'Entre para ver esta área' : 'Painel Arkyn'}</h2>
         {inline && <p className="muted">Pedidos, clientes e cupons têm dados sensíveis, por isso exigem login.</p>}
         <input type="email" placeholder="E-mail" value={email} onChange={e => setEmail(e.target.value)} required />
@@ -74,15 +75,22 @@ function Panel({ session, onLogout }: { session: Session | null; onLogout: () =>
   }
   return (
     <div className="adm">
-      <header className="adm-head">
-        <b>ARKYN · Painel</b>
-        <span><Link to="/">Ver loja</Link>{session && <> · <button className="link" onClick={onLogout}>Sair</button></>}</span>
-      </header>
-      <nav className="adm-tabs">
-        {TABS.map(t => <button key={t.id} className={tab === t.id ? 'on' : ''} onClick={() => setTab(t.id)}>{t.label}{t.protected && !session ? ' 🔒' : ''}</button>)}
-      </nav>
-      {!session && <div className="adm-warn">Modo sem senha: quem tiver o link /admin consegue editar produtos e configurações. Ative o login antes de divulgar o site.</div>}
-      <div className="adm-body" key={tab}>{body()}</div>
+      <aside className="adm-side">
+        <div className="adm-brand"><img src="/logo.jpg" alt="" /><div><b>ARKYN</b><small>PAINEL</small></div></div>
+        <nav>
+          {TABS.map(t => (
+            <button key={t.id} className={tab === t.id ? 'on' : ''} onClick={() => setTab(t.id)}>
+              <span className="ic">{t.icon}</span>{t.label}{t.protected && !session ? <i className="lock">🔒</i> : null}
+            </button>
+          ))}
+        </nav>
+        <div className="adm-foot"><Link to="/">← Ver loja</Link>{session && <button className="link" onClick={onLogout}>Sair</button>}</div>
+      </aside>
+      <section className="adm-main">
+        <div className="adm-top"><h1>{cur.label}</h1>{session && <span className="muted">{session.user.email}</span>}</div>
+        {!session && <div className="adm-warn">Modo sem senha: quem tiver o link /admin edita produtos e configurações. Ative o login antes de divulgar o site.</div>}
+        <div className="adm-body" key={tab}>{body()}</div>
+      </section>
     </div>
   )
 }

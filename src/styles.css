@@ -183,3 +183,51 @@ input,select { background:#fff; color:var(--ink); border:1px solid var(--line); 
 .old { text-decoration:line-through; color:var(--muted); font-style:normal; font-size:12px; margin-right:6px; font-weight:400 }
 .thumb { position:relative }
 .off { position:absolute; top:8px; left:8px; background:#000; color:#fff; font-size:11px; font-weight:700; padding:3px 8px; border-radius:99px; z-index:1 }
+
+/* ===== Painel admin: visual ===== */
+.adm { display:grid; grid-template-columns:240px 1fr; min-height:100vh; background:#f6f3ee }
+.adm-side { background:#0f0f0f; color:#cfc9bb; display:flex; flex-direction:column; padding:20px 14px; position:sticky; top:0; height:100vh }
+.adm-brand { display:flex; align-items:center; gap:10px; padding:4px 8px 20px; border-bottom:1px solid #26231b; margin-bottom:14px }
+.adm-brand img { width:40px; height:40px; border-radius:50%; object-fit:cover; border:1px solid #b8923a }
+.adm-brand b { color:#fff; letter-spacing:.2em; font-family:Georgia,serif; font-weight:500; display:block; line-height:1.1 }
+.adm-brand small { color:#b8923a; letter-spacing:.35em; font-size:9px }
+.adm-side nav { display:flex; flex-direction:column; gap:2px; flex:1 }
+.adm-side nav button { display:flex; align-items:center; gap:12px; background:none; border:0; color:inherit; padding:11px 12px; border-radius:8px; font-size:14px; cursor:pointer; text-align:left }
+.adm-side nav button:hover { background:#1b1913; color:#fff }
+.adm-side nav button.on { background:linear-gradient(135deg,#b8923a,#d9b95f); color:#111; font-weight:600 }
+.adm-side .ic { width:22px; text-align:center; filter:saturate(.8) }
+.adm-side .lock { margin-left:auto; font-style:normal; font-size:11px; opacity:.7 }
+.adm-foot { display:flex; justify-content:space-between; font-size:13px; padding:12px 8px 0; border-top:1px solid #26231b }
+.adm-foot a,.adm-foot .link { color:#cfc9bb }
+.adm-main { min-width:0; display:flex; flex-direction:column }
+.adm-top { display:flex; justify-content:space-between; align-items:center; padding:22px 32px 6px }
+.adm-top h1 { font-size:26px }
+.adm-warn { margin:10px 32px 0; background:#fff7dd; border:1px solid #ecd9a0; color:#6b5200; padding:10px 14px; border-radius:8px; font-size:13px }
+.adm-body { padding:20px 32px 48px; max-width:1200px; width:100% }
+.adm-stats { gap:14px }
+.adm-stats div,.adm-card,.adm-line,.adm-box { border:1px solid #e8e1d3; border-radius:12px; box-shadow:0 1px 2px rgba(0,0,0,.04) }
+.adm-stats div { padding:18px; position:relative; overflow:hidden }
+.adm-stats div::before { content:''; position:absolute; left:0; top:0; bottom:0; width:4px; background:linear-gradient(#b8923a,#d9b95f) }
+.adm-stats b { font-size:26px; font-family:Georgia,serif; font-weight:500 }
+.adm-stats small { text-transform:uppercase; letter-spacing:.08em; font-size:11px }
+.adm-card { padding:20px; margin-bottom:14px } .adm-card > b { font-family:Georgia,serif; font-weight:500; font-size:18px }
+.chart .col span { background:linear-gradient(#d9b95f,#b8923a); opacity:1 }
+.adm-line { padding:10px 14px } .adm-line:hover { border-color:#cdbf9c }
+.adm-body .btn { border-radius:8px; padding:10px 18px } .adm-body .btn:not(.ghost) { background:#111 }
+.adm-body input,.adm-body select,.adm-body textarea { border-radius:8px; border-color:#e0d8c7 } .adm-body input:focus,.adm-body select:focus,.adm-body textarea:focus { outline:2px solid #d9b95f; outline-offset:0 }
+.adm-form { background:#fff; border:1px solid #e8e1d3; border-radius:12px; padding:24px; max-width:680px }
+.adm-form h3 { font-family:Georgia,serif; font-weight:500; font-size:22px }
+.adm-body h3 { font-family:Georgia,serif; font-weight:500; font-size:20px; margin-bottom:10px }
+.adm-wrap { background:radial-gradient(ellipse at top,#2a2208 0,#0f0f0f 70%) }
+.adm-box.login { align-items:center; text-align:center; gap:12px; border:0; box-shadow:0 20px 50px rgba(0,0,0,.35) } .adm-box.login input,.adm-box.login .btn { width:100% }
+.adm-box.login .muted { margin-top:-6px }
+.login-logo { width:84px; height:84px; border-radius:50%; object-fit:cover; border:2px solid #b8923a }
+.adm-body .adm-box.login { margin:20px auto; background:#fff }
+@media (max-width:860px) {
+  .adm { grid-template-columns:1fr }
+  .adm-side { position:static; height:auto; flex-direction:row; align-items:center; padding:10px; gap:8px; overflow-x:auto }
+  .adm-brand { padding:0 8px 0 0; margin:0; border:0 } .adm-brand div { display:none }
+  .adm-side nav { flex-direction:row; flex:none } .adm-side nav button { white-space:nowrap; padding:9px 12px }
+  .adm-foot { border:0; padding:0 4px; gap:12px; flex:none }
+  .adm-top,.adm-body { padding-left:16px; padding-right:16px } .adm-warn { margin:10px 16px 0 }
+}
