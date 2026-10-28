@@ -9,7 +9,8 @@ import CustomersTab from '../admin/CustomersTab'
 import CouponsTab from '../admin/CouponsTab'
 import SettingsTab from '../admin/SettingsTab'
 
-const REQUIRE_LOGIN = (import.meta.env as Record<string, string | undefined>).VITE_ADMIN_LOGIN === 'true'
+// Login obrigatório na entrada do painel: uma senha abre tudo. Para desligar (não recomendado): VITE_ADMIN_LOGIN=false
+const REQUIRE_LOGIN = (import.meta.env as Record<string, string | undefined>).VITE_ADMIN_LOGIN !== 'false'
 // protected = dados de clientes/cupons: sempre exigem login
 const TABS: { id: string; label: string; icon: string; protected?: boolean }[] = [
   { id: 'dash', label: 'Dashboard', icon: '📊', protected: true }, { id: 'orders', label: 'Pedidos', icon: '🧾', protected: true },
