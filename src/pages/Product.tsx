@@ -18,8 +18,9 @@ export default function Product() {
         <div className="pdp-info">
           <small>{p.brand}</small>
           <h1>{p.name}</h1>
-          <strong className="price">{brl(p.price)}</strong>
+          <strong className="price">{!!p.old_price && p.old_price > p.price && <em className="old">{brl(p.old_price)}</em>}{brl(p.price)}</strong>
           <p className="muted">{p.stock > 0 ? `${p.stock} em estoque` : 'Esgotado'} · Pix ou cartão de crédito</p>
+          {p.description && <p>{p.description}</p>}
           {!!p.tags?.length && <div className="tags">{p.tags.map(t => <span key={t}>{t}</span>)}</div>}
           {!!p.notes?.length && <p><b>Notas:</b> {p.notes.join(' · ')}</p>}
           <button className="btn" disabled={p.stock <= 0} onClick={() => add(p.id)}>ADICIONAR AO CARRINHO</button>

@@ -17,7 +17,7 @@ export default function Layout({ children }: { children: ReactNode }) {
   const { count, settings, setOpen } = useStore()
   return (
     <>
-      <div className="topbar">Pix e cartão de crédito &nbsp;|&nbsp; Atendimento em Coxim - MS</div>
+      <div className="topbar">{settings.announcement || 'Pix e cartão de crédito  |  Atendimento em Coxim - MS'}</div>
       <header className="header">
         <Logo />
         <nav>

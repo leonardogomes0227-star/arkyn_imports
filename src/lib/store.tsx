@@ -28,7 +28,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (!supabase) return
-    supabase.from('products').select('*').then(({ data }) => { if (data?.length) setProducts(data as Product[]) })
+    supabase.from('products').select('*').then(({ data }) => { if (data?.length) setProducts((data as Product[]).filter(p => p.active !== false)) })
     supabase.from('settings').select('value').eq('id', 1).maybeSingle().then(({ data }) => {
       if (data?.value) setSettings({ ...DEFAULT_SETTINGS, ...(data.value as Settings) })
     })

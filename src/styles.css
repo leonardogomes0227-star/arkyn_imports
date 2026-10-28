@@ -165,3 +165,21 @@ input,select { background:#fff; color:var(--ink); border:1px solid var(--line); 
 .hero-poster { height:100%; display:grid; place-items:center } .hero-poster .bottle { width:auto; height:90%; max-width:60%; filter:drop-shadow(0 10px 16px rgba(0,0,0,.2)) }
 @media (max-width:720px) { .hero-3d { height:320px } }
 .adm-warn { background:#fff3cd; color:#664d03; padding:10px 24px; font-size:13px; text-align:center }
+.adm-tabs { display:flex; gap:4px; overflow-x:auto; background:#fff; border-bottom:1px solid var(--line); padding:0 16px }
+.adm-tabs button { background:none; border:0; border-bottom:3px solid transparent; padding:14px 14px; font-size:14px; cursor:pointer; white-space:nowrap; color:var(--muted) }
+.adm-tabs button.on { color:#000; border-bottom-color:#000; font-weight:600 }
+.adm-two { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:12px; margin-bottom:12px }
+.adm-stats .clk { cursor:pointer } .adm-stats .clk:hover { border-color:#000 }
+.chart { display:flex; align-items:flex-end; gap:3px; height:120px; margin:12px 0 6px }
+.chart .col { flex:1; height:100%; display:flex; align-items:flex-end }
+.chart .col span { display:block; width:100%; background:#000; border-radius:2px 2px 0 0; min-height:2px; opacity:.85 }
+.pill { display:inline-block; padding:1px 9px; border-radius:99px; font-size:11px; background:#eee; color:#333 }
+.pill.s-pending { background:#fff3cd; color:#664d03 } .pill.s-paid,.pill.s-separating { background:#d1e7dd; color:#0a3622 }
+.pill.s-shipped { background:#cfe2ff; color:#052c65 } .pill.s-delivered { background:#e2e3e5 } .pill.s-canceled { background:#f8d7da; color:#58151c }
+.lbl,.adm-form .chk { display:flex; flex-direction:column; gap:4px; font-size:13px; color:var(--muted); margin-bottom:8px }
+.adm-form .chk { flex-direction:row; align-items:center; gap:8px; color:var(--ink) }
+.adm-line.off { opacity:.55 } .adm-body textarea { background:#fff; border:1px solid var(--line); border-radius:6px; padding:10px; font:inherit }
+.adm-body { max-width:1100px }
+.old { text-decoration:line-through; color:var(--muted); font-style:normal; font-size:12px; margin-right:6px; font-weight:400 }
+.thumb { position:relative }
+.off { position:absolute; top:8px; left:8px; background:#000; color:#fff; font-size:11px; font-weight:700; padding:3px 8px; border-radius:99px; z-index:1 }

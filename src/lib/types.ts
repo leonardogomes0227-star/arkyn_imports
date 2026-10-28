@@ -13,12 +13,18 @@ export interface Product {
   notes?: string[]
   tags?: string[] // perfil usado no quiz: doce, amadeirado, fresco, floral, especiado, intenso, dia, noite
   image?: string
+  active?: boolean // false = oculto na loja
+  featured?: boolean
+  old_price?: number | null // preço antigo (mostra riscado + % off)
+  description?: string | null
 }
 
 export interface Settings {
   whatsapp: string
   pickupAddress: string
   freeShippingFrom: number
+  announcement?: string
+  heroTitle?: string
   installments: number // parcelas máximas no cartão (1 = sem parcelamento)
   shipping: { city: string; price: number }[]
 }

@@ -7,13 +7,14 @@ export default function ProductCard({ p }: { p: Product }) {
   const { add, settings } = useStore()
   return (
     <article className="card">
-      <Link to={`/produto/${p.id}`} className="thumb">{p.image ? <img src={p.image} alt={p.name} loading="lazy" /> : <Bottle id={p.id} brand={p.brand} />}</Link>
+      <Link to={`/produto/${p.id}`} className="thumb">
+        {!!p.old_price && p.old_price > p.price && p.stock > 0 && <span className="off">-{Math.round((1 - p.price / p.old_price) * 100)}%</span>}{p.image ? <img src={p.image} alt={p.name} loading="lazy" /> : <Bottle id={p.id} brand={p.brand} />}</Link>
       <div className="info">
         <small>{p.brand}</small>
         {p.stock > 0 && p.stock <= 3 && <span className="low">{p.stock === 1 ? 'Última peça!' : `Restam ${p.stock}`}</span>}
         <Link to={`/produto/${p.id}`}><h3>{p.name}</h3></Link>
         <div className="row">
-          <div><strong>{p.stock > 0 ? brl(p.price) : 'Esgotado'}</strong>{p.stock > 0 && settings.installments > 1 && <em className="inst">ou até {settings.installments}x de {brl(p.price / settings.installments)}</em>}</div>
+          <div>{p.stock > 0 && !!p.old_price && p.old_price > p.price && <em className="old">{brl(p.old_price)}</em>}<strong>{p.stock > 0 ? brl(p.price) : 'Esgotado'}</strong>{p.stock > 0 && settings.installments > 1 && <em className="inst">ou até {settings.installments}x de {brl(p.price / settings.installments)}</em>}</div>
           <button className="plus" disabled={p.stock <= 0} onClick={() => add(p.id)} aria-label="Adicionar ao carrinho" title={p.stock > 0 ? 'Adicionar' : 'Esgotado'}>+</button>
         </div>
       </div>

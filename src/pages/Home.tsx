@@ -23,7 +23,7 @@ export default function Home() {
         <div className="hero-in">
         <div className="hero-text">
           <small>PERFUMES ÁRABES E IMPORTADOS</small>
-          <h1>Seu cheiro, do jeito que você quer ser lembrado.</h1>
+          <h1>{settings.heroTitle || 'Seu cheiro, do jeito que você quer ser lembrado.'}</h1>
           <p>Lattafa, Armaf, Maison Alhambra, French Avenue e mais, direto de Coxim - MS.</p>
           <div className="hero-btns"><Link to="/quiz" className="btn dark">DESCOBRIR MEU PERFUME</Link><Link to="/catalogo" className="btn ghost">VER CATÁLOGO</Link></div>
         </div>
@@ -48,7 +48,7 @@ export default function Home() {
 
       <section className="section">
         <div className="sec-head"><h2>DESTAQUES</h2><Link to="/catalogo">VER TODOS →</Link></div>
-        <div className="grid">{[...products].sort((a, b) => Number(!!b.image) - Number(!!a.image)).slice(0, 10).map(p => <ProductCard key={p.id} p={p} />)}</div>
+        <div className="grid">{[...products].sort((a, b) => Number(!!b.featured) * 2 + Number(!!b.image) - (Number(!!a.featured) * 2 + Number(!!a.image))).slice(0, 10).map(p => <ProductCard key={p.id} p={p} />)}</div>
       </section>
 
       <section className="section promos">

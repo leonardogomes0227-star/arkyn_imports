@@ -11,11 +11,19 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (pay.status === 'approved' && pay.external_reference) {
     const h = { apikey: key, Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' }
     const ref = encodeURIComponent(pay.external_reference)
+    const [order] = await (await fetch(`${url}/rest/v1/orders?id=eq.${ref}&select=items,coupon,status`, { headers: h })).json()
+    // idempotência: o Mercado Pago pode notificar várias vezes; só processa se ainda estiver pendente
+    if (!order || order.status !== 'pending') return res.status(200).end()
+
     await fetch(`${url}/rest/v1/orders?id=eq.${ref}`, { method: 'PATCH', headers: h, body: JSON.stringify({ status: 'paid' }) })
-    const [order] = await (await fetch(`${url}/rest/v1/orders?id=eq.${ref}&select=items`, { headers: h })).json()
-    for (const i of order?.items ?? []) {
-      const [p] = await (await fetch(`${url}/rest/v1/products?id=eq.${encodeURIComponent(i.id)}&select=stock`, { headers: h })).json()
-      if (p) await fetch(`${url}/rest/v1/products?id=eq.${encodeURIComponent(i.id)}`, { method: 'PATCH', headers: h, body: JSON.stringify({ stock: Math.max(0, p.stock - i.qty) }) })
+    if (order.coupon) {
+      const [c] = await (await fetch(`${url}/rest/v1/coupons?code=eq.${encodeURIComponent(order.coupon)}&select=uses`, { headers: h })).json()
+      if (c) await fetch(`${url}/rest/v1/coupons?code=eq.${encodeURIComponent(order.coupon)}`, { method: 'PATCH', headers: h, body: JSON.stringify({ uses: c.uses + 1 }) })
+    }
+    for (const i of order.items ?? []) {
+      const pid = encodeURIComponent(i.id)
+      const [p] = await (await fetch(`${url}/rest/v1/products?id=eq.${pid}&select=stock`, { headers: h })).json()
+      if (p) await fetch(`${url}/rest/v1/products?id=eq.${pid}`, { method: 'PATCH', headers: h, body: JSON.stringify({ stock: Math.max(0, p.stock - i.qty) }) })
     }
   }
   res.status(200).end()
