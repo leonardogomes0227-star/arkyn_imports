@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import HeroBottle from '../components/HeroBottle'
 import ProductCard from '../components/ProductCard'
 import { useStore } from '../lib/store'
 
@@ -26,7 +27,7 @@ export default function Home() {
           <p>Lattafa, Armaf, Maison Alhambra, French Avenue e mais, direto de Coxim - MS.</p>
           <div className="hero-btns"><Link to="/quiz" className="btn dark">DESCOBRIR MEU PERFUME</Link><Link to="/catalogo" className="btn ghost">VER CATÁLOGO</Link></div>
         </div>
-        <img className="hero-img" src="/logo-full.png" alt="Arkyn Imports" />
+        <HeroBottle />
         </div>
       </section>
 
