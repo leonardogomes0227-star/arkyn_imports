@@ -8,15 +8,17 @@ import ProductsTab from '../admin/ProductsTab'
 import CustomersTab from '../admin/CustomersTab'
 import CouponsTab from '../admin/CouponsTab'
 import SettingsTab from '../admin/SettingsTab'
+import NewSale from '../admin/NewSale'
+import Tools from '../admin/Tools'
 
 // Login obrigatório na entrada do painel: uma senha abre tudo. Para desligar (não recomendado): VITE_ADMIN_LOGIN=false
 const REQUIRE_LOGIN = (import.meta.env as Record<string, string | undefined>).VITE_ADMIN_LOGIN !== 'false'
 // protected = dados de clientes/cupons: sempre exigem login
 const TABS: { id: string; label: string; icon: string; protected?: boolean }[] = [
-  { id: 'dash', label: 'Dashboard', icon: '📊', protected: true }, { id: 'orders', label: 'Pedidos', icon: '🧾', protected: true },
+  { id: 'dash', label: 'Dashboard', icon: '📊', protected: true }, { id: 'sale', label: 'Nova venda', icon: '🛒', protected: true }, { id: 'orders', label: 'Pedidos', icon: '🧾', protected: true },
   { id: 'products', label: 'Produtos', icon: '🧴' }, { id: 'stock', label: 'Estoque', icon: '📦' },
   { id: 'customers', label: 'Clientes', icon: '👥', protected: true }, { id: 'coupons', label: 'Cupons', icon: '🏷️', protected: true },
-  { id: 'settings', label: 'Configurações', icon: '⚙️' },
+  { id: 'tools', label: 'Ferramentas', icon: '🧰', protected: true }, { id: 'settings', label: 'Configurações', icon: '⚙️' },
 ]
 
 export default function Admin() {
@@ -76,7 +78,9 @@ function Panel({ session, onLogout }: { session: Session | null; onLogout: () =>
     if (cur.protected && !session) return <Login inline />
     switch (tab) {
       case 'dash': return <Dashboard go={setTab} />
+      case 'sale': return <NewSale />
       case 'orders': return <OrdersTab />
+      case 'tools': return <Tools />
       case 'products': return <ProductsTab />
       case 'stock': return <ProductsTab stockMode />
       case 'customers': return <CustomersTab />

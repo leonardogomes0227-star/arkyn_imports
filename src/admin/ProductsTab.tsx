@@ -5,7 +5,7 @@ import { brl } from '../lib/store'
 import type { Category, Gender, Product } from '../lib/types'
 import { downloadCsv, list, LOW_STOCK, slug, useAllProducts } from './shared'
 
-const EMPTY: Product = { id: '', name: '', brand: '', price: 0, stock: 0, category: 'masculino', gender: 'masculino', family: '', notes: [], tags: [], image: '', active: true, featured: false, old_price: null, description: '' }
+const EMPTY: Product = { id: '', name: '', brand: '', price: 0, stock: 0, category: 'masculino', gender: 'masculino', family: '', notes: [], tags: [], image: '', active: true, featured: false, old_price: null, description: '', cost: null }
 const CATS: [Category, string][] = [['masculino', 'Masculino'], ['feminino', 'Feminino'], ['splash', 'Splash/Miniatura'], ['skincare', 'Skincare']]
 
 export default function ProductsTab({ stockMode = false }: { stockMode?: boolean }) {
@@ -25,7 +25,7 @@ export default function ProductsTab({ stockMode = false }: { stockMode?: boolean
   async function save(e: FormEvent) {
     e.preventDefault()
     if (!edit) return
-    const row = { ...edit, id: isNew ? slug(`${edit.brand} ${edit.name}`) : edit.id, old_price: edit.old_price || null }
+    const row = { ...edit, id: isNew ? slug(`${edit.brand} ${edit.name}`) : edit.id, old_price: edit.old_price || null, cost: edit.cost || null }
     const { error } = await supabase!.from('products').upsert(row)
     if (error) return setMsg(error.message + ' — se falar de coluna, rode supabase/painel-completo.sql')
     setEdit(null); setMsg(''); reload()
@@ -61,6 +61,7 @@ export default function ProductsTab({ stockMode = false }: { stockMode?: boolean
           <label>Nome<input value={edit.name} onChange={e => setEdit({ ...edit, name: e.target.value })} required /></label>
           <label>Preço (R$)<input type="number" step="0.01" min="0" value={edit.price} onChange={e => setEdit({ ...edit, price: Number(e.target.value) })} required /></label>
           <label>Preço antigo (promoção){off > 0 && <b> · {off}% off</b>}<input type="number" step="0.01" min="0" value={edit.old_price ?? ''} onChange={e => setEdit({ ...edit, old_price: e.target.value ? Number(e.target.value) : null })} /></label>
+          <label>Custo de compra (R$){edit.cost ? <b> · margem {Math.round((1 - edit.cost / (edit.price || 1)) * 100)}%</b> : null}<input type="number" step="0.01" min="0" value={edit.cost ?? ''} onChange={e => setEdit({ ...edit, cost: e.target.value ? Number(e.target.value) : null })} /></label>
           <label>Estoque<input type="number" min="0" value={edit.stock} onChange={e => setEdit({ ...edit, stock: Number(e.target.value) })} required /></label>
           <label>Categoria<select value={edit.category} onChange={e => setEdit({ ...edit, category: e.target.value as Category })}>{CATS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}</select></label>
           <label>Gênero<select value={edit.gender} onChange={e => setEdit({ ...edit, gender: e.target.value as Gender })}><option value="masculino">Masculino</option><option value="feminino">Feminino</option><option value="unissex">Unissex</option></select></label>
@@ -99,7 +100,7 @@ export default function ProductsTab({ stockMode = false }: { stockMode?: boolean
         {shown.map(p => (
           <div className={p.active === false ? 'adm-line off' : 'adm-line'} key={p.id}>
             {p.image ? <img className="adm-thumb" src={p.image} alt="" /> : <div className="adm-thumb" />}
-            <div className="grow"><small>{p.brand}{p.featured ? ' · ★ destaque' : ''}{p.active === false ? ' · oculto' : ''}</small><div>{p.name}</div>{p.old_price ? <small>{brl(p.old_price)} → {brl(p.price)}</small> : null}</div>
+            <div className="grow"><small>{p.brand}{p.featured ? ' · ★ destaque' : ''}{p.active === false ? ' · oculto' : ''}</small><div>{p.name}</div>{p.old_price ? <small>{brl(p.old_price)} → {brl(p.price)} </small> : null}{p.cost ? <small style={{ color: '#2d6a4f' }}>margem {Math.round((1 - p.cost / (p.price || 1)) * 100)}%</small> : null}</div>
             {!stockMode && <label>R$<input type="number" step="0.01" defaultValue={p.price} onBlur={e => Number(e.target.value) !== p.price && quick(p, { price: Number(e.target.value) })} /></label>}
             <label>Estoque<input type="number" min="0" defaultValue={p.stock} style={p.stock <= LOW_STOCK ? { borderColor: p.stock <= 0 ? '#b3261e' : '#a15c00' } : undefined} onBlur={e => Number(e.target.value) !== p.stock && quick(p, { stock: Number(e.target.value) })} /></label>
             {!stockMode && <>

@@ -17,6 +17,7 @@ export interface Product {
   featured?: boolean
   old_price?: number | null // preço antigo (mostra riscado + % off)
   description?: string | null
+  cost?: number | null // custo de compra (só painel)
 }
 
 export interface Settings {

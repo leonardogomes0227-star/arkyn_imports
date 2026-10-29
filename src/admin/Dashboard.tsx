@@ -17,9 +17,12 @@ export default function Dashboard({ go }: { go: (t: string) => void }) {
     paid.forEach(o => { const k = o.created_at.slice(0, 10); if (k in byDay) byDay[k] += Number(o.total) })
     const qty: Record<string, number> = {}
     paid.forEach(o => o.items.forEach(i => { qty[i.id] = (qty[i.id] ?? 0) + i.qty }))
+    let cost = 0, noCost = new Set<string>()
+    paid.forEach(o => o.items.forEach(i => { const c = products.find(x => x.id === i.id)?.cost; if (c) cost += c * i.qty; else noCost.add(i.id) }))
+    const itemsRevenue = paid.reduce((s, o) => s + Number(o.total) - Number(o.shipping || 0), 0)
     const top = Object.entries(qty).sort((a, b) => b[1] - a[1]).slice(0, 5)
-    return { inRange, paid, revenue, byDay, top, pending: inRange.filter(o => o.status === 'pending').length, toShip: orders.filter(o => o.status === 'paid' || o.status === 'separating').length }
-  }, [orders, days])
+    return { profit: itemsRevenue - cost, noCost: noCost.size, inRange, paid, revenue, byDay, top, pending: inRange.filter(o => o.status === 'pending').length, toShip: orders.filter(o => o.status === 'paid' || o.status === 'separating').length }
+  }, [orders, products, days])
 
   const out = products.filter(p => p.stock <= 0 && p.active !== false)
   const low = products.filter(p => p.stock > 0 && p.stock <= LOW_STOCK && p.active !== false)
@@ -38,6 +41,7 @@ export default function Dashboard({ go }: { go: (t: string) => void }) {
       <div className="adm-stats">
         <div><small>Faturamento (pago)</small><b>{brl(d.revenue)}</b></div>
         <div><small>Pedidos pagos</small><b>{d.paid.length}</b></div>
+        <div><small>Lucro estimado</small><b>{brl(d.profit)}</b>{d.noCost > 0 && <small style={{ textTransform: 'none', letterSpacing: 0 }}>{d.noCost} produto(s) sem custo cadastrado</small>}</div>
         <div><small>Ticket médio</small><b>{brl(d.paid.length ? d.revenue / d.paid.length : 0)}</b></div>
         <div><small>Aguardando pagamento</small><b>{d.pending}</b></div>
         <div onClick={() => go('orders')} className="clk"><small>A separar / enviar</small><b>{d.toShip}</b></div>
