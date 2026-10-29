@@ -25,7 +25,8 @@ export default function ProductsTab({ stockMode = false }: { stockMode?: boolean
   async function save(e: FormEvent) {
     e.preventDefault()
     if (!edit) return
-    const row = { ...edit, id: isNew ? slug(`${edit.brand} ${edit.name}`) : edit.id, old_price: edit.old_price || null, cost: edit.cost || null }
+    const row: Product = { ...edit, id: isNew ? slug(`${edit.brand} ${edit.name}`) : edit.id, old_price: edit.old_price || null }
+    if (row.cost) row.cost = Number(row.cost); else delete row.cost // só envia custo quando preenchido (coluna criada por supabase/ferramentas.sql)
     const { error } = await supabase!.from('products').upsert(row)
     if (error) return setMsg(error.message + ' — se falar de coluna, rode supabase/painel-completo.sql')
     setEdit(null); setMsg(''); reload()
