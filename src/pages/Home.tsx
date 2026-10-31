@@ -1,89 +1,84 @@
 import { Link } from 'react-router-dom'
-import HeroBottle from '../components/HeroBottle'
 import ProductCard from '../components/ProductCard'
-import { useStore } from '../lib/store'
+import { brl, useStore } from '../lib/store'
+import type { Category } from '../lib/types'
 
-const cats = [
-  ['masculino', 'Perfumes\nMasculinos', '♂'],
-  ['feminino', 'Perfumes\nFemininos', '♀'],
-  ['splash', 'Splash &\nMiniaturas', '✦'],
-  ['skincare', 'Skincare', '◌'],
+const GROUPS: [Category, string][] = [['masculino', 'Masculinos'], ['feminino', 'Femininos'], ['splash', 'Splash e miniaturas'], ['skincare', 'Skincare']]
+const STEPS = [
+  ['Escolha', 'Navegue pela coleção ou faça o quiz e monte a sua sacola.'],
+  ['Pague', 'Pix ou cartão de crédito, em ambiente seguro do Mercado Pago.'],
+  ['Receba', 'Retire em Coxim ou receba onde estiver, conforme a cidade.'],
 ]
-const steps = [
-  ['1', 'Escolha', 'Navegue pelo catálogo e adicione seus perfumes ao carrinho.'],
-  ['2', 'Pague', 'Finalize com Pix ou cartão de crédito pelo Mercado Pago.'],
-  ['3', 'Receba', 'Retire em Coxim ou receba na sua porta.'],
-]
+const ASK: [string, string][] = [['masculino', 'Masculino'], ['feminino', 'Feminino'], ['any', 'Tanto faz'], ['present', 'Presente']]
 
 export default function Home() {
   const { products, settings } = useStore()
+  const cover = products.find(p => p.id === 'lattafa-afeef-100ml')
+  const featured = [...products].filter(p => p.stock > 0)
+    .sort((a, b) => Number(!!b.featured) * 2 + Number(!!b.image) - (Number(!!a.featured) * 2 + Number(!!a.image))).slice(0, 8)
+
   return (
     <>
-      <section className="hero">
-        <div className="hero-in">
-        <div className="hero-text">
-          <small>PERFUMES ÁRABES E IMPORTADOS</small>
-          <h1>{settings.heroTitle || 'Seu cheiro, do jeito que você quer ser lembrado.'}</h1>
-          <p>Lattafa, Armaf, Maison Alhambra, French Avenue e mais, direto de Coxim - MS.</p>
-          <div className="hero-btns"><Link to="/quiz" className="btn dark">DESCOBRIR MEU PERFUME</Link><Link to="/catalogo" className="btn ghost">VER CATÁLOGO</Link></div>
+      <section className="cover">
+        <div className="cover-text">
+          <p className="eyebrow">Perfumaria árabe e importada · Coxim – MS</p>
+          <h1>{settings.heroTitle || <>Seu cheiro, do jeito que você quer <em>ser lembrado.</em></>}</h1>
+          <p className="lead">Lattafa, Armaf, Maison Alhambra, French Avenue e outras casas, com Pix ou cartão e retirada em Coxim.</p>
+          <div className="cover-cta">
+            <Link to="/quiz" className="btn gold">Descobrir meu perfume</Link>
+            <Link to="/catalogo" className="textlink">Ver a coleção →</Link>
+          </div>
         </div>
-        <HeroBottle />
-        </div>
+        <figure className="cover-photo">
+          <img src="/capa.jpg" alt="Perfume Lattafa Afeef na mão, em frente à prateleira da loja" />
+          {cover && <figcaption><Link to={`/produto/${cover.id}`}><span>{cover.brand} {cover.name}</span><b>{brl(cover.price)} →</b></Link></figcaption>}
+        </figure>
       </section>
 
-      <section className="cats">
-        {cats.map(([k, l, i]) => (
-          <Link key={k} to={`/catalogo?cat=${k}`} className="cat"><span>{i}</span>{l.split('\n').map(t => <em key={t}>{t}</em>)}</Link>
-        ))}
+      <section className="section wide">
+        <div className="sec-head"><h2>Em destaque</h2><Link to="/catalogo" className="textlink">Ver os {products.length} perfumes →</Link></div>
+        <div className="grid">{featured.map(p => <ProductCard key={p.id} p={p} />)}</div>
       </section>
 
-      <section className="section">
-        <div className="sec-head"><h2>COMPRE POR OCASIÃO</h2></div>
-        <div className="occ">
-          {[['doce', 'Encontro', 'Doces e envolventes'], ['noite', 'Noite', 'Fragrâncias intensas'], ['calor', 'Calor', 'Frescos e leves'], ['dia', 'Dia a dia', 'Versáteis para o trabalho']].map(([t, n, d]) => (
-            <Link key={n} to={`/catalogo?tag=${t}`}><b>{n}</b><small>{d}</small></Link>
-          ))}
-        </div>
-      </section>
-
-      <section className="section">
-        <div className="sec-head"><h2>DESTAQUES</h2><Link to="/catalogo">VER TODOS →</Link></div>
-        <div className="grid">{[...products].sort((a, b) => Number(!!b.featured) * 2 + Number(!!b.image) - (Number(!!a.featured) * 2 + Number(!!a.image))).slice(0, 10).map(p => <ProductCard key={p.id} p={p} />)}</div>
-      </section>
-
-      <section className="section promos">
-        <div className="promo darkp">
-          <small>PERFUMES MASCULINOS</small><h3>Encontre sua assinatura.</h3>
-          <p>Asad, Fakhar, Salvo e Liquid Brun: as fragrâncias mais pedidas.</p>
-          <Link to="/catalogo?cat=masculino" className="btn light">VER MASCULINOS →</Link>
-          <img src="/produtos/lattafa-asad-elixir-100ml.jpg" alt="Lattafa Asad Elixir" loading="lazy" />
-        </div>
-        <div className="promo beige">
-          <small>PERFUMES FEMININOS</small><h3>Presentes que falam por você.</h3>
-          <p>Afeef, Atheeri, Tharwah e outras queridinhas.</p>
-          <Link to="/catalogo?cat=feminino" className="btn light">VER FEMININOS →</Link>
-          <img src="/produtos/lattafa-afeef-100ml.jpg" alt="Lattafa Afeef" loading="lazy" />
+      <section className="ask">
+        <div className="ask-in">
+          <div>
+            <h2>Qual é o seu cheiro?</h2>
+            <p>Cinco perguntas rápidas e três indicações da coleção. Comece por aqui:</p>
+          </div>
+          <div className="ask-q">
+            <span>Pra quem é o perfume?</span>
+            <div>{ASK.map(([v, l]) => <Link key={v} to={`/quiz?p=${v}`}>{l}</Link>)}</div>
+          </div>
         </div>
       </section>
 
-      <section className="section">
-        <div className="quiz-cta">
-          <div><small>QUIZ</small><h3>Qual é o seu cheiro?</h3><p>Responda 5 perguntas e receba 3 indicações para você.</p></div>
-          <Link to="/quiz" className="btn light">FAZER O QUIZ →</Link>
+      <section className="section wide">
+        <div className="sec-head"><h2>Tabela de preços</h2><span className="muted">Valores de hoje, à vista no Pix ou no cartão</span></div>
+        <div className="pricelist">
+          {GROUPS.map(([cat, title]) => {
+            const list = products.filter(p => p.category === cat && p.active !== false).sort((a, b) => a.brand.localeCompare(b.brand))
+            return list.length ? (
+              <div key={cat}>
+                <h3>{title}</h3>
+                {list.map(p => (
+                  <Link key={p.id} to={`/produto/${p.id}`} className="prow">
+                    <span className="pn"><i>{p.brand}</i> {p.name}</span>
+                    <span className="dots" />
+                    <b>{p.stock > 0 ? brl(p.price) : 'Esgotado'}</b>
+                  </Link>
+                ))}
+              </div>
+            ) : null
+          })}
         </div>
       </section>
 
-      <section className="section">
-        <div className="sec-head"><h2>COMO COMPRAR</h2></div>
-        <div className="steps">
-          {steps.map(([n, t, d]) => <div key={n} className="step"><span>{n}</span><h3>{t}</h3><p>{d}</p></div>)}
-        </div>
-      </section>
-
-      <section className="benefits">
-        <div><b>Pix e cartão</b><small>Pagamento seguro</small></div>
-        <div><b>Retirada em Coxim</b><small>{settings.pickupAddress}</small></div>
-        <div><b>Atendimento no WhatsApp</b><small>Tire dúvidas antes de comprar</small></div>
+      <section className="section wide how">
+        <div className="sec-head"><h2>Como comprar</h2></div>
+        <ol>
+          {STEPS.map(([t, d], i) => <li key={t}><span>{i + 1}</span><h3>{t}</h3><p>{d}</p></li>)}
+        </ol>
       </section>
     </>
   )

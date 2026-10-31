@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import ProductCard from '../components/ProductCard'
 import { brl, useStore } from '../lib/store'
 import type { Product } from '../lib/types'
@@ -17,7 +17,9 @@ const QUESTIONS: Q[] = [
 
 export default function Quiz() {
   const { products, settings } = useStore()
-  const [answers, setAnswers] = useState<string[][]>([])
+  const [sp] = useSearchParams()
+  const start = sp.get('p')
+  const [answers, setAnswers] = useState<string[][]>(start && ['masculino', 'feminino', 'any', 'present'].includes(start) ? [[start]] : [])
   const [pick, setPick] = useState<string[]>([])
   const step = answers.length
   const done = step >= QUESTIONS.length

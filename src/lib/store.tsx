@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
-import { supabase } from './supabase'
+import { key, url } from './env'
 import { DEFAULT_SETTINGS, SEED_PRODUCTS } from './seed'
 import type { CartItem, Product, Settings } from './types'
 
@@ -26,12 +26,13 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     try { return JSON.parse(localStorage.getItem('cart') || '[]') } catch { return [] }
   })
 
+  // A vitrine só lê dados públicos: fetch direto na API REST (evita carregar a biblioteca inteira do Supabase)
   useEffect(() => {
-    if (!supabase) return
-    supabase.from('products').select('*').then(({ data }) => { if (data?.length) setProducts((data as Product[]).filter(p => p.active !== false)) })
-    supabase.from('settings').select('value').eq('id', 1).maybeSingle().then(({ data }) => {
-      if (data?.value) setSettings({ ...DEFAULT_SETTINGS, ...(data.value as Settings) })
-    })
+    if (!url || !key) return
+    const headers = { apikey: key, Authorization: `Bearer ${key}` }
+    const get = (path: string) => fetch(`${url}/rest/v1/${path}`, { headers }).then(r => (r.ok ? r.json() : null)).catch(() => null)
+    get('products?select=*').then((data: Product[] | null) => { if (data?.length) setProducts(data.filter(p => p.active !== false)) })
+    get('settings?id=eq.1&select=value').then((data: { value: Settings }[] | null) => { if (data?.[0]?.value) setSettings({ ...DEFAULT_SETTINGS, ...data[0].value }) })
   }, [])
 
   useEffect(() => { try { localStorage.setItem('cart', JSON.stringify(cart)) } catch { /* ignore */ } }, [cart])

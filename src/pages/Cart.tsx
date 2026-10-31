@@ -21,7 +21,7 @@ export default function Cart() {
   const discount = cp ? Math.min(cp.discount, subtotal) : 0
   const total = subtotal - discount + shipping
 
-  if (!lines.length) return <section className="section"><h2>Carrinho</h2><p className="muted">Seu carrinho está vazio.</p><Link to="/catalogo" className="btn">Ver catálogo</Link></section>
+  if (!lines.length) return <section className="section"><h2>Sacola</h2><p className="muted">Seu carrinho está vazio.</p><Link to="/catalogo" className="btn">Ver catálogo</Link></section>
 
   const summary = lines.map(l => `${l.qty}x ${l.p.brand} ${l.p.name}`).join('\n')
   const wa = `https://wa.me/${settings.whatsapp}?text=${encodeURIComponent(`Olá! Quero comprar:\n${summary}\nTotal: ${brl(total)}\nEntrega: ${method === 'pickup' ? 'Retirada' : method}\nNome: ${name}`)}`
@@ -51,7 +51,7 @@ export default function Cart() {
 
   return (
     <section className="section">
-      <h2>Carrinho</h2>
+      <h2>Sacola</h2>
       {lines.map(({ p, qty }) => (
         <div className="line" key={p.id}>
           <div><small>{p.brand}</small><h3>{p.name}</h3></div>

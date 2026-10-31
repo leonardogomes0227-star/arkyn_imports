@@ -10,7 +10,7 @@ export default function CartDrawer() {
     <>
       <div className={open ? 'scrim on' : 'scrim'} onClick={() => setOpen(false)} />
       <aside className={open ? 'drawer on' : 'drawer'} aria-hidden={!open}>
-        <div className="drawer-head"><b>Seu carrinho</b><button className="link" onClick={() => setOpen(false)}>Fechar ✕</button></div>
+        <div className="drawer-head"><b>Sua sacola</b><button className="link" onClick={() => setOpen(false)}>Fechar ✕</button></div>
         {goal > 0 && lines.length > 0 && (
           <div className="ship">
             <p>{subtotal >= goal ? 'Você ganhou frete grátis!' : `Faltam ${brl(goal - subtotal)} para você ganhar frete grátis.`}</p>
@@ -18,7 +18,7 @@ export default function CartDrawer() {
           </div>
         )}
         <div className="drawer-body">
-          {!lines.length && <p className="muted">Seu carrinho está vazio.</p>}
+          {!lines.length && <p className="muted">Sua sacola está vazio.</p>}
           {lines.map(({ p, qty }) => (
             <div className="dline" key={p.id}>
               {p.image ? <img src={p.image} alt="" /> : <div className="ph" />}

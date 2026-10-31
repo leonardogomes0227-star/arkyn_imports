@@ -1,5 +1,5 @@
 import { Link, useParams } from 'react-router-dom'
-import Bottle from '../components/Bottle'
+import Placeholder from '../components/Placeholder'
 import ProductCard from '../components/ProductCard'
 import { brl, useStore } from '../lib/store'
 
@@ -14,7 +14,7 @@ export default function Product() {
     <section className="section">
       <p className="crumbs"><Link to="/catalogo">Catálogo</Link> / {p.brand}</p>
       <div className="pdp">
-        <div className="pdp-img">{p.image ? <img src={p.image} alt={p.name} /> : <Bottle id={p.id} brand={p.brand} big />}</div>
+        <div className="pdp-img">{p.image ? <img src={p.image} alt={p.name} /> : <Placeholder brand={p.brand} />}</div>
         <div className="pdp-info">
           <small>{p.brand}</small>
           <h1>{p.name}</h1>
