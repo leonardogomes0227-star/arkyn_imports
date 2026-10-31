@@ -28,7 +28,7 @@ export default function Home() {
   const featured = [...inStock].sort((a, b) => rank(b) - rank(a)).slice(0, 8)
   const shown = new Set(featured.map(p => p.id))
   // prateleiras por categoria: primeiro o que ainda não apareceu em destaque
-  const by = (c: Category) => inStock.filter(p => p.category === c).sort((a, b) => Number(shown.has(a.id)) - Number(shown.has(b.id)) || rank(b) - rank(a)).slice(0, 4)
+  const by = (c: Category) => inStock.filter(p => p.category === c && !!p.image).sort((a, b) => Number(shown.has(a.id)) - Number(shown.has(b.id)) || rank(b) - rank(a)).slice(0, 4)
   const brands = [...new Set(products.filter(p => p.category === 'masculino' || p.category === 'feminino').map(p => p.brand))].sort()
 
   return (

@@ -1,11 +1,11 @@
 :root {
   --bg:#f4efe6; --ink:#17130e; --muted:#7a7164; --line:#dcd2bf; --beige:#e7dfcf;
   --gold:#a8832d; --gold-l:#c9a24a; --dark:#0e0c09;
-  --serif:'Cormorant Garamond',Georgia,serif; --sans:'Jost',system-ui,sans-serif;
+  --serif:'Montserrat',system-ui,sans-serif; --sans:'Montserrat',system-ui,sans-serif;
 }
 * { box-sizing:border-box; margin:0 }
 html { scroll-behavior:smooth }
-body { background:var(--bg); color:var(--ink); font-family:var(--sans); font-size:16px; line-height:1.55; -webkit-font-smoothing:antialiased }
+body { background:var(--bg); color:var(--ink); font-family:var(--sans); font-size:15px; line-height:1.55; -webkit-font-smoothing:antialiased }
 a { color:inherit; text-decoration:none }
 h1,h2,h3 { font-family:var(--serif); font-weight:500; line-height:1.05; font-variant-numeric:lining-nums }
 img { display:block; max-width:100% }
@@ -237,3 +237,26 @@ input:focus,select:focus,textarea:focus { outline:0; border-bottom-color:var(--i
   .tiles { grid-template-columns:1fr 1fr } .how ol { grid-template-columns:1fr; gap:20px }
 }
 @media (max-width:560px) { .tile span { font-size:22px } .quiztile b { font-size:26px } .topbar { gap:6px 20px; font-size:10px } }
+
+/* ===== tipografia de loja (sans-serif) ===== */
+h1,h2,h3 { font-weight:700; letter-spacing:-.01em; line-height:1.15; font-variant-numeric:normal }
+.section > h2 { font-size:28px; text-transform:uppercase; letter-spacing:.02em }
+.sec-head h2 { font-size:22px; text-transform:uppercase; letter-spacing:.04em }
+.banner h1 { font-size:clamp(30px,3.8vw,54px); line-height:1.1; max-width:13em }
+.banner h1 em,.cover h1 em { font-style:normal; color:var(--gold-l) }
+.info h3 { font-size:15px; font-weight:600; line-height:1.3; letter-spacing:0 }
+.info small { font-weight:600; letter-spacing:.14em; font-size:10.5px }
+.card .pr strong { font-size:17px; font-weight:700 }
+.logo b { font-family:var(--sans); font-weight:700; letter-spacing:.22em; font-size:21px }
+.logo small { letter-spacing:.5em; font-weight:500; font-size:8.5px }
+.ph-img span { font-family:var(--sans); font-style:normal; font-weight:600; font-size:15px; letter-spacing:.06em; text-transform:uppercase; color:var(--gold) }
+.tile span { font-size:19px; font-weight:700; letter-spacing:.02em; text-transform:uppercase }
+.quiztile b { font-size:25px; font-weight:700; line-height:1.15; text-transform:uppercase }
+.how li span { font-style:normal; font-weight:700; font-size:44px; color:var(--gold) } .how h3 { font-size:17px; text-transform:uppercase; letter-spacing:.04em }
+.pdp-info h1 { font-size:clamp(26px,3vw,38px) } .price { font-size:26px; font-weight:700 }
+.quiz .q { font-size:26px } .line h3 { font-size:16px; font-weight:600 } .total { font-size:24px }
+.drawer-head { font-family:var(--sans); font-size:18px; font-weight:700; text-transform:uppercase; letter-spacing:.04em }
+.wordmark { font-family:var(--sans); font-weight:700; font-size:34px; letter-spacing:.24em }
+.wm-sub { letter-spacing:.6em; font-size:10px }
+.cart > h2,.quiz > h2 { font-size:28px }
+.banner-photo figcaption { font-weight:500 }
