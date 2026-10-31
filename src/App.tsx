@@ -9,12 +9,13 @@ import Quiz from './pages/Quiz'
 const Admin = lazy(() => import('./pages/Admin'))
 
 export default function App() {
-  if (useLocation().pathname.startsWith('/admin')) return <Suspense fallback={null}><Admin /></Suspense>
+  const loc = useLocation()
+  if (loc.pathname.startsWith('/admin')) return <Suspense fallback={null}><Admin /></Suspense>
   return (
     <Layout>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/catalogo" element={<Catalog />} />
+        <Route path="/catalogo" element={<Catalog key={loc.search} />} />
         <Route path="/produto/:id" element={<Product />} />
         <Route path="/quiz" element={<Quiz />} />
         <Route path="/carrinho" element={<Cart />} />

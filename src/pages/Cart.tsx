@@ -50,7 +50,7 @@ export default function Cart() {
   }
 
   return (
-    <section className="section">
+    <section className="section cart">
       <h2>Sacola</h2>
       {lines.map(({ p, qty }) => (
         <div className="line" key={p.id}>

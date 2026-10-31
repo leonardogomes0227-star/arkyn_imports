@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import CartDrawer from './CartDrawer'
 import { useStore } from '../lib/store'
 
@@ -15,23 +15,33 @@ export function Logo({ light = false }: { light?: boolean }) {
 
 export default function Layout({ children }: { children: ReactNode }) {
   const { count, settings, setOpen } = useStore()
+  const go = useNavigate()
+  const [term, setTerm] = useState('')
   return (
     <>
-      <div className="topbar">{settings.announcement || 'Pix e cartão de crédito · Atendimento em Coxim – MS'}</div>
+      <div className="topbar">{settings.announcement || <><span>Pix e cartão de crédito</span><span>Retirada em Coxim – MS</span><span>Atendimento pelo WhatsApp</span></>}</div>
       <header className="header">
         <Logo />
-        <nav>
-          <Link to="/catalogo">Coleção</Link>
-          <Link to="/catalogo?cat=masculino">Masculinos</Link>
-          <Link to="/catalogo?cat=feminino">Femininos</Link>
-          <Link to="/catalogo?cat=splash">Splash</Link>
-          <Link to="/quiz">Qual é o seu cheiro?</Link>
-        </nav>
+        <form className="search" role="search" onSubmit={e => { e.preventDefault(); go(`/catalogo?q=${encodeURIComponent(term.trim())}`) }}>
+          <input value={term} onChange={e => setTerm(e.target.value)} placeholder="Busque por perfume ou marca" aria-label="Buscar" />
+          <button aria-label="Buscar"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg></button>
+        </form>
         <div className="head-r">
           <Link to="/admin" className="adm-btn">Admin</Link>
-          <button className="cart-link" aria-label="Abrir sacola" onClick={() => setOpen(true)}>Sacola{count > 0 && <em>{count}</em>}</button>
+          <button className="cart-link" aria-label="Abrir sacola" onClick={() => setOpen(true)}>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M6 7h12l-1 13H7L6 7z" /><path d="M9 7a3 3 0 0 1 6 0" /></svg>
+            Sacola{count > 0 && <em>{count}</em>}
+          </button>
         </div>
       </header>
+      <nav className="catnav">
+        <Link to="/catalogo?cat=masculino">Masculinos</Link>
+        <Link to="/catalogo?cat=feminino">Femininos</Link>
+        <Link to="/catalogo?cat=splash">Splash e miniaturas</Link>
+        <Link to="/catalogo?cat=skincare">Skincare</Link>
+        <Link to="/catalogo">Todos os perfumes</Link>
+        <Link to="/quiz" className="hl">Qual é o seu cheiro?</Link>
+      </nav>
       <main>{children}</main>
       <CartDrawer />
       <footer className="footer">

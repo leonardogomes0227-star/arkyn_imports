@@ -16,14 +16,12 @@ export default function ProductCard({ p }: { p: Product }) {
         <small>{p.brand}</small>
         <Link to={`/produto/${p.id}`}><h3>{p.name}</h3></Link>
         {p.stock > 0 && p.stock <= 3 && <span className="low">{p.stock === 1 ? 'Última peça' : `Restam ${p.stock}`}</span>}
-        <div className="row">
-          <div>
-            {sale && <em className="old">{brl(p.old_price!)}</em>}
-            <strong>{p.stock > 0 ? brl(p.price) : 'Esgotado'}</strong>
-            {p.stock > 0 && settings.installments > 1 && <em className="inst">até {settings.installments}x de {brl(p.price / settings.installments)}</em>}
-          </div>
-          <button className="add" disabled={p.stock <= 0} onClick={() => add(p.id)}>Adicionar</button>
+        <div className="pr">
+          {sale && <em className="old">{brl(p.old_price!)}</em>}
+          <strong>{p.stock > 0 ? brl(p.price) : 'Esgotado'}</strong>
+          {p.stock > 0 && settings.installments > 1 && <em className="inst">ou até {settings.installments}x de {brl(p.price / settings.installments)}</em>}
         </div>
+        <button className="buy" disabled={p.stock <= 0} onClick={() => add(p.id)}>{p.stock > 0 ? 'Comprar' : 'Indisponível'}</button>
       </div>
     </article>
   )
