@@ -41,7 +41,7 @@ export default function Catalog() {
       <p className="crumbs">Início / {title}</p>
       <div className="shop">
         <aside className={open ? 'side on' : 'side'}>
-          <div className="side-head"><b>Filtros</b>{any && <button className="link" onClick={() => { setCat(''); setBrand(''); setTag(''); setMax(0); setStockOnly(false) }}>Limpar tudo</button>}</div>
+          <div className="side-head"><b>Filtros</b>{any && <button className="link" onClick={() => { setCat(''); setBrand(''); setTag(''); setMax(0); setStockOnly(false) }}>Limpar tudo</button>}<button className="side-x" aria-label="Fechar filtros" onClick={() => setOpen(false)}>✕</button></div>
           <h4>Categoria</h4>{CATS.map(([k, l]) => opt(cat === k, l, count('cat', p => p.category === k), () => setCat(cat === k ? '' : k)))}
           <h4>Família olfativa</h4>{PERFIS.map(t => opt(tag === t, cap(t), count('tag', p => !!p.tags?.includes(t)), () => setTag(tag === t ? '' : t)))}
           <h4>Marca</h4>{brands.map(b => opt(brand === b, b, count('brand', p => p.brand === b), () => setBrand(brand === b ? '' : b)))}
