@@ -21,6 +21,20 @@ const WITH_PHOTO = new Set([
   'maison-alhambra-salvo-elixir-60ml',
 ])
 
+// Fotos recortadas (sem fundo) em public/produtos-sf/<id>.webp; as demais usam a foto original
+const CLEAN = new Set([
+  'al-wataniah-attar-al-wesal-gold-100ml',
+  'armaf-club-de-nuit-maleka-105ml',
+  'french-avenue-liquid-brun-100ml',
+  'jacques-bogart-silver-scent-intense-100ml',
+  'lattafa-atheeri-100ml',
+  'lattafa-eclaire-100ml',
+  'lattafa-fakhar-black-100ml',
+  'lattafa-fakhar-rose-100ml',
+  'lattafa-tharwah-gold-100ml',
+  'maison-alhambra-no-2-men-80ml',
+])
+
 const TAGS: Record<string, string[]> = {
   'armaf-club-de-nuit-intense-man-edt-105ml': ['amadeirado', 'intenso', 'noite'],
   'jacques-bogart-silver-scent-intense-100ml': ['fresco', 'amadeirado', 'dia'],
@@ -49,7 +63,7 @@ const TAGS: Record<string, string[]> = {
 }
 
 const p = (id: string, brand: string, name: string, price: number, category: Category, gender: Gender): Product =>
-  ({ id, brand, name, price, stock: 5, category, gender, family: '', notes: [], tags: TAGS[id] ?? [], image: WITH_PHOTO.has(id) ? `/produtos/${id}.jpg` : '' })
+  ({ id, brand, name, price, stock: 5, category, gender, family: '', notes: [], tags: TAGS[id] ?? [], image: CLEAN.has(id) ? `/produtos-sf/${id}.webp` : WITH_PHOTO.has(id) ? `/produtos/${id}.jpg` : '' })
 
 export const SEED_PRODUCTS: Product[] = [
   p('armaf-club-de-nuit-intense-man-edt-105ml', 'Armaf', 'Club de Nuit Intense Man EDT 105ml', 259.90, 'masculino', 'masculino'),
