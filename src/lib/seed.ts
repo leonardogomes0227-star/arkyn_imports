@@ -70,8 +70,29 @@ const TAGS: Record<string, string[]> = {
   'ard-al-zaafaran-sahebat-al-jamal-70ml': ['doce', 'floral', 'dia'],
 }
 
+// Notas olfativas (resumo dos anúncios dos revendedores); produtos sem lista clara ficam de fora
+const NOTES: Record<string, string[]> = {
+  'armaf-club-de-nuit-intense-man-edt-105ml': ['Limão', 'Abacaxi', 'Bergamota', 'Jasmim', 'Almíscar', 'Baunilha'],
+  'jacques-bogart-silver-scent-intense-100ml': ['Flor de laranjeira', 'Limão siciliano', 'Lavanda', 'Cardamomo', 'Fava tonka', 'Oud'],
+  'lattafa-the-kingdom-masculino-100ml': ['Lavanda', 'Hortelã', 'Sálvia', 'Baunilha', 'Tabaco', 'Fava tonka'],
+  'maison-alhambra-victorioso-nero-100ml': ['Limão', 'Pimenta rosa', 'Lavanda', 'Incenso', 'Baunilha', 'Âmbar'],
+  'lattafa-fakhar-extrait-gold-100ml': ['Maçã', 'Gengibre', 'Bergamota', 'Lavanda', 'Fava tonka', 'Vetiver'],
+  'lattafa-al-noble-wazeer-100ml': ['Hortelã', 'Bergamota', 'Íris', 'Chocolate amargo', 'Baunilha', 'Sândalo'],
+  'french-avenue-liquid-brun-100ml': ['Canela', 'Bergamota', 'Cardamomo', 'Baunilha', 'Praliné', 'Almíscar'],
+  'lattafa-asad-elixir-100ml': ['Pimenta rosa', 'Açafrão', 'Toranja', 'Tabaco', 'Baunilha', 'Patchouli'],
+  'maison-alhambra-salvo-elixir-60ml': ['Canela', 'Noz-moscada', 'Cardamomo', 'Toranja', 'Lavanda', 'Âmbar'],
+  'french-avenue-vulcan-feu-100ml': ['Manga', 'Limão', 'Gengibre', 'Jasmim', 'Fava tonka', 'Cedro'],
+  'maison-alhambra-pink-eclipse-100ml': ['Bergamota', 'Tangerina', 'Pera', 'Jasmim', 'Baunilha', 'Almíscar'],
+  'lattafa-dalal-100ml': ['Tangerina', 'Maçã', 'Jasmim', 'Baunilha', 'Almíscar'],
+  'lattafa-fakhar-rose-100ml': ['Romã', 'Tuberosa', 'Jasmim', 'Rosa', 'Peônia'],
+  'armaf-club-de-nuit-maleka-105ml': ['Lichia', 'Bergamota', 'Pimenta rosa', 'Praliné', 'Sândalo', 'Âmbar'],
+  'lattafa-atheeri-100ml': ['Maracujá', 'Orquídea', 'Jasmim', 'Baunilha', 'Madeira âmbar'],
+  'lattafa-eclaire-100ml': ['Caramelo', 'Leite', 'Mel', 'Baunilha', 'Praliné', 'Almíscar'],
+  'lattafa-afeef-100ml': ['Bergamota', 'Pimenta rosa', 'Pêssego', 'Jasmim', 'Sândalo', 'Âmbar'],
+}
+
 const p = (id: string, brand: string, name: string, price: number, category: Category, gender: Gender): Product =>
-  ({ id, brand, name, price, stock: 5, category, gender, family: '', notes: [], tags: TAGS[id] ?? [], image: PACKSHOT.has(id) ? `/produtos-net/${id}.webp` : WITH_PHOTO.has(id) ? `/produtos/${id}.jpg` : '' })
+  ({ id, brand, name, price, stock: 5, category, gender, family: '', notes: NOTES[id] ?? [], tags: TAGS[id] ?? [], image: PACKSHOT.has(id) ? `/produtos-net/${id}.webp` : WITH_PHOTO.has(id) ? `/produtos/${id}.jpg` : '' })
 
 export const SEED_PRODUCTS: Product[] = [
   p('armaf-club-de-nuit-intense-man-edt-105ml', 'Armaf', 'Club de Nuit Intense Man EDT 105ml', 259.90, 'masculino', 'masculino'),
