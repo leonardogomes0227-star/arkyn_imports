@@ -76,7 +76,7 @@ input:focus,select:focus,textarea:focus { outline:0; border-color:var(--ink) }
 .thumb { position:relative; display:block; aspect-ratio:1/1; border-radius:8px; overflow:hidden; background:#f3f4f6 }
 .thumb img { width:100%; height:100%; object-fit:cover; transition:transform .5s }
 .card:hover .thumb img { transform:scale(1.04) }
-.thumb.clean { background:#f3f4f6 } .thumb.clean img { object-fit:contain; padding:6%; transition:transform .5s cubic-bezier(.22,1,.36,1) }
+.thumb.clean { background:#f3f4f6 } .thumb.clean img { object-fit:contain; mix-blend-mode:multiply; transition:transform .5s cubic-bezier(.22,1,.36,1) }
 .notes { position:absolute; inset:auto 0 0 0; display:flex; flex-wrap:wrap; gap:6px; padding:34px 14px 14px; background:linear-gradient(to top,rgba(8,8,8,.78),rgba(8,8,8,0)); color:#fff; opacity:0; transform:translateY(8px); transition:opacity .3s,transform .3s; pointer-events:none }
 .notes b { flex-basis:100%; font-size:10px; letter-spacing:.14em; text-transform:uppercase; opacity:.75; font-weight:600 }
 .notes i { font-style:normal; font-size:12px; background:rgba(255,255,255,.16); backdrop-filter:blur(6px); border:1px solid rgba(255,255,255,.25); border-radius:99px; padding:3px 10px; text-transform:capitalize }
@@ -221,4 +221,4 @@ select { max-width:100% } .form select,.form input { width:100%; min-width:0 }
 }
 @media (max-width:860px) { .side .btn.side-close { border-radius:0; padding:16px } }
 
-.pdp-img { background:#f3f4f6 }
+.pdp-img { background:#f3f4f6 } .pdp-img img[src*='-net/'] { object-fit:contain; mix-blend-mode:multiply }

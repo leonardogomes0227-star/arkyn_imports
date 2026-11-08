@@ -7,7 +7,7 @@ export default function ProductCard({ p }: { p: Product }) {
   const { add, settings } = useStore()
   const sale = !!p.old_price && p.old_price > p.price && p.stock > 0
   const n = settings.installments
-  const clean = !!p.image?.includes('-sf/')
+  const clean = !!p.image?.includes('-net/')
   const hint = p.notes?.length ? p.notes : [p.family, ...(p.tags ?? [])].filter(Boolean) as string[]
   return (
     <article className="card">
