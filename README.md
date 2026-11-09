@@ -13,3 +13,4 @@ E-commerce de perfumes (React + Vite + TS, Supabase opcional, Mercado Pago via f
 2. Authentication > Providers > Email: desative "Allow new users to sign up"; em Users, crie o usuário admin.
 3. Na Vercel, cadastre `VITE_SUPABASE_URL` e `VITE_SUPABASE_ANON_KEY` (e as variáveis do `.env.example`) e faça Redeploy.
 4. Entre em `/admin`, aba Produtos > "Importar produtos de exemplo"; depois edite preço, estoque e fotos.
+
