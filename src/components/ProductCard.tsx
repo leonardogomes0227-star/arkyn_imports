@@ -1,41 +1,69 @@
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Placeholder from './Placeholder'
+import { useToast } from './Toast'
 import { brl, useStore } from '../lib/store'
 import { noteGradient } from '../lib/noteColors'
-import { useToast } from './Toast'
 import type { Product } from '../lib/types'
+
+export function ProductSkeleton({ n = 4 }: { n?: number }) {
+  return <>{Array.from({ length: n }, (_, i) => (
+    <div className="card sk" key={i} aria-hidden="true"><div className="thumb ax-skel" /><div className="info"><span className="ax-skel sk-l s" /><span className="ax-skel sk-l m" /><span className="ax-skel sk-l p" /></div></div>
+  ))}</>
+}
 
 export default function ProductCard({ p }: { p: Product }) {
   const { add, settings, setOpen } = useStore()
   const { toast } = useToast()
-  const sale = !!p.old_price && p.old_price > p.price && p.stock > 0
+  const [loaded, setLoaded] = useState(false)
+  const [done, setDone] = useState(false)
+  const img = useRef<HTMLImageElement>(null)
+  useEffect(() => { if (img.current?.complete) setLoaded(true) }, [])
+
+  const out = p.stock <= 0
+  const sale = !!p.old_price && p.old_price > p.price && !out
   const n = settings.installments
   const clean = !!p.image?.includes('-net/')
+  const second = p.images?.find(x => x && x !== p.image) // segunda foto real do cadastro, se existir
   const hint = p.notes?.length ? p.notes : [p.family, ...(p.tags ?? [])].filter(Boolean) as string[]
+  const quick = (e: React.MouseEvent) => {
+    e.preventDefault()
+    add(p.id, false)
+    setDone(true); window.setTimeout(() => setDone(false), 1400)
+    toast(`${p.name} adicionado à sacola`, { label: 'Ver sacola', run: () => setOpen(true) })
+  }
+
   return (
-    <article className="card">
-      <Link to={`/produto/${p.id}`} className={`thumb${clean ? ' clean' : ''}`}>
+    <article className={out ? 'card is-out' : 'card'}>
+      <Link to={`/produto/${p.id}`} className={`thumb${clean ? ' clean' : ''}${loaded || !p.image ? ' ready' : ''}`} aria-label={`${p.brand} ${p.name}`}>
+        {!loaded && p.image && <span className="ax-skel thumb-skel" />}
         {sale && <span className="off">-{Math.round((1 - p.price / p.old_price!) * 100)}%</span>}
-        {p.image ? <img src={p.image} alt={`${p.brand} ${p.name}`} loading="lazy" /> : <Placeholder brand={p.brand} />}
-        {p.stock > 0 && (
-          <button className="quick" aria-label="Adicionar à sacola" title="Adicionar à sacola" onClick={e => { e.preventDefault(); add(p.id, false); toast(`${p.name} adicionado à sacola`, { label: 'Ver sacola', run: () => setOpen(true) }) }}>+</button>
+        {p.image ? <img ref={img} className="m" src={p.image} width={800} height={800} alt={`${p.brand} ${p.name}`} loading="lazy" decoding="async" onLoad={() => setLoaded(true)} /> : <Placeholder brand={p.brand} />}
+        {second && <img className="alt" src={second} width={800} height={800} alt="" loading="lazy" decoding="async" />}
+        {out && <span className="sold">Esgotado</span>}
+        {!out && (
+          <button type="button" className={done ? 'quick done' : 'quick'} aria-label={`Adicionar ${p.name} à sacola`} onClick={quick}>
+            {done
+              ? <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+              : <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" /></svg>}
+          </button>
         )}
-        {!!hint.length && (
+        {!!hint.length && !out && (
           <span className="notes" aria-hidden="true">
             <b>{p.notes?.length ? 'Notas' : 'Perfil'}</b>
-            {hint.slice(0, 6).map(n => <i key={n}>{p.notes?.length ? <u style={{ background: noteGradient(n) }} /> : null}{n}</i>)}
+            {hint.slice(0, 6).map(x => <i key={x}>{p.notes?.length ? <u style={{ background: noteGradient(x) }} /> : null}{x}</i>)}
           </span>
         )}
       </Link>
       <div className="info">
         <small>{p.brand}</small>
         <Link to={`/produto/${p.id}`}><h3>{p.name}</h3></Link>
-        {p.stock > 0 && p.stock <= 3 && <span className="low">{p.stock === 1 ? 'Última unidade' : `Restam ${p.stock} unidades`}</span>}
+        {!out && p.stock <= 3 && <span className="low">{p.stock === 1 ? 'Última unidade' : `Restam ${p.stock} unidades`}</span>}
         <div className="pr">
-          {p.stock > 0 ? <>
+          {!out ? <>
             <span className="pline">{sale && <em className="old">{brl(p.old_price!)}</em>}<strong>{brl(p.price)}</strong></span>
             {n > 1 && <em className="inst">ou {n}x de {brl(p.price / n)} sem juros</em>}
-          </> : <strong className="soldout">Esgotado</strong>}
+          </> : <strong className="soldout">Indisponível no momento</strong>}
         </div>
       </div>
     </article>

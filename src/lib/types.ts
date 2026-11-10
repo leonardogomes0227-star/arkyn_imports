@@ -13,6 +13,7 @@ export interface Product {
   notes?: string[]
   tags?: string[] // perfil usado no quiz: doce, amadeirado, fresco, floral, especiado, intenso, dia, noite
   image?: string
+  images?: string[] // fotos extras (galeria e troca no hover), quando o cadastro tiver
   active?: boolean // false = oculto na loja
   featured?: boolean
   old_price?: number | null // preço antigo (mostra riscado + % off)
