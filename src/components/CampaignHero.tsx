@@ -9,21 +9,21 @@ type Slide = {
   theme: { from: string; to: string; glow: string; ink: string; accent: string; btnBg: string; btnFg: string }
 }
 const SLIDES: Slide[] = [
-  { id: 'arabe', img: '/hero/lattafa-asad-elixir-100ml.webp', word: 'ÁRABE', eyebrow: 'Perfumaria árabe', title: ['Perfume árabe.', 'Presença que fica.'],
-    sub: 'Lattafa, Armaf, Maison Alhambra e outras marcas, em Coxim – MS e para todo o Brasil.', cta: ['Ver todos os perfumes', '/catalogo'], cta2: ['Qual é o seu cheiro?', '/quiz'],
-    theme: { from: '#0b0b0c', to: '#3a2210', glow: 'rgba(213,164,92,.5)', ink: '#f8f2e8', accent: '#d5a45c', btnBg: '#d5a45c', btnFg: '#101113' } },
+  { id: 'arabe', img: '/hero/lattafa-asad-elixir-100ml.webp', word: 'ARKYN', eyebrow: 'Perfumaria selecionada', title: ['Uma experiência', 'que marca.'],
+    sub: 'Descubra fragrâncias selecionadas para quem valoriza autenticidade, personalidade e sofisticação.', cta: ['Explorar coleção', '/catalogo'], cta2: ['Qual é o seu cheiro?', '/quiz'],
+    theme: { from: '#f6f2ea', to: '#e5dcce', glow: 'rgba(255,255,255,.95)', ink: '#2b2025', accent: '#7f6a43', btnBg: '#111111', btnFg: '#ffffff' } },
   { id: 'ele', img: '/hero/maison-alhambra-victorioso-nero-100ml.webp', word: 'ELE', eyebrow: 'Para ele', title: ['Noite longa,', 'presença forte.'],
     sub: 'Amadeirados e especiados para quem chega marcando território.', cta: ['Ver masculinos', '/catalogo?cat=masculino'],
-    theme: { from: '#08080a', to: '#241c0f', glow: 'rgba(188,153,82,.5)', ink: '#f3ebd9', accent: '#cba85c', btnBg: '#f3ebd9', btnFg: '#08080a' } },
+    theme: { from: '#efebe3', to: '#d9d1c4', glow: 'rgba(255,255,255,.95)', ink: '#2b2025', accent: '#7f6a43', btnBg: '#111111', btnFg: '#ffffff' } },
   { id: 'ela', img: '/hero/maison-alhambra-pink-eclipse-100ml.webp', word: 'ELA', eyebrow: 'Para ela', title: ['Doce, floral', 'e marcante.'],
     sub: 'Fragrâncias femininas que enchem o ambiente de personalidade.', cta: ['Ver femininos', '/catalogo?cat=feminino'],
-    theme: { from: '#1c0d14', to: '#7a2f49', glow: 'rgba(240,150,170,.5)', ink: '#fdeef0', accent: '#f2b6c0', btnBg: '#fdeef0', btnFg: '#3a1020' } },
+    theme: { from: '#f6ece6', to: '#e8d3c8', glow: 'rgba(255,255,255,.95)', ink: '#2b2025', accent: '#111111', btnBg: '#111111', btnFg: '#ffffff' } },
   { id: 'vulcan', img: '/hero/french-avenue-vulcan-feu-100ml.webp', word: 'FEU', eyebrow: 'Destaque da casa', title: ['Fogo', 'na pele.'],
     sub: 'Vulcan Feu, da French Avenue: especiado e amadeirado, com manga, limão e gengibre.', cta: ['Conhecer o Vulcan Feu', '/produto/french-avenue-vulcan-feu-100ml'],
-    theme: { from: '#041f27', to: '#0e5866', glow: 'rgba(96,204,210,.5)', ink: '#f5efe3', accent: '#e2c78c', btnBg: '#f5efe3', btnFg: '#052b35' } },
+    theme: { from: '#ebefec', to: '#cdd9d2', glow: 'rgba(255,255,255,.95)', ink: '#1f2b2a', accent: '#5f7a72', btnBg: '#111111', btnFg: '#ffffff' } },
   { id: 'quiz', img: '/hero/armaf-club-de-nuit-maleka-105ml.webp', word: 'CHEIRO', eyebrow: 'Compre pelo cheiro', title: ['Qual é o', 'seu cheiro?'],
     sub: 'Responda o quiz e veja os perfumes do catálogo que combinam com você.', cta: ['Fazer o quiz', '/quiz'],
-    theme: { from: '#150d20', to: '#46305f', glow: 'rgba(192,152,232,.5)', ink: '#f4edf9', accent: '#dcc4f2', btnBg: '#f4edf9', btnFg: '#211630' } },
+    theme: { from: '#f0ecf2', to: '#d8cfe0', glow: 'rgba(255,255,255,.95)', ink: '#2b2025', accent: '#7a6a8a', btnBg: '#111111', btnFg: '#ffffff' } },
 ]
 const MS = 6500
 

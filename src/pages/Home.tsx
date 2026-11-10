@@ -12,12 +12,14 @@ const cap = (t: string) => t[0].toUpperCase() + t.slice(1)
 
 // Recortes sem fundo disponíveis (public/hero). Para os demais, usa a foto do produto.
 const CUTOUTS = new Set(['french-avenue-vulcan-feu-100ml', 'lattafa-afeef-100ml', 'armaf-club-de-nuit-maleka-105ml', 'lattafa-asad-elixir-100ml', 'maison-alhambra-pink-eclipse-100ml', 'maison-alhambra-victorioso-nero-100ml'])
-// Visual de cada categoria real do catálogo (produto de capa preferido + cores)
-const CATS: { cat: Category; title: string; prefer: string; a: string; b: string; dark: boolean }[] = [
-  { cat: 'masculino', title: 'Masculinos', prefer: 'lattafa-asad-elixir-100ml', a: '#17181c', b: '#363943', dark: true },
-  { cat: 'feminino', title: 'Femininos', prefer: 'maison-alhambra-pink-eclipse-100ml', a: '#f6e0dc', b: '#e7bcb6', dark: false },
-  { cat: 'splash', title: 'Splash e miniaturas', prefer: '', a: '#2b2620', b: '#4a4034', dark: true },
-  { cat: 'skincare', title: 'Skincare', prefer: 'celimax-the-vita-a-retinal-shot-15ml', a: '#efe6d3', b: '#ddd0b3', dark: false },
+// Categorias em oval: produto de capa preferido + tons suaves. Só aparecem as que têm produto.
+const OVALS: { label: string; to: string; match: (p: Product) => boolean; prefer: string; a: string; b: string }[] = [
+  { label: 'Masculinos', to: '/catalogo?cat=masculino', match: p => p.category === 'masculino', prefer: 'lattafa-asad-elixir-100ml', a: '#f1ece4', b: '#d9cfbf' },
+  { label: 'Femininos', to: '/catalogo?cat=feminino', match: p => p.category === 'feminino', prefer: 'maison-alhambra-pink-eclipse-100ml', a: '#f3ebe3', b: '#ddcfc0' },
+  { label: 'Doces', to: '/catalogo?tag=doce', match: p => !!p.tags?.includes('doce'), prefer: 'lattafa-afeef-100ml', a: '#f4ede0', b: '#e3d3b5' },
+  { label: 'Amadeirados', to: '/catalogo?tag=amadeirado', match: p => !!p.tags?.includes('amadeirado'), prefer: 'maison-alhambra-victorioso-nero-100ml', a: '#eee9e1', b: '#d2c8b8' },
+  { label: 'Splash e miniaturas', to: '/catalogo?cat=splash', match: p => p.category === 'splash', prefer: '', a: '#efeae3', b: '#d8cfc0' },
+  { label: 'Skincare', to: '/catalogo?cat=skincare', match: p => p.category === 'skincare', prefer: 'celimax-the-vita-a-retinal-shot-15ml', a: '#f0ece3', b: '#d9d1bf' },
 ]
 
 function SecHead({ eyebrow, title, to, link = 'Ver todos' }: { eyebrow?: string; title: string; to?: string; link?: string }) {
@@ -65,12 +67,12 @@ export default function Home() {
   const by = (list: Product[]) => list.filter(p => !shown.has(p.id)).slice(0, 4)
   const brands = [...new Set(products.filter(p => p.category === 'masculino' || p.category === 'feminino').map(p => p.brand))].sort()
 
-  const cats = CATS.map(c => {
-    const inCat = products.filter(p => p.category === c.cat)
+  const cats = OVALS.map(c => {
+    const inCat = products.filter(c.match)
     const pick = inCat.find(p => p.id === c.prefer && p.image) ?? inCat.find(p => p.image)
     const src = pick ? (CUTOUTS.has(pick.id) ? `/hero/${pick.id}.webp` : pick.image!) : ''
     return { ...c, count: inCat.length, src, cut: !!pick && CUTOUTS.has(pick.id) }
-  }).filter(c => c.count > 0)
+  }).filter(c => c.count > 0 && !!c.src)
 
   const scents = SCENTS.map(t => {
     const list = products.filter(p => p.tags?.includes(t))
@@ -98,38 +100,37 @@ export default function Home() {
       </Reveal>
 
 
-      <Reveal as="section" className="ar-duo" aria-label="Campanhas">
-        {[
-          { to: '/catalogo?cat=masculino', id: 'lattafa-asad-elixir-100ml', k: 'Para ele', t: 'Noite longa, presença forte', c: 'Ver masculinos', cls: 'night' },
-          { to: '/catalogo?cat=feminino', id: 'maison-alhambra-pink-eclipse-100ml', k: 'Para ela', t: 'Doce, floral e marcante', c: 'Ver femininos', cls: 'rose' },
-        ].map((b, i) => (
-          <Link key={b.id} to={b.to} className={`ar-ban ${b.cls}`} style={{ '--i': i } as React.CSSProperties}>
-            <span className="ar-ban-txt"><small>{b.k}</small><b>{b.t}</b><em>{b.c} <i aria-hidden="true">→</i></em></span>
-            <img src={`/hero/${b.id}.webp`} alt="" loading="lazy" />
-            <span className="ar-smoke" aria-hidden="true" />
-          </Link>
-        ))}
-      </Reveal>
 
       {cats.length > 0 && (
         <Reveal as="section" className="section">
           <SecHead eyebrow="Explore" title="Compre por categoria" to="/catalogo" link="Ver tudo" />
-          <div className="cat-grid">
+          <div className="oval-grid">
             {cats.map((c, i) => (
-              <Link key={c.cat} to={`/catalogo?cat=${c.cat}`} className={`cat-tile${c.dark ? ' dk' : ''}`} style={{ '--a': c.a, '--b': c.b, '--i': i } as React.CSSProperties}>
-                {c.src && <img src={c.src} alt="" loading="lazy" className={c.cut ? 'cut' : 'photo'} />}
-                <span className="cat-txt">
-                  <small>{c.count} {c.count === 1 ? 'produto' : 'produtos'}</small>
-                  <b>{c.title}</b>
-                </span>
-                <span className="cat-go" aria-hidden="true">→</span>
+              <Link key={c.label} to={c.to} className="oval" style={{ '--a': c.a, '--b': c.b, '--i': i } as React.CSSProperties}>
+                <span className="oval-img">{c.src && <img src={c.src} alt="" loading="lazy" className={c.cut ? 'cut' : 'photo'} />}</span>
+                <b>{c.label}</b>
+                <small>{c.count} {c.count === 1 ? 'produto' : 'produtos'}</small>
               </Link>
             ))}
           </div>
         </Reveal>
       )}
 
-      <Shelf eyebrow="Seleção da casa" title="Destaques" to="/catalogo" items={featured} />
+      <Shelf eyebrow="Para começar" title="Destaques" to="/catalogo" items={featured} />
+
+      <Reveal as="section" className="bq-promo" aria-label="Sobre a Arkyn">
+        <div className="bq-promo-txt">
+          <p>Arkyn Imports</p>
+          <h2>Mais que uma fragrância. Uma assinatura.</h2>
+          <span>Perfumes árabes e importados escolhidos com cuidado, com atendimento próximo, em Coxim – MS.</span>
+          <Link to="/catalogo" className="bq-btn light">Conhecer os perfumes</Link>
+        </div>
+        <div className="bq-promo-img" aria-hidden="true">
+          {['lattafa-afeef-100ml', 'maison-alhambra-pink-eclipse-100ml', 'lattafa-asad-elixir-100ml'].map((id, i) => <img key={id} src={`/hero/${id}.webp`} alt="" loading="lazy" style={{ '--i': i } as React.CSSProperties} />)}
+          <span className="bq-podium" />
+        </div>
+      </Reveal>
+
       <Shelf eyebrow="Condições especiais" title="Ofertas" to="/catalogo" items={offers} />
 
       <nav className="ar-brands" aria-label="Marcas">
