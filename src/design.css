@@ -291,3 +291,56 @@ input[aria-invalid="true"] { border-color:#b3261e; box-shadow:0 0 0 3px rgba(179
 .pdp-page, .catalog { padding-top:clamp(20px,2.4vw,36px) }
 .side-close, .filters-btn { display:none }
 @media (max-width:860px) { .side-close, .filters-btn { display:inline-flex } .side-close { width:100% } }
+
+/* =====================================================================
+   SACOLA LATERAL
+   ===================================================================== */
+.scrim { z-index:100; background:rgba(10,10,10,.5) }
+.ax-drawer { position:fixed; top:0; right:0; bottom:0; z-index:110; width:min(440px,100vw); background:var(--bg); display:flex; flex-direction:column; box-shadow:var(--sh-3);
+  transform:translateX(104%); visibility:hidden; transition:transform .5s var(--ease),visibility 0s linear .5s }
+.ax-drawer.on { transform:none; visibility:visible; transition:transform .5s var(--ease) }
+.ax-drawer-head { display:flex; align-items:center; justify-content:space-between; padding:20px 24px; border-bottom:1px solid var(--line) }
+.ax-drawer-head h2 { font-family:var(--display); font-weight:600; font-size:1.85rem; line-height:1; display:flex; align-items:baseline; gap:12px } .ax-drawer-head small { font:400 var(--fs-sm)/1 var(--sans); color:var(--mute) }
+.ax-drawer-x { width:42px; height:42px; background:none; border:0; border-radius:50%; font-size:17px; cursor:pointer; transition:background var(--dur-1) ease } .ax-drawer-x:hover { background:rgba(15,15,16,.07) }
+.ax-ship { padding:14px 24px 16px; background:var(--sand); font-size:var(--fs-sm) } .ax-ship p { margin-bottom:10px }
+.ax-ship-bar { height:3px; background:rgba(15,15,16,.14); border-radius:3px; overflow:hidden } .ax-ship-bar span { display:block; height:100%; background:var(--ink); border-radius:3px; transition:width .6s var(--ease) }
+.ax-drawer-body { flex:1; overflow:auto; padding:4px 24px }
+.ax-lines { list-style:none; margin:0; padding:0 } .ax-lines li { display:grid; grid-template-columns:92px 1fr; gap:16px; padding:20px 0; border-bottom:1px solid var(--line); animation:line-in .5s var(--ease) both }
+@keyframes line-in { from { opacity:0; transform:translateX(14px) } to { opacity:1; transform:none } }
+.ax-line-img { width:92px; height:92px; background:#fff; border-radius:8px; overflow:hidden; display:block } .ax-line-img img { width:100%; height:100%; object-fit:contain; padding:4px }
+.ax-line-t { display:flex; flex-direction:column; align-items:flex-start; min-width:0 } .ax-line-t small, .ck-items small { font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--mute) }
+.ax-line-t > a, .ck-name { font-family:var(--display); font-weight:600; font-size:1.2rem; line-height:1.1; margin-top:3px; font-variant-numeric:lining-nums } .ax-line-t > a:hover, .ck-name:hover { text-decoration:underline }
+.ax-line-row { display:flex; justify-content:space-between; align-items:center; width:100%; margin-top:12px } .ax-line-row b { font-size:var(--fs-md) }
+.ax-step { display:inline-flex; align-items:center; border:1px solid var(--line); background:#fff; border-radius:var(--r-sm) }
+.ax-step button { width:36px; height:38px; background:none; border:0; font-size:18px; cursor:pointer; transition:background var(--dur-1) ease } .ax-step button:hover:not(:disabled) { background:var(--sand) } .ax-step button:disabled { opacity:.3; cursor:default }
+.ax-step output { min-width:30px; text-align:center; font-weight:700; font-size:var(--fs-sm) }
+.ax-remove { background:none; border:0; padding:8px 0 0; font-size:var(--fs-xs); color:var(--mute); text-decoration:underline; cursor:pointer } .ax-remove:hover { color:var(--ink) }
+.ax-cart-empty { display:flex; flex-direction:column; align-items:center; text-align:center; gap:10px; padding:clamp(48px,12vh,110px) 12px; color:var(--stone) } .ax-cart-empty h3 { font-family:var(--display); font-weight:600; font-size:1.9rem; color:var(--ink); margin-top:10px } .ax-cart-empty .btn { margin-top:14px }
+.ax-drawer-foot { padding:20px 24px calc(22px + env(safe-area-inset-bottom)); border-top:1px solid var(--line); display:grid; gap:10px; background:var(--bg) }
+.ax-tot { display:flex; justify-content:space-between; align-items:baseline; font-size:var(--fs-md) } .ax-tot b { font-family:var(--display); font-weight:600; font-size:1.8rem; font-variant-numeric:lining-nums }
+.ax-note { color:var(--mute); font-size:var(--fs-xs); margin:-2px 0 4px }
+
+/* =====================================================================
+   FINALIZAÇÃO
+   ===================================================================== */
+.ck { padding-top:clamp(20px,2.4vw,36px) !important }
+.ck-title { font-family:var(--display); font-weight:600; font-size:var(--fs-h2); line-height:1; margin-bottom:clamp(22px,3vw,40px) }
+.ck-grid { display:grid; grid-template-columns:minmax(0,1.25fr) minmax(0,.9fr); gap:clamp(24px,4vw,72px); align-items:start }
+.ck-card { border:0; margin:0 0 18px; padding:26px; background:#fff; border-radius:var(--r-md); box-shadow:0 0 0 1px rgba(15,15,16,.04); display:grid; gap:16px; min-width:0 }
+.ck-card legend { float:left; width:100%; padding:0; margin-bottom:2px; display:flex; align-items:center; gap:12px; font-family:var(--display); font-weight:600; font-size:1.55rem; line-height:1 } .ck-card legend + * { clear:both }
+.ck-card legend i { width:28px; height:28px; border-radius:50%; background:var(--ink); color:#fff; font:700 12px/28px var(--sans); text-align:center }
+.ck-f { display:grid; gap:8px; font-size:var(--fs-sm); font-weight:500; letter-spacing:.02em } .ck-f input { width:100%; font-weight:400 }
+.ck-err { min-height:1.2em; margin:0; color:#b3261e; font-size:var(--fs-sm); font-weight:400 } .ck-err-box { background:#fbeceb; padding:12px 14px; border-radius:var(--r-sm); min-height:0 }
+.ck-opt { display:grid; grid-template-columns:auto 1fr auto; gap:14px; align-items:center; padding:16px 18px; border:1px solid var(--line); border-radius:var(--r-sm); cursor:pointer; transition:border-color var(--dur-1) ease,background var(--dur-1) ease }
+.ck-opt:hover { border-color:var(--stone) } .ck-opt.on { border-color:var(--ink); background:#faf8f4 } .ck-opt input { accent-color:var(--ink); width:18px; height:18px; padding:0 }
+.ck-opt b { display:block; font-weight:500 } .ck-opt small { color:var(--mute); font-size:var(--fs-sm) } .ck-opt em { font-style:normal; font-weight:700; font-size:var(--fs-sm) }
+.ck-coupon { display:flex; gap:10px } .ck-coupon input { flex:1; min-width:0; text-transform:uppercase } .ck-coupon .btn { min-height:auto; padding:0 24px }
+.ck-coupon-ok { background:var(--sand); padding:14px 16px; border-radius:var(--r-sm); font-size:var(--fs-sm); margin:0 }
+.ck-sum { position:sticky; top:112px; display:grid; gap:16px; background:#fff; border-radius:var(--r-md); padding:26px; box-shadow:var(--sh-1) }
+.ck-sum h2 { font-family:var(--display); font-weight:600; font-size:1.65rem; line-height:1 }
+.ck-items { list-style:none; margin:0; padding:0 } .ck-items li { display:grid; grid-template-columns:84px 1fr; gap:14px; padding:16px 0; border-bottom:1px solid var(--line) } .ck-items li:first-child { padding-top:6px }
+.ck-img { width:84px; height:84px; background:#f6f3ee; border-radius:8px; overflow:hidden } .ck-img img { width:100%; height:100%; object-fit:contain; padding:4px; mix-blend-mode:multiply } .ck-items li > div { display:flex; flex-direction:column; align-items:flex-start; min-width:0 }
+.ck-totals { margin:0; display:grid; gap:10px } .ck-totals div { display:flex; justify-content:space-between; font-size:var(--fs-base) } .ck-totals dt { color:var(--mute) } .ck-totals dd { margin:0; font-weight:500 }
+.ck-total { padding-top:14px; border-top:1px solid var(--line); align-items:baseline } .ck-total dt { color:var(--ink) !important; font-weight:500 } .ck-total dd { font-family:var(--display); font-weight:600 !important; font-size:2.2rem; line-height:1; font-variant-numeric:lining-nums }
+.ck-secure { color:var(--mute); font-size:var(--fs-xs); text-align:center; margin:0; line-height:1.5 }
+@media (max-width:900px) { .ck-grid { grid-template-columns:1fr } .ck-sum { position:static } .ck-card { padding:20px } }

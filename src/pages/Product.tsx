@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import Placeholder from '../components/Placeholder'
 import ProductCard, { ProductSkeleton } from '../components/ProductCard'
-import { useToast } from '../components/Toast'
 import { noteGradient } from '../lib/noteColors'
 import { CAT_LABEL } from '../lib/search'
 import { brl, useStore } from '../lib/store'
@@ -14,7 +13,6 @@ const cap = (s: string) => s[0].toUpperCase() + s.slice(1)
 export default function Product() {
   const { id } = useParams()
   const { products, settings, add, ready, setOpen } = useStore()
-  const { toast } = useToast()
   const [qty, setQty] = useState(1)
   const [pic, setPic] = useState(0)
   const [bar, setBar] = useState(false)
@@ -46,7 +44,7 @@ export default function Product() {
     .map(x => ({ x, s: (x.tags ?? []).filter(t => (p.tags ?? []).includes(t)).length + (x.brand === p.brand ? 1 : 0) }))
     .sort((a, b) => b.s - a.s).slice(0, 4).map(r => r.x)
   const wa = `https://wa.me/${settings.whatsapp}?text=${encodeURIComponent(`Olá! Tenho interesse no ${p.brand} ${p.name}.`)}`
-  const buy = () => { add(p.id, true, qty); toast(`${qty > 1 ? `${qty}x ` : ''}${p.name} na sacola`) }
+  const buy = () => add(p.id, true, qty)
   const zoom = (e: React.MouseEvent<HTMLDivElement>) => {
     const r = e.currentTarget.getBoundingClientRect()
     e.currentTarget.style.setProperty('--zx', `${((e.clientX - r.left) / r.width) * 100}%`)
