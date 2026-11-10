@@ -13,21 +13,21 @@ const cap = (t: string) => t[0].toUpperCase() + t.slice(1)
 
 // Recortes sem fundo disponíveis (public/hero). Para os demais, usa a foto do produto.
 const CUTOUTS = new Set(['french-avenue-vulcan-feu-100ml', 'lattafa-afeef-100ml', 'armaf-club-de-nuit-maleka-105ml', 'lattafa-asad-elixir-100ml', 'maison-alhambra-pink-eclipse-100ml', 'maison-alhambra-victorioso-nero-100ml'])
-// Categorias em oval: produto de capa preferido + tons suaves. Só aparecem as que têm produto.
-const OVALS: { label: string; to: string; match: (p: Product) => boolean; prefer: string; a: string; b: string }[] = [
-  { label: 'Masculinos', to: '/catalogo?cat=masculino', match: p => p.category === 'masculino', prefer: 'lattafa-asad-elixir-100ml', a: '#f1ece4', b: '#d9cfbf' },
-  { label: 'Femininos', to: '/catalogo?cat=feminino', match: p => p.category === 'feminino', prefer: 'maison-alhambra-pink-eclipse-100ml', a: '#f3ebe3', b: '#ddcfc0' },
-  { label: 'Doces', to: '/catalogo?tag=doce', match: p => !!p.tags?.includes('doce'), prefer: 'lattafa-afeef-100ml', a: '#f4ede0', b: '#e3d3b5' },
-  { label: 'Amadeirados', to: '/catalogo?tag=amadeirado', match: p => !!p.tags?.includes('amadeirado'), prefer: 'maison-alhambra-victorioso-nero-100ml', a: '#eee9e1', b: '#d2c8b8' },
-  { label: 'Splash e miniaturas', to: '/catalogo?cat=splash', match: p => p.category === 'splash', prefer: '', a: '#efeae3', b: '#d8cfc0' },
-  { label: 'Skincare', to: '/catalogo?cat=skincare', match: p => p.category === 'skincare', prefer: 'celimax-the-vita-a-retinal-shot-15ml', a: '#f0ece3', b: '#d9d1bf' },
+// Categorias editoriais: produto de capa preferido. Só aparecem as que têm produto com foto.
+const CATS: { label: string; to: string; match: (p: Product) => boolean; prefer: string }[] = [
+  { label: 'Masculinos', to: '/catalogo?cat=masculino', match: p => p.category === 'masculino', prefer: 'lattafa-asad-elixir-100ml' },
+  { label: 'Femininos', to: '/catalogo?cat=feminino', match: p => p.category === 'feminino', prefer: 'maison-alhambra-pink-eclipse-100ml' },
+  { label: 'Doces', to: '/catalogo?tag=doce', match: p => !!p.tags?.includes('doce'), prefer: 'lattafa-afeef-100ml' },
+  { label: 'Amadeirados', to: '/catalogo?tag=amadeirado', match: p => !!p.tags?.includes('amadeirado'), prefer: 'maison-alhambra-victorioso-nero-100ml' },
+  { label: 'Splash e miniaturas', to: '/catalogo?cat=splash', match: p => p.category === 'splash', prefer: '' },
+  { label: 'Skincare', to: '/catalogo?cat=skincare', match: p => p.category === 'skincare', prefer: 'celimax-the-vita-a-retinal-shot-15ml' },
 ]
 
 function SecHead({ eyebrow, title, to, link = 'Ver todos' }: { eyebrow?: string; title: string; to?: string; link?: string }) {
   return (
     <div className="ax-sec-head">
       <div>{eyebrow && <p className="ax-eyebrow">{eyebrow}</p>}<h2>{title}</h2></div>
-      {to && <Link to={to} className="textlink">{link}</Link>}
+      {to && <Link to={to} className="ax-sec-link">{link} <span aria-hidden="true">→</span></Link>}
     </div>
   )
 }
@@ -61,14 +61,14 @@ export default function Home() {
 
   // Vitrines: só aparecem quando os dados sustentam. "Mais vendidos" e "Novidades" ficam de fora
   // porque o cadastro não guarda vendas por produto nem data de cadastro.
-  const flagged = live.filter(p => p.featured).slice(0, 8)
-  const featured = flagged.length ? flagged : live.filter(p => !!p.image).slice(0, 8)
+  const flagged = live.filter(p => p.featured).slice(0, 4)
+  const featured = flagged.length ? flagged : live.filter(p => !!p.image).slice(0, 4)
   const offers = live.filter(p => !!p.old_price && p.old_price > p.price).slice(0, 8)
   const shown = new Set([...featured, ...offers].map(p => p.id))
   const by = (list: Product[]) => list.filter(p => !shown.has(p.id)).slice(0, 4)
   const brands = [...new Set(products.filter(p => p.category === 'masculino' || p.category === 'feminino').map(p => p.brand))].sort()
 
-  const cats = OVALS.map(c => {
+  const cats = CATS.map(c => {
     const inCat = products.filter(c.match)
     const pick = inCat.find(p => p.id === c.prefer && p.image) ?? inCat.find(p => p.image)
     const src = pick ? (CUTOUTS.has(pick.id) ? `/hero/${pick.id}.webp` : pick.image!) : ''
@@ -97,21 +97,18 @@ export default function Home() {
       <h1 className="sr-only">Arkyn Imports: perfumes árabes e importados em Coxim – MS</h1>
       <CampaignHero />
 
-      <Reveal as="section" className="ax-benefits" >
+      <section className="ax-benefits" aria-label="Como comprar">
         {benefits.map(([ic, t, s]) => <div key={t}>{ic}<span><b>{t}</b><small>{s}</small></span></div>)}
-      </Reveal>
-
-
+      </section>
 
       {cats.length > 0 && (
         <Reveal as="section" className="section">
           <SecHead eyebrow="Explore" title="Compre por categoria" to="/catalogo" link="Ver tudo" />
-          <div className="oval-grid">
+          <div className="cat-ed">
             {cats.map((c, i) => (
-              <Link key={c.label} to={c.to} className="oval" style={{ '--a': c.a, '--b': c.b, '--i': i } as React.CSSProperties}>
-                <span className="oval-img">{c.src && <SizedImg src={c.src} size={480} width={480} height={480} alt="" loading="lazy" decoding="async" className={c.cut ? 'cut' : 'photo'} />}</span>
-                <b>{c.label}</b>
-                <small>{c.count} {c.count === 1 ? 'produto' : 'produtos'}</small>
+              <Link key={c.label} to={c.to} className={i < 2 ? 'cat-t cat-t--lg' : 'cat-t cat-t--sm'}>
+                <span className="cat-plate">{c.src && <SizedImg src={c.src} size={480} width={480} height={480} alt="" loading="lazy" decoding="async" className={c.cut ? 'cut' : 'photo'} />}</span>
+                <span className="cat-cap"><b>{c.label}</b><small>{c.count} {c.count === 1 ? 'produto' : 'produtos'}</small><i aria-hidden="true">→</i></span>
               </Link>
             ))}
           </div>
@@ -120,33 +117,37 @@ export default function Home() {
 
       <Shelf eyebrow="Para começar" title="Destaques" to="/catalogo" items={featured} />
 
-      <Reveal as="section" className="bq-promo" aria-label="Sobre a Arkyn">
+      <Reveal as="section" className="bq-promo">
         <div className="bq-promo-txt">
           <p>Arkyn Imports</p>
           <h2>Mais que uma fragrância. Uma assinatura.</h2>
           <span>Perfumes árabes e importados escolhidos com cuidado, com atendimento próximo, em Coxim – MS.</span>
-          <Link to="/catalogo" className="bq-btn light">Conhecer os perfumes</Link>
+          <Link to="/catalogo" className="bq-btn">Conhecer os perfumes</Link>
         </div>
         <div className="bq-promo-img" aria-hidden="true">
           {([['lattafa-afeef-100ml', 970, 824], ['maison-alhambra-pink-eclipse-100ml', 1000, 749], ['lattafa-asad-elixir-100ml', 436, 1000]] as const).map(([id, w, h], i) => <img key={id} src={`/hero/${id}.webp`} width={w} height={h} alt="" loading="lazy" decoding="async" style={{ '--i': i } as React.CSSProperties} />)}
-          <span className="bq-podium" />
         </div>
       </Reveal>
 
       <Shelf eyebrow="Condições especiais" title="Ofertas" to="/catalogo" items={offers} />
+      <Shelf eyebrow="Para ele" title="Perfumes masculinos" to="/catalogo?cat=masculino" items={by(masc)} />
+      <Shelf eyebrow="Para ela" title="Perfumes femininos" to="/catalogo?cat=feminino" items={by(fem)} />
 
-      <nav className="ar-brands" aria-label="Marcas">
-        <div className="ar-brands-track">
-          {[...brands, ...brands].map((b, i) => <Link key={b + i} to={`/catalogo?brand=${encodeURIComponent(b)}`} tabIndex={i >= brands.length ? -1 : 0} aria-hidden={i >= brands.length}>{b}</Link>)}
-        </div>
-      </nav>
+      {brands.length > 0 && (
+        <Reveal as="section" className="ar-brands">
+          <nav aria-label="Marcas">
+            <p className="ax-eyebrow">Marcas</p>
+            <div>{brands.map(b => <Link key={b} to={`/catalogo?brand=${encodeURIComponent(b)}`}>{b}</Link>)}</div>
+          </nav>
+        </Reveal>
+      )}
 
       <section className="ax-band">
         <div className="ax-band-in">
           <Reveal className="ax-band-head">
             <div><p className="ax-eyebrow">Famílias olfativas</p><h2>Escolha pelo cheiro que você gosta</h2></div>
             <p className="ax-band-p">Cada família reúne os perfumes do catálogo com aquele perfil. Veja as notas mais presentes e explore.</p>
-            <Link to="/quiz" className="btn light">Fazer o quiz</Link>
+            <Link to="/quiz" className="btn">Fazer o quiz</Link>
           </Reveal>
           <div className="scent-grid">
             {scents.map(([t, count, notes, thumbs], i) => (
@@ -162,9 +163,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      <Shelf eyebrow="Para ele" title="Perfumes masculinos" to="/catalogo?cat=masculino" items={by(masc)} />
-      <Shelf eyebrow="Para ela" title="Perfumes femininos" to="/catalogo?cat=feminino" items={by(fem)} />
     </>
   )
 }

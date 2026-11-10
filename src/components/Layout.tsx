@@ -65,22 +65,24 @@ export default function Layout({ children }: { children: ReactNode }) {
     <>
       <a className="ax-skip" href="#conteudo">Pular para o conteúdo</a>
       <header className={scrolled ? 'ax-header is-scrolled' : 'ax-header'}>
-        <div className="ax-topbar" aria-label="Avisos da loja"><div className="ax-marquee">{[...msgs, ...msgs, ...msgs, ...msgs].map((m, i) => <span key={i}>{m}</span>)}</div></div>
+        <div className="ax-topbar" aria-label="Avisos da loja"><div className="ax-marquee">{[...msgs, ...msgs, ...msgs, ...msgs].map((m, i) => <span key={i} data-d={i >= msgs.length ? '' : undefined} aria-hidden={i >= msgs.length ? true : undefined}>{m}</span>)}</div></div>
         <div className="ax-head">
-          <button type="button" className="ax-burger" aria-label="Abrir menu" aria-expanded={menu} aria-controls="ax-menu" onClick={() => setMenu(true)}><span /><span /><span /></button>
-          <nav className="ax-nav" aria-label="Principal">
-            {NAV.map(([label, to]) => <Link key={to} to={to} aria-current={active(to) ? 'page' : undefined}>{label}</Link>)}
-          </nav>
+          <div className="ax-left">
+            <button type="button" className="ax-burger" aria-label="Abrir menu" aria-expanded={menu} aria-controls="ax-menu" onClick={() => setMenu(true)}><span /><span /><span /></button>
+            <button type="button" className="ax-icon ax-find" aria-label="Buscar perfumes" onClick={() => setSearch(true)}><IconSearch size={21} /><span>Buscar</span></button>
+          </div>
           <Logo />
           <div className="ax-actions">
             <Link to="/quiz" className="ax-quiz" aria-current={loc.pathname === '/quiz' ? 'page' : undefined}>Qual é o seu cheiro?</Link>
-            <button type="button" className="ax-icon" aria-label="Buscar perfumes" onClick={() => setSearch(true)}><IconSearch size={21} /></button>
             <Link to="/favoritos" className="ax-icon ax-fav" aria-label={favs.length ? `Favoritos, ${favs.length}` : 'Favoritos'}><IconHeart size={21} />{favs.length > 0 && <em>{favs.length}</em>}</Link>
             <button type="button" className="ax-icon ax-bag" aria-label={count ? `Abrir sacola, ${count} ${count === 1 ? 'item' : 'itens'}` : 'Abrir sacola'} onClick={() => setOpen(true)}>
               <IconBag size={21} />{count > 0 && <em key={count}>{count}</em>}
             </button>
           </div>
         </div>
+        <nav className="ax-nav" aria-label="Principal">
+          {NAV.map(([label, to]) => <Link key={to} to={to} aria-current={active(to) ? 'page' : undefined}>{label}</Link>)}
+        </nav>
         <SearchOverlay open={search} onClose={() => setSearch(false)} />
       </header>
 
@@ -105,13 +107,14 @@ export default function Layout({ children }: { children: ReactNode }) {
         <div className="ax-footer-in">
           <div className="ax-foot-brand">
             <Logo className="ax-foot-logo" />
-            <p>Perfumaria árabe e importada em Coxim – MS.</p>
+            <p>Perfumaria árabe e importada em Coxim – MS. Atendimento próximo, do pedido à retirada.</p>
             <a className="ax-foot-ig" href="https://instagram.com/arkyn_imports" target="_blank" rel="noreferrer">@arkyn_imports no Instagram</a>
           </div>
           <div>
             <h4>Comprar</h4>
             {NAV.map(([label, to]) => <Link key={to} to={to}>{label}</Link>)}
             <Link to="/quiz">Qual é o seu cheiro?</Link>
+            <Link to="/favoritos">Favoritos</Link>
           </div>
           <div>
             <h4>Atendimento</h4>
@@ -126,7 +129,7 @@ export default function Layout({ children }: { children: ReactNode }) {
             <div className="ax-pay"><i>Pix</i><i>Cartão</i></div>
           </div>
         </div>
-        <p className="ax-copy">© {new Date().getFullYear()} Arkyn Imports · Coxim – MS · <Link to="/admin">Área do lojista</Link></p>
+        <p className="ax-copy"><span>© {new Date().getFullYear()} Arkyn Imports · Coxim – MS</span><Link to="/admin">Área do lojista</Link></p>
       </footer>
 
       <a className="wa-float" href={wa} target="_blank" rel="noreferrer" aria-label="Falar no WhatsApp">
