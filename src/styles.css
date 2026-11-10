@@ -400,3 +400,101 @@ select { max-width:100% } .form select,.form input { width:100%; min-width:0 }
 @media (max-width:820px) {
   .orb.o0 { width:70px; left:-10px; top:-8px } .orb.o1 { width:58px; right:-6px; top:-4px } .orb.o2 { width:60px; left:-8px; bottom:-6px } .orb.o3 { width:84px; right:-12px; bottom:-10px }
 }
+
+/* =====================================================================
+   HERO PREMIUM (.lx): vitrine de perfumes em formato de fotografia de estúdio
+   ===================================================================== */
+.lx { --px:0; --py:0; position:relative; max-width:1360px; margin:24px auto 0; padding:0 clamp(20px,3.2vw,72px); outline:none }
+.lx:focus-visible { outline:2px solid #111; outline-offset:4px; border-radius:18px }
+.lx-view { display:grid; position:relative; isolation:isolate; overflow:hidden; border-radius:14px; box-shadow:0 36px 70px -38px rgba(0,0,0,.45); touch-action:pan-y }
+.lx-slide { grid-area:1/1; position:relative; display:flex; align-items:center; min-height:clamp(580px,46vw,680px); color:var(--ink); background:linear-gradient(118deg,var(--from),var(--to));
+  opacity:0; visibility:hidden; z-index:1; transition:opacity .01s linear 1s,visibility 0s linear 1s }
+.lx-slide.on { opacity:1; visibility:visible; z-index:2; animation:lx-fade 1s cubic-bezier(.4,0,.2,1) both; transition:none }
+@keyframes lx-fade { from { opacity:0 } to { opacity:1 } }
+
+/* palco: parede com luz, piso e frasco */
+.lx-stage { position:absolute; inset:0; overflow:hidden }
+.lx-wall { position:absolute; inset:-6%; background:radial-gradient(46% 68% at 72% 46%,var(--spot),transparent 72%); transform:translate3d(calc(var(--px) * -26px),calc(var(--py) * -16px),0); transition:transform .7s cubic-bezier(.2,.7,.2,1) }
+.lx-floor { position:absolute; left:0; right:0; bottom:0; height:25%; background:linear-gradient(to bottom,rgba(255,255,255,.05),var(--floor)); border-top:1px solid var(--rule) }
+.lx-prod { position:absolute; right:5%; bottom:23%; width:50%; height:74%; display:flex; align-items:flex-end; justify-content:center; transform:translate3d(calc(var(--px) * 14px),calc(var(--py) * 8px),0); transition:transform .7s cubic-bezier(.2,.7,.2,1) }
+.lx-enter { height:100%; max-width:100%; display:flex }
+.lx-slide.on .lx-enter { animation:lx-in 1.4s cubic-bezier(.2,.7,.2,1) .15s both }
+.lx-pimg { position:relative; height:100%; max-width:100%; display:flex; animation:lx-float 9s ease-in-out infinite }
+.lx-photo { position:relative; display:block; height:100%; width:auto; max-width:100%; object-fit:contain; object-position:bottom; filter:drop-shadow(0 28px 26px rgba(0,0,0,.3)) }
+.lx-refl { position:absolute; left:0; top:100%; width:100%; height:100%; object-fit:contain; object-position:bottom; transform:scaleY(-1); opacity:.2; pointer-events:none;
+  -webkit-mask-image:linear-gradient(to top,rgba(0,0,0,.9),transparent 40%); mask-image:linear-gradient(to top,rgba(0,0,0,.9),transparent 40%) }
+.lx-pshadow { position:absolute; left:50%; bottom:-1.5%; width:72%; height:5%; transform:translateX(-50%); background:radial-gradient(ellipse at center,rgba(0,0,0,.55),transparent 70%); filter:blur(9px) }
+@keyframes lx-in { from { opacity:0; transform:translateY(26px) scale(.96) } to { opacity:1; transform:none } }
+@keyframes lx-float { 0%,100% { transform:translateY(0) } 50% { transform:translateY(-7px) } }
+
+/* informações: hierarquia editorial */
+.lx-info { position:relative; z-index:3; width:min(46%,580px); display:flex; flex-direction:column; align-items:flex-start; padding:clamp(34px,5vw,72px) clamp(28px,5vw,72px) 112px }
+.lx-slide.on .lx-a { animation:lx-rise .95s cubic-bezier(.2,.7,.2,1) var(--d,0s) both }
+@keyframes lx-rise { from { opacity:0; transform:translateY(18px) } to { opacity:1; transform:none } }
+.lx-brand { font-size:11px; font-weight:500; letter-spacing:.38em; text-transform:uppercase; color:var(--accent); margin-bottom:20px }
+.lx-name { font-family:'Cormorant Garamond',Georgia,serif; font-weight:600; font-size:clamp(50px,6.2vw,98px); line-height:.92; letter-spacing:-.015em; margin-bottom:16px; text-wrap:balance }
+.lx-profile { font-family:'Cormorant Garamond',Georgia,serif; font-style:italic; font-weight:500; font-size:clamp(19px,1.7vw,23px); color:var(--mute); margin-bottom:28px }
+.lx-notes { width:100%; max-width:410px; border-top:1px solid var(--rule); padding-top:14px; margin-bottom:30px }
+.lx-notes-h { font-size:10px; letter-spacing:.32em; text-transform:uppercase; color:var(--mute) }
+.lx-notes ol { list-style:none; margin:12px 0 0; padding:0; display:grid; grid-template-columns:1fr 1fr; gap:11px 26px }
+.lx-notes li { display:flex; align-items:center; gap:9px; font-size:15px; letter-spacing:.01em }
+.lx-slide.on .lx-notes li { animation:lx-rise .8s cubic-bezier(.2,.7,.2,1) calc(.62s + var(--j) * .09s) both }
+.lx-notes em { font-style:normal; font-size:10px; letter-spacing:.12em; color:var(--accent); width:17px; flex:none }
+.lx-notes i { width:13px; height:13px; border-radius:50%; flex:none; box-shadow:inset -1px -2px 3px rgba(0,0,0,.28),0 0 0 1px rgba(255,255,255,.18) }
+.lx-buy { display:flex; flex-direction:column; gap:18px }
+.lx-price { font-family:'Cormorant Garamond',Georgia,serif; font-weight:600; font-size:clamp(34px,3.4vw,46px); line-height:1; display:flex; align-items:baseline; gap:14px; flex-wrap:wrap }
+.lx-price small { font:400 13px/1.3 var(--sans); color:var(--mute) }
+.lx-actions { display:flex; align-items:center; gap:24px; flex-wrap:wrap }
+
+/* botão premium: preenchimento deslizante, seta, feedback ao clicar */
+.lx-btn { position:relative; overflow:hidden; display:inline-flex; align-items:center; gap:16px; height:56px; padding:0 30px; background:var(--btn-bg); color:var(--btn-fg); border:1px solid var(--btn-bg); border-radius:3px; font-size:12px; font-weight:700; letter-spacing:.22em; text-transform:uppercase; cursor:pointer;
+  transition:transform .18s ease,box-shadow .4s ease; box-shadow:0 14px 30px -14px rgba(0,0,0,.5) }
+.lx-btn::before { content:''; position:absolute; inset:0; background:var(--accent); transform:translateX(-102%); transition:transform .6s cubic-bezier(.2,.7,.2,1) }
+.lx-btn > * { position:relative; z-index:1 } .lx-btn svg { transition:transform .45s cubic-bezier(.2,.7,.2,1) }
+.lx-btn:hover::before, .lx-btn:focus-visible::before { transform:none } .lx-btn:hover svg { transform:translateX(6px) }
+.lx-btn:hover { box-shadow:0 18px 36px -14px rgba(0,0,0,.6) } .lx-btn:active { transform:scale(.97); box-shadow:inset 0 0 0 60px rgba(0,0,0,.1) }
+.lx-btn:focus-visible, .lx-add:focus-visible, .lx-arrows button:focus-visible, .lx-bar:focus-visible { outline:2px solid var(--accent); outline-offset:3px }
+.lx-add { background:none; border:0; border-bottom:1px solid var(--rule); padding:5px 0; color:var(--ink); font-size:13px; letter-spacing:.05em; cursor:pointer; transition:border-color .3s,color .3s }
+.lx-add:hover { border-color:var(--ink) } .lx-add.done { color:var(--accent); border-color:var(--accent) }
+
+/* navegação: contador, barras de progresso e setas discretas */
+.lx-ctrl { position:absolute; z-index:5; left:clamp(20px,3.2vw,72px); right:clamp(20px,3.2vw,72px); bottom:0; padding:0 clamp(28px,5vw,72px) 30px; display:flex; align-items:center; gap:26px; color:var(--ink); pointer-events:none; transition:color .8s }
+.lx-ctrl > * { pointer-events:auto }
+.lx-count { font-size:12px; letter-spacing:.14em; opacity:.8 } .lx-count b { font-size:14px; font-weight:700 }
+.lx-bars { display:flex; gap:8px }
+.lx-bar { position:relative; width:46px; height:24px; padding:0; border:0; background:none; cursor:pointer }
+.lx-bar::before { content:''; position:absolute; left:0; right:0; top:11px; height:2px; background:var(--rule); transition:background .8s }
+.lx-bar span { position:absolute; left:0; top:11px; height:2px; width:0; background:var(--ink); transition:background .8s }
+.lx-bar.seen span { width:100% } .lx-bar.on span { animation:lx-fill linear forwards }
+@keyframes lx-fill { from { width:0 } to { width:100% } }
+.lx-bar:hover::before { background:var(--ink); opacity:.5 }
+.lx-arrows { margin-left:auto; display:flex; gap:10px }
+.lx-arrows button { width:44px; height:44px; border-radius:50%; border:1px solid var(--rule); background:transparent; color:var(--ink); display:grid; place-items:center; cursor:pointer; transition:background .3s,border-color .3s,transform .15s }
+.lx-arrows button:hover { border-color:var(--ink); background:rgba(127,127,127,.12) } .lx-arrows button:active { transform:scale(.92) }
+
+@media (max-width:1100px) {
+  .lx-info { width:52% } .lx-prod { width:48%; right:3% } .lx-notes ol { grid-template-columns:1fr; gap:9px }
+}
+@media (max-width:820px) {
+  .lx { padding:0 12px; margin-top:12px }
+  .lx-slide { display:block; min-height:0 }
+  .lx-stage { position:relative; inset:auto; height:min(92vw,400px) }
+  .lx-prod { left:9%; right:9%; width:auto; bottom:20%; height:76% }
+  .lx-floor { height:21% }
+  .lx-info { width:100%; padding:26px 22px 86px }
+  .lx-brand { margin-bottom:14px } .lx-name { font-size:clamp(42px,13vw,60px); margin-bottom:12px } .lx-profile { margin-bottom:22px }
+  .lx-notes { max-width:none; margin-bottom:26px } .lx-notes ol { grid-template-columns:1fr 1fr; gap:11px 18px }
+  .lx-actions { flex-direction:column; align-items:stretch; width:100%; gap:16px } .lx-buy { width:100% }
+  .lx-btn { width:100%; justify-content:space-between; height:58px } .lx-add { align-self:center }
+  .lx-arrows { display:none } .lx-ctrl { left:12px; right:12px; padding:0 22px 26px; justify-content:space-between } .lx-bar { width:38px }
+}
+@media (prefers-reduced-motion:reduce) {
+  .lx-slide.on, .lx-slide.on .lx-a, .lx-slide.on .lx-notes li, .lx-slide.on .lx-enter, .lx-pimg { animation:none !important }
+  .lx-wall, .lx-prod { transform:none !important; transition:none } .lx-bar.on span { animation:none; width:100% } .lx-btn::before, .lx-btn svg { transition:none }
+}
+/* acabamento do palco */
+.lx-floor { -webkit-mask-image:linear-gradient(to right,transparent 30%,#000 56%); mask-image:linear-gradient(to right,transparent 30%,#000 56%) }
+.lx-prod { height:70%; bottom:24% }
+@media (max-width:820px) { .lx-floor { -webkit-mask-image:none; mask-image:none } .lx-prod { height:74%; bottom:21% } }
+.lx-count { white-space:nowrap; flex:none }
+.lx-price, .lx-name { font-variant-numeric:lining-nums; font-feature-settings:'lnum' 1 }
