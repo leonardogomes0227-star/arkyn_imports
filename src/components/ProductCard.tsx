@@ -2,10 +2,12 @@ import { Link } from 'react-router-dom'
 import Placeholder from './Placeholder'
 import { brl, useStore } from '../lib/store'
 import { noteGradient } from '../lib/noteColors'
+import { useToast } from './Toast'
 import type { Product } from '../lib/types'
 
 export default function ProductCard({ p }: { p: Product }) {
-  const { add, settings } = useStore()
+  const { add, settings, setOpen } = useStore()
+  const { toast } = useToast()
   const sale = !!p.old_price && p.old_price > p.price && p.stock > 0
   const n = settings.installments
   const clean = !!p.image?.includes('-net/')
@@ -16,7 +18,7 @@ export default function ProductCard({ p }: { p: Product }) {
         {sale && <span className="off">-{Math.round((1 - p.price / p.old_price!) * 100)}%</span>}
         {p.image ? <img src={p.image} alt={`${p.brand} ${p.name}`} loading="lazy" /> : <Placeholder brand={p.brand} />}
         {p.stock > 0 && (
-          <button className="quick" aria-label="Adicionar à sacola" title="Adicionar à sacola" onClick={e => { e.preventDefault(); add(p.id) }}>+</button>
+          <button className="quick" aria-label="Adicionar à sacola" title="Adicionar à sacola" onClick={e => { e.preventDefault(); add(p.id, false); toast(`${p.name} adicionado à sacola`, { label: 'Ver sacola', run: () => setOpen(true) }) }}>+</button>
         )}
         {!!hint.length && (
           <span className="notes" aria-hidden="true">

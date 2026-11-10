@@ -7,7 +7,7 @@ interface Ctx {
   products: Product[]
   settings: Settings
   cart: CartItem[]
-  add: (id: string) => void
+  add: (id: string, openCart?: boolean) => void
   setQty: (id: string, qty: number) => void
   clear: () => void
   count: number
@@ -40,7 +40,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const value = useMemo<Ctx>(() => ({
     products, settings, cart,
     open, setOpen,
-    add: id => { setOpen(true); setCart(c => c.some(i => i.id === id) ? c.map(i => i.id === id ? { ...i, qty: i.qty + 1 } : i) : [...c, { id, qty: 1 }]) },
+    add: (id, openCart = true) => { if (openCart) setOpen(true); setCart(c => c.some(i => i.id === id) ? c.map(i => i.id === id ? { ...i, qty: i.qty + 1 } : i) : [...c, { id, qty: 1 }]) },
     setQty: (id, qty) => setCart(c => qty <= 0 ? c.filter(i => i.id !== id) : c.map(i => i.id === id ? { ...i, qty } : i)),
     clear: () => setCart([]),
     count: cart.reduce((s, i) => s + i.qty, 0),
