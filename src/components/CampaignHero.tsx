@@ -34,6 +34,7 @@ export default function CampaignHero() {
   const [offscreen, setOffscreen] = useState(false)
   const [reduced, setReduced] = useState(false)
   const [moved, setMoved] = useState(false)
+  const [warm, setWarm] = useState(false) // só depois do primeiro slide estabilizar, pré-carrega o próximo
   const root = useRef<HTMLElement>(null)
   const drag = useRef<number | null>(null)
   const frame = useRef(0)
@@ -45,6 +46,7 @@ export default function CampaignHero() {
     const on = () => setReduced(q.matches); on(); q.addEventListener('change', on)
     return () => q.removeEventListener('change', on)
   }, [])
+  useEffect(() => { const t = window.setTimeout(() => setWarm(true), 3000); return () => window.clearTimeout(t) }, [])
   // pausa quando o banner sai da tela
   useEffect(() => {
     const el = root.current
@@ -76,6 +78,7 @@ export default function CampaignHero() {
         const t = s.theme
         const vars = { '--from': t.from, '--to': t.to, '--glow': t.glow, '--ink': t.ink, '--accent': t.accent, '--btn-bg': t.btnBg, '--btn-fg': t.btnFg } as CSSProperties
         const tab = on ? 0 : -1
+        const want = k === 0 || k === i || (warm && k === (i + 1) % total)
         return (
           <div key={s.id} className={on ? `ch-slide on${moved ? '' : ' init'}` : 'ch-slide'} style={vars} role="group" aria-roledescription="slide" aria-label={`${k + 1} de ${total}`} aria-hidden={!on}>
             <span className="ch-bg" aria-hidden="true" />
@@ -84,7 +87,7 @@ export default function CampaignHero() {
             <span className="ch-dust" aria-hidden="true">{Array.from({ length: 14 }, (_, n) => <i key={n} style={{ '--n': n } as CSSProperties} />)}</span>
             <div className="ch-prod" aria-hidden="true">
               <span className="ch-pglow" />
-              <div className="ch-float"><img src={s.img} alt="" width="800" height="800" loading={k === 0 ? 'eager' : 'lazy'} decoding="async" {...(k === 0 ? { fetchpriority: 'high' } : {})} /></div>
+              <div className="ch-float"><img src={want ? s.img : undefined} alt="" width="800" height="800" loading={k === 0 ? 'eager' : 'lazy'} decoding="async" {...(k === 0 ? { fetchpriority: 'high' } : {})} /></div>
               <span className="ch-pfloor" />
             </div>
             <div className="ch-info">

@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import CampaignHero from '../components/CampaignHero'
 import ProductCard from '../components/ProductCard'
 import Reveal from '../components/Reveal'
+import SizedImg from '../components/SizedImg'
 import { IconCard, IconChat, IconStore, IconTruck } from '../components/Icons'
 import { brl, useStore } from '../lib/store'
 import { usePageMeta } from '../lib/seo'
@@ -108,7 +109,7 @@ export default function Home() {
           <div className="oval-grid">
             {cats.map((c, i) => (
               <Link key={c.label} to={c.to} className="oval" style={{ '--a': c.a, '--b': c.b, '--i': i } as React.CSSProperties}>
-                <span className="oval-img">{c.src && <img src={c.src} alt="" loading="lazy" className={c.cut ? 'cut' : 'photo'} />}</span>
+                <span className="oval-img">{c.src && <SizedImg src={c.src} size={480} width={480} height={480} alt="" loading="lazy" decoding="async" className={c.cut ? 'cut' : 'photo'} />}</span>
                 <b>{c.label}</b>
                 <small>{c.count} {c.count === 1 ? 'produto' : 'produtos'}</small>
               </Link>
@@ -127,7 +128,7 @@ export default function Home() {
           <Link to="/catalogo" className="bq-btn light">Conhecer os perfumes</Link>
         </div>
         <div className="bq-promo-img" aria-hidden="true">
-          {['lattafa-afeef-100ml', 'maison-alhambra-pink-eclipse-100ml', 'lattafa-asad-elixir-100ml'].map((id, i) => <img key={id} src={`/hero/${id}.webp`} alt="" loading="lazy" style={{ '--i': i } as React.CSSProperties} />)}
+          {([['lattafa-afeef-100ml', 970, 824], ['maison-alhambra-pink-eclipse-100ml', 1000, 749], ['lattafa-asad-elixir-100ml', 436, 1000]] as const).map(([id, w, h], i) => <img key={id} src={`/hero/${id}.webp`} width={w} height={h} alt="" loading="lazy" decoding="async" style={{ '--i': i } as React.CSSProperties} />)}
           <span className="bq-podium" />
         </div>
       </Reveal>
@@ -151,7 +152,7 @@ export default function Home() {
             {scents.map(([t, count, notes, thumbs], i) => (
               <Reveal key={t} delay={i * 70}>
                 <Link to={`/catalogo?tag=${t}`} className="scent">
-                  <span className="scent-th">{thumbs.map(src => <i key={src}><img src={src} alt="" loading="lazy" /></i>)}</span>
+                  <span className="scent-th">{thumbs.map(src => <i key={src}><SizedImg src={src} size={160} width={160} height={160} alt="" loading="lazy" decoding="async" /></i>)}</span>
                   <b>{cap(t)}</b>
                   <small>{notes.join(' · ')}</small>
                   <em>{count} perfumes →</em>

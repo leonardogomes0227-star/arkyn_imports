@@ -1,3 +1,4 @@
+import SizedImg from '../components/SizedImg'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useToast } from '../components/Toast'
@@ -131,7 +132,7 @@ export default function Cart() {
           <ul className="ck-items">
             {lines.map(({ p, qty }) => (
               <li key={p.id}>
-                <Link to={`/produto/${p.id}`} className="ck-img">{p.image ? <img src={p.image} alt="" width="160" height="160" /> : null}</Link>
+                <Link to={`/produto/${p.id}`} className="ck-img">{p.image ? <SizedImg src={p.image} size={160} alt="" width={160} height={160} /> : null}</Link>
                 <div>
                   <small>{p.brand}</small>
                   <Link to={`/produto/${p.id}`} className="ck-name">{p.name}</Link>

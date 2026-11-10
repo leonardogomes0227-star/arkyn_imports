@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { IconHeart } from '../components/Icons'
 import Placeholder from '../components/Placeholder'
+import SizedImg from '../components/SizedImg'
 import ProductCard, { ProductSkeleton } from '../components/ProductCard'
 import { noteGradient } from '../lib/noteColors'
 import { CAT_LABEL } from '../lib/search'
@@ -73,7 +74,7 @@ export default function Product() {
         <div className="pdp-gallery">
           {images.length > 1 && (
             <div className="pdp-thumbs" role="tablist" aria-label="Fotos do produto">
-              {images.map((src, i) => <button key={src} type="button" role="tab" aria-selected={i === pic} className={i === pic ? 'on' : ''} onClick={() => setPic(i)} aria-label={`Foto ${i + 1}`}><img src={src} alt="" width="120" height="120" loading="lazy" /></button>)}
+              {images.map((src, i) => <button key={src} type="button" role="tab" aria-selected={i === pic} className={i === pic ? 'on' : ''} onClick={() => setPic(i)} aria-label={`Foto ${i + 1}`}><SizedImg src={src} size={160} alt="" width={120} height={120} loading="lazy" /></button>)}
             </div>
           )}
           <div className={`pdp-img${images[pic]?.includes('-net/') ? ' clean' : ''}`} onMouseMove={zoom}>

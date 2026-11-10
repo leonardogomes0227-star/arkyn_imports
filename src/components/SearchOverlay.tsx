@@ -1,3 +1,4 @@
+import SizedImg from './SizedImg'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { IconSearch } from './Icons'
@@ -72,7 +73,7 @@ export default function SearchOverlay({ open, onClose }: { open: boolean; onClos
               {results.map((p, i) => (
                 <li key={p.id} role="option" aria-selected={i === cur} className={i === cur ? 'on' : ''}>
                   <Link to={`/produto/${p.id}`} onClick={onClose} tabIndex={open ? 0 : -1}>
-                    <span className="ax-hit-img">{p.image ? <img src={p.image} alt="" loading="lazy" /> : null}</span>
+                    <span className="ax-hit-img">{p.image ? <SizedImg src={p.image} size={160} alt="" width={96} height={96} loading="lazy" /> : null}</span>
                     <span className="ax-hit-t"><small>{p.brand}</small><b>{p.name}</b></span>
                     <span className="ax-hit-p">{p.stock > 0 ? brl(p.price) : 'Esgotado'}</span>
                   </Link>
