@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import HeroSlider from '../components/HeroSlider'
+import CampaignHero from '../components/CampaignHero'
 import ProductCard from '../components/ProductCard'
 import Reveal from '../components/Reveal'
 import { IconCard, IconChat, IconStore, IconTruck } from '../components/Icons'
@@ -91,7 +91,7 @@ export default function Home() {
 
   return (
     <>
-      <HeroSlider />
+      <CampaignHero />
 
       <Reveal as="section" className="ax-benefits" >
         {benefits.map(([ic, t, s]) => <div key={t}>{ic}<span><b>{t}</b><small>{s}</small></span></div>)}
