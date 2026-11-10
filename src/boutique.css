@@ -51,7 +51,7 @@ h1,h2,h3 { letter-spacing:0 }
 .ax-nav a { color:var(--ink); font-weight:600; letter-spacing:.12em; position:relative }
 .ax-nav a::after { content:''; position:absolute; left:0; right:0; bottom:-6px; height:2px; background:var(--btn); transform:scaleX(0); transform-origin:left; transition:transform .35s var(--ease) }
 .ax-nav a:hover { color:var(--rose-d) } .ax-nav a:hover::after, .ax-nav a[aria-current="page"]::after { transform:scaleX(1) }
-.ax-quiz { color:var(--rose-d) !important; font-weight:700 }
+.ax-quiz { color:var(--rose-d); font-weight:700 }
 .ax-icon, .ax-burger { color:var(--ink) } .ax-burger span { background:var(--ink) }
 .ax-logo img { filter:none; mix-blend-mode:multiply }
 .ax-bag em, .ax-fav em { background:var(--champagne); color:#111; box-shadow:0 0 0 2px #fff }
@@ -129,7 +129,7 @@ h1,h2,h3 { letter-spacing:0 }
 .card-add { margin:12px 4px 0; align-self:stretch; min-height:44px; border:0; border-radius:var(--r-sm); background:var(--btn); color:#fff; font:800 .75rem/1 var(--sans); letter-spacing:.14em; text-transform:uppercase; cursor:pointer; transition:background .25s,transform .25s; position:relative; z-index:2 }
 .card-add:hover { background:var(--btn-h) } .card-add.done { background:var(--plum) }
 .card.is-out .card-add { display:none }
-.quick { background:#fff; color:var(--rose-d); box-shadow:var(--sh-1) } .quick:hover { background:var(--btn) !important; color:#fff }
+.quick { background:#fff; color:var(--rose-d); box-shadow:var(--sh-1) } .quick:hover { background:var(--btn); color:#fff }
 .card .fav { position:absolute; top:10px; right:10px; z-index:3; width:40px; height:40px; display:grid; place-items:center; border:0; border-radius:50%; background:rgba(255,255,255,.9); color:var(--ink-2); cursor:pointer; box-shadow:var(--sh-1); transition:transform .25s var(--ease),color .2s }
 .card .fav:hover { transform:scale(1.08); color:var(--rose) } .card .fav.on { color:#d4475f; animation:bq-pop .4s var(--ease) }
 .ax-fav { position:relative; display:grid; place-items:center }
@@ -151,7 +151,7 @@ h1,h2,h3 { letter-spacing:0 }
 .ax-band .btn.light { background:var(--btn); color:#fff; border-color:var(--btn) }
 .scent { background:#fff; border-radius:var(--r-md); color:var(--ink); box-shadow:var(--sh-1); transition:transform .4s var(--ease),box-shadow .4s var(--ease) }
 @media (hover:hover) { .scent:hover { transform:translateY(-6px); box-shadow:var(--sh-2) } }
-.scent b { font-family:var(--display); font-weight:600; font-size:1.7rem !important; text-transform:none; color:var(--plum) }
+.ax-band .scent b { font-family:var(--display); font-weight:600; font-size:1.7rem; text-transform:none; color:var(--plum) }
 .scent small { color:var(--mute) } .scent em { color:var(--rose-d) }
 .scent-th i { background:var(--blush) }
 
@@ -171,15 +171,15 @@ h1,h2,h3 { letter-spacing:0 }
 
 /* ---------- página de produto ---------- */
 .pdp-img { background:radial-gradient(90% 80% at 50% 38%,#fff 0,var(--blush) 66%,var(--blush-2) 100%); border-radius:var(--r-md); box-shadow:none }
-.pdp-img img, .pdp-img img[src*='-net/'] { mix-blend-mode:multiply !important }
+.pdp-img img, .pdp-img img[src*='-net/'] { mix-blend-mode:multiply }
 .pdp-img .off, .pdp-off { background:var(--plum); color:#fff; border-radius:4px; font-weight:800 }
-.pdp-info h1 { font-family:var(--display) !important; font-weight:600 !important; text-transform:none; font-size:clamp(2.4rem,4.4vw,3.8rem) !important; line-height:1.02 }
-.pdp-now { font-family:var(--sans) !important; font-weight:800 !important; color:var(--ink); font-size:clamp(1.9rem,3vw,2.6rem) !important }
+.pdp-info h1 { font-family:var(--display); font-weight:600; text-transform:none; font-size:clamp(2.4rem,4.4vw,3.8rem); line-height:1.02 }
+.pdp-now { font-family:var(--sans); font-weight:800; color:var(--ink); font-size:clamp(1.9rem,3vw,2.6rem) }
 .pdp-cta { background:var(--btn); border-color:var(--btn) } .pdp-cta:hover { background:var(--btn-h); border-color:var(--btn-h) }
 .pdp-bar { background:#fff; color:var(--ink); box-shadow:0 -10px 30px -14px rgba(37,35,31,.35) } .pdp-bar small { color:var(--rose) } .pdp-bar b { font-family:var(--sans); font-weight:800; font-size:1.2rem; color:var(--ink) } .pdp-bar .btn { background:var(--btn); border-color:var(--btn) }
 .pdp-acc summary { font-weight:800; letter-spacing:.12em; text-transform:uppercase; font-size:.8125rem }
-.catalog .page-title, .ax-empty-page h1, .ax-empty-results h2 { font-family:var(--display) !important; font-weight:600 !important; text-transform:none; letter-spacing:0 }
-.catalog .page-title { font-size:clamp(2.4rem,4.6vw,3.8rem) !important }
+.catalog .page-title, .ax-empty-page h1, .ax-empty-results h2 { font-family:var(--display); font-weight:600; text-transform:none; letter-spacing:0 }
+.catalog .page-title { font-size:clamp(2.4rem,4.6vw,3.8rem) }
 
 /* ---------- rodapé em ameixa ---------- */
 .ax-footer { background:var(--plum); color:#dccbd5 }

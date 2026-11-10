@@ -7,7 +7,6 @@ import { ToastProvider } from './components/Toast'
 import './fonts.css'
 import './styles.css'
 import './design.css'
-import './admin.css'
 import './campaign.css'
 import './boutique.css'
 
