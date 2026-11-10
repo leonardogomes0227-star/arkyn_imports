@@ -93,6 +93,7 @@ export default function Home() {
 
   return (
     <>
+      <h1 className="sr-only">Arkyn Imports: perfumes árabes e importados em Coxim – MS</h1>
       <CampaignHero />
 
       <Reveal as="section" className="ax-benefits" >

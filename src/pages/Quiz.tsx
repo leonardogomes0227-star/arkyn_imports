@@ -57,7 +57,7 @@ export default function Quiz() {
 
   return (
     <section className="section quiz">
-      <h2>Qual é o seu cheiro?</h2>
+      <h1>Qual é o seu cheiro?</h1>
       {!done ? (
         <>
           <p className="muted">Pergunta {step + 1} de {QUESTIONS.length}</p>

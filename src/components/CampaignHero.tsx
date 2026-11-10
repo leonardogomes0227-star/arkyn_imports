@@ -11,10 +11,10 @@ type Slide = {
 const SLIDES: Slide[] = [
   { id: 'arabe', img: '/hero/lattafa-asad-elixir-100ml.webp', word: 'ARKYN', eyebrow: 'Perfumaria selecionada', title: ['Uma experiência', 'que marca.'],
     sub: 'Descubra fragrâncias selecionadas para quem valoriza autenticidade, personalidade e sofisticação.', cta: ['Explorar coleção', '/catalogo'], cta2: ['Qual é o seu cheiro?', '/quiz'],
-    theme: { from: '#f6f2ea', to: '#e5dcce', glow: 'rgba(255,255,255,.95)', ink: '#2b2025', accent: '#7f6a43', btnBg: '#111111', btnFg: '#ffffff' } },
+    theme: { from: '#f6f2ea', to: '#e5dcce', glow: 'rgba(255,255,255,.95)', ink: '#2b2025', accent: '#6f5b37', btnBg: '#111111', btnFg: '#ffffff' } },
   { id: 'ele', img: '/hero/maison-alhambra-victorioso-nero-100ml.webp', word: 'ELE', eyebrow: 'Para ele', title: ['Noite longa,', 'presença forte.'],
     sub: 'Amadeirados e especiados para quem chega marcando território.', cta: ['Ver masculinos', '/catalogo?cat=masculino'],
-    theme: { from: '#efebe3', to: '#d9d1c4', glow: 'rgba(255,255,255,.95)', ink: '#2b2025', accent: '#7f6a43', btnBg: '#111111', btnFg: '#ffffff' } },
+    theme: { from: '#efebe3', to: '#d9d1c4', glow: 'rgba(255,255,255,.95)', ink: '#2b2025', accent: '#6f5b37', btnBg: '#111111', btnFg: '#ffffff' } },
   { id: 'ela', img: '/hero/maison-alhambra-pink-eclipse-100ml.webp', word: 'ELA', eyebrow: 'Para ela', title: ['Doce, floral', 'e marcante.'],
     sub: 'Fragrâncias femininas que enchem o ambiente de personalidade.', cta: ['Ver femininos', '/catalogo?cat=feminino'],
     theme: { from: '#f6ece6', to: '#e8d3c8', glow: 'rgba(255,255,255,.95)', ink: '#2b2025', accent: '#111111', btnBg: '#111111', btnFg: '#ffffff' } },

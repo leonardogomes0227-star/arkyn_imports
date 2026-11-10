@@ -7,8 +7,8 @@
   /* Luxo-Clean: 65% claro, 25% escuro, 10% champagne */
   --bg:#f4f0e9; --surface:#ffffff; --blush:#ece4d8; --blush-2:#e5dcce; --sand:#e5dcce; --line:#e2d9ca;
   --btn:#111111; --btn-h:#25231f;
-  --rose:#7f6a43; --rose-d:#5f4e30; --rose-l:#b49a70; --champagne:#b49a70; --plum:#25231f; --plum-2:#111111;
-  --ink:#25231f; --ink-2:#4a463f; --mute:#74705f; --muted:#74705f; --stone:#5f5b52;
+  --rose:#6f5b37; --rose-d:#5f4e30; --rose-l:#b49a70; --champagne:#b49a70; --plum:#25231f; --plum-2:#111111;
+  --ink:#25231f; --ink-2:#4a463f; --mute:#65614f; --muted:#65614f; --stone:#5f5b52;
   --gold:var(--rose); --gold-l:var(--champagne); --dark:#25231f;
   --display:'Cormorant Garamond',Georgia,'Times New Roman',serif;
   --sans:'Manrope','DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
@@ -19,6 +19,11 @@
 body { font-family:var(--sans); background:var(--bg); color:var(--ink) }
 ::selection { background:var(--blush-2); color:var(--plum) }
 :focus-visible { outline-color:var(--rose) }
+
+/* só para leitores de tela e buscadores */
+.sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0 }
+/* título do Quiz (h1) com o mesmo visual que tinha como h2 */
+.quiz > h1 { font-size:30px; line-height:1.15; margin-bottom:20px }
 
 /* títulos: serifa elegante, sem caixa alta */
 h1,h2,h3 { letter-spacing:0 }
