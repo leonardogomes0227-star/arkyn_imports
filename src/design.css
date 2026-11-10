@@ -219,7 +219,7 @@ input[aria-invalid="true"] { border-color:#b3261e; box-shadow:0 0 0 3px rgba(179
 .card .info { padding:18px 4px 0; gap:5px }
 .card .info small { font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--mute) }
 .card .info h3 { font-family:var(--display); font-weight:600; font-size:1.32rem; line-height:1.1; letter-spacing:-.005em; margin:0 }
-.card .info a:hover h3 { text-decoration:underline; text-decoration-thickness:1px; text-underline-offset:3px }
+@media (hover:hover) { .card .info a:hover h3 { text-decoration:underline; text-decoration-thickness:1px; text-underline-offset:3px } }
 .card .low { font-size:var(--fs-xs); color:#a1442a; letter-spacing:.04em }
 .card .pr { margin-top:8px } .card .pr strong { font-size:1.05rem; font-weight:700 } .card .pr .old { font-size:var(--fs-sm) } .card .soldout { color:var(--mute); font-weight:500; font-size:var(--fs-sm) }
 .card.sk .info { gap:10px; padding-top:18px } .sk-l { display:block; height:12px; border-radius:3px } .sk-l.s { width:32% } .sk-l.m { width:78%; height:18px } .sk-l.p { width:28% }
@@ -362,3 +362,78 @@ input[aria-invalid="true"] { border-color:#b3261e; box-shadow:0 0 0 3px rgba(179
 .ck-coupon input { flex:1 1 0; width:0 }
 .ck-items .ax-line-row, .ax-lines .ax-line-row { flex-wrap:wrap; gap:8px 12px }
 @media (max-width:400px) { .ck-items li { grid-template-columns:64px 1fr; gap:12px } .ck-img { width:64px; height:64px } .ck-sum, .ck-card { padding:18px } }
+
+/* =====================================================================
+   POLIMENTO MOBILE — alvos de toque ≥ 44px, texto ≥ 12px, campos 16px
+   ===================================================================== */
+/* cartão inteiro clicável (nome, foto e área vazia levam ao produto; o "+" continua independente) */
+.card { position:relative }
+.card .info a::after { content:''; position:absolute; inset:0; z-index:1 }
+.card .quick { z-index:3 }
+
+@media (max-width:820px) {
+  /* campos: 16px evita o zoom automático do iPhone ao tocar */
+  input, select, textarea { font-size:16px; min-height:48px }
+  input[type=checkbox], input[type=radio] { min-height:0 }
+  /* texto mínimo legível */
+  .ax-topbar { font-size:12px } .ax-bag em { font-size:12px; min-width:20px; height:20px; line-height:20px }
+  .card .info small, .lx-notes-h, .pdp-bar small, .ax-eyebrow, .cat-txt small, .ax-hit-t small, .ax-line-t small, .ck-items small { font-size:12px }
+  .lx-notes em, .pdp-notes-list em, .lx-brand { font-size:12px }
+  /* alvos de toque */
+  .textlink, .ax-sec-head .textlink { display:inline-flex; align-items:center; min-height:44px }
+  .rail { gap:6px 22px; flex-wrap:wrap; justify-content:flex-start } .rail a { display:inline-flex; align-items:center; min-height:44px }
+  .lx-bar { height:44px; min-width:20px } .lx-bar::before, .lx-bar span { top:21px }
+  .lx-add { min-height:44px; padding:12px 0; display:inline-flex; align-items:center }
+  .quick { width:44px; height:44px; right:10px; top:10px }
+  .ax-footer a, .ax-footer span { padding:11px 0 } .ax-foot-brand a { padding:12px 0 }
+  .ax-copy a { padding:12px 4px; display:inline-block }
+  .ax-step button { width:44px; height:44px } .ax-remove { padding:12px 0; min-height:44px }
+  .fopt { padding:12px 0 !important; min-height:44px } .fchk { min-height:44px }
+  .active-filters button:not(.link) { min-height:44px } .active-filters .link { padding:12px 8px }
+  .ax-chips a { min-height:44px; display:inline-flex; align-items:center }
+  .ax-menu-nav a { min-height:56px } .ax-menu-x, .ax-drawer-x { width:48px; height:48px }
+  .crumbs a { display:inline-block; padding:10px 0 }
+  .pdp-thumbs button { width:64px; height:64px }
+  .pdp-acc summary { min-height:56px }
+  .scent { min-height:44px }
+  /* botão de WhatsApp: respeita a área segura e não cobre a finalização */
+  .wa-float { right:calc(14px + env(safe-area-inset-right)); bottom:calc(14px + env(safe-area-inset-bottom)); width:54px; height:54px }
+  body.page-checkout .wa-float { display:none }
+  .ax-toasts { bottom:calc(20px + env(safe-area-inset-bottom)) }
+}
+.ax-bag, .ax-icon, .ax-burger { -webkit-tap-highlight-color:transparent }
+a, button { -webkit-tap-highlight-color:rgba(15,15,16,.08) }
+html { -webkit-text-size-adjust:100%; text-size-adjust:100% }
+@media (max-width:820px) {
+  .lx-bars { gap:4px } .lx-bar { min-width:30px } .lx-ctrl { gap:12px; padding-left:20px; padding-right:20px }
+  .crumbs { display:flex; flex-wrap:wrap; align-items:center; gap:0 2px } .crumbs a { display:inline-block; padding:14px 4px }
+}
+
+/* ---------- mobile: ajustes da revisão visual ---------- */
+.ax-sec-head .textlink { white-space:nowrap; flex:none }
+@media (max-width:820px) {
+  .ax-sec-head { align-items:flex-end; gap:12px } .ax-sec-head h2 { min-width:0 }
+  .cat-txt { padding-right:50px }
+  .rail { flex-wrap:nowrap; overflow-x:auto; scrollbar-width:none; gap:22px; margin-top:56px; padding:6px 20px; -webkit-mask-image:linear-gradient(to right,#000 88%,transparent); mask-image:linear-gradient(to right,#000 88%,transparent) }
+  .rail::-webkit-scrollbar { display:none } .rail a, .rail .ax-eyebrow { flex:none; white-space:nowrap }
+  .ax-footer-in { gap:8px 28px } .ax-footer h4 { margin:26px 0 6px }
+  .ax-foot-brand p { margin-top:10px }
+}
+
+/* ---------- mobile: WhatsApp flutuante sem cobrir conteúdo; busca em tela cheia ---------- */
+@media (max-width:820px) {
+  body.page-product .wa-float, body.page-checkout .wa-float { display:none }
+  .wa-float { width:50px; height:50px }
+  .ax-search-panel { min-height:100dvh; max-height:100dvh; padding-top:calc(18px + env(safe-area-inset-top)) }
+  .ax-menu { padding-top:calc(14px + env(safe-area-inset-top)); padding-bottom:calc(26px + env(safe-area-inset-bottom)) }
+}
+
+/* ---------- mobile: segunda rodada de revisão ---------- */
+@media (max-width:820px) {
+  .cat-txt { padding-right:0; display:block } .cat-txt b { display:block }
+  .cat-go { top:12px; bottom:auto; right:12px; width:38px; height:38px }
+  .pdp-bar .btn { letter-spacing:.1em; padding:0 14px; white-space:nowrap }
+  .ax-all { text-align:left; line-height:1.5; padding-bottom:6px; letter-spacing:.08em }
+  .ax-hits a { grid-template-columns:60px 1fr; grid-template-areas:'i t' 'i p'; row-gap:2px } .ax-hit-img { grid-area:i; width:60px; height:60px } .ax-hit-t { grid-area:t } .ax-hit-p { grid-area:p; font-size:var(--fs-base) }
+}
+@media (max-width:820px) { .cat-txt small { letter-spacing:.08em; white-space:nowrap } .ax-all { letter-spacing:.03em; font-size:12px } }

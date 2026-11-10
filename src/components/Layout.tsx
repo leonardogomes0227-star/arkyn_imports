@@ -40,6 +40,11 @@ export default function Layout({ children }: { children: ReactNode }) {
   }, [])
   // ao trocar de página: volta ao topo e fecha menu/busca
   useEffect(() => { window.scrollTo(0, 0); setMenu(false); setSearch(false) }, [loc.pathname, loc.search])
+  useEffect(() => {
+    document.body.classList.toggle('page-checkout', loc.pathname === '/carrinho')
+    document.body.classList.toggle('page-product', loc.pathname.startsWith('/produto/'))
+    return () => document.body.classList.remove('page-checkout', 'page-product')
+  }, [loc.pathname])
   // trava a rolagem do fundo com menu/busca abertos; atalhos: "/" e Ctrl/⌘+K abrem a busca
   useEffect(() => { document.body.style.overflow = menu || search ? 'hidden' : '' }, [menu, search])
   useEffect(() => {
