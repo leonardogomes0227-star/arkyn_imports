@@ -14,12 +14,12 @@ const cap = (t: string) => t[0].toUpperCase() + t.slice(1)
 const CUTOUTS = new Set(['french-avenue-vulcan-feu-100ml', 'lattafa-afeef-100ml', 'armaf-club-de-nuit-maleka-105ml', 'lattafa-asad-elixir-100ml', 'maison-alhambra-pink-eclipse-100ml', 'maison-alhambra-victorioso-nero-100ml'])
 // Categorias em oval: produto de capa preferido + tons suaves. Só aparecem as que têm produto.
 const OVALS: { label: string; to: string; match: (p: Product) => boolean; prefer: string; a: string; b: string }[] = [
-  { label: 'Masculinos', to: '/catalogo?cat=masculino', match: p => p.category === 'masculino', prefer: 'lattafa-asad-elixir-100ml', a: '#efe9e4', b: '#d9cfc6' },
-  { label: 'Femininos', to: '/catalogo?cat=feminino', match: p => p.category === 'feminino', prefer: 'maison-alhambra-pink-eclipse-100ml', a: '#fbe9ec', b: '#f0c9d1' },
-  { label: 'Doces', to: '/catalogo?tag=doce', match: p => !!p.tags?.includes('doce'), prefer: 'lattafa-afeef-100ml', a: '#fbefe0', b: '#efd3b0' },
-  { label: 'Amadeirados', to: '/catalogo?tag=amadeirado', match: p => !!p.tags?.includes('amadeirado'), prefer: 'maison-alhambra-victorioso-nero-100ml', a: '#ece6df', b: '#cfc2b3' },
-  { label: 'Splash e miniaturas', to: '/catalogo?cat=splash', match: p => p.category === 'splash', prefer: '', a: '#f1e8f4', b: '#dccbe6' },
-  { label: 'Skincare', to: '/catalogo?cat=skincare', match: p => p.category === 'skincare', prefer: 'celimax-the-vita-a-retinal-shot-15ml', a: '#eef3e6', b: '#d3e0c0' },
+  { label: 'Masculinos', to: '/catalogo?cat=masculino', match: p => p.category === 'masculino', prefer: 'lattafa-asad-elixir-100ml', a: '#f1ece4', b: '#d9cfbf' },
+  { label: 'Femininos', to: '/catalogo?cat=feminino', match: p => p.category === 'feminino', prefer: 'maison-alhambra-pink-eclipse-100ml', a: '#f3ebe3', b: '#ddcfc0' },
+  { label: 'Doces', to: '/catalogo?tag=doce', match: p => !!p.tags?.includes('doce'), prefer: 'lattafa-afeef-100ml', a: '#f4ede0', b: '#e3d3b5' },
+  { label: 'Amadeirados', to: '/catalogo?tag=amadeirado', match: p => !!p.tags?.includes('amadeirado'), prefer: 'maison-alhambra-victorioso-nero-100ml', a: '#eee9e1', b: '#d2c8b8' },
+  { label: 'Splash e miniaturas', to: '/catalogo?cat=splash', match: p => p.category === 'splash', prefer: '', a: '#efeae3', b: '#d8cfc0' },
+  { label: 'Skincare', to: '/catalogo?cat=skincare', match: p => p.category === 'skincare', prefer: 'celimax-the-vita-a-retinal-shot-15ml', a: '#f0ece3', b: '#d9d1bf' },
 ]
 
 function SecHead({ eyebrow, title, to, link = 'Ver todos' }: { eyebrow?: string; title: string; to?: string; link?: string }) {
@@ -118,12 +118,12 @@ export default function Home() {
 
       <Shelf eyebrow="Para começar" title="Destaques" to="/catalogo" items={featured} />
 
-      <Reveal as="section" className="bq-promo" aria-label="Seleção da casa">
+      <Reveal as="section" className="bq-promo" aria-label="Sobre a Arkyn">
         <div className="bq-promo-txt">
-          <p>Seleção da casa</p>
-          <h2>Perfumes escolhidos a dedo</h2>
-          <span>Árabes e importados com presença, para todos os gostos e ocasiões.</span>
-          <Link to="/catalogo" className="bq-btn light">Ver o catálogo</Link>
+          <p>Arkyn Imports</p>
+          <h2>Mais que uma fragrância. Uma assinatura.</h2>
+          <span>Perfumes árabes e importados escolhidos com cuidado, com atendimento próximo, em Coxim – MS.</span>
+          <Link to="/catalogo" className="bq-btn light">Conhecer os perfumes</Link>
         </div>
         <div className="bq-promo-img" aria-hidden="true">
           {['lattafa-afeef-100ml', 'maison-alhambra-pink-eclipse-100ml', 'lattafa-asad-elixir-100ml'].map((id, i) => <img key={id} src={`/hero/${id}.webp`} alt="" loading="lazy" style={{ '--i': i } as React.CSSProperties} />)}
