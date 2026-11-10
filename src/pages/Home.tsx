@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import HeroSlider from '../components/HeroSlider'
 import ProductCard from '../components/ProductCard'
 import { useStore } from '../lib/store'
 import type { Category, Product } from '../lib/types'
@@ -31,15 +32,13 @@ export default function Home() {
     const freq = new Map<string, number>()
     list.forEach(p => p.notes?.forEach(x => freq.set(x, (freq.get(x) ?? 0) + 1)))
     const notes = [...freq.entries()].sort((a, b) => b[1] - a[1]).slice(0, 4).map(([x]) => x)
-    return [t, list.length, notes] as [string, number, string[]]
+    const thumbs = list.filter(p => p.image).slice(0, 3).map(p => p.image as string)
+    return [t, list.length, notes, thumbs] as [string, number, string[], string[]]
   }).filter(([, c]) => c > 0)
 
   return (
     <>
-      <section className="intro">
-        <img src="/logo-full.png" alt="Arkyn Imports" />
-        <p>Perfumes árabes originais · Retirada em Coxim – MS</p>
-      </section>
+      <HeroSlider />
 
       <Shelf title="Lançamentos" to="/catalogo" items={featured} />
 
@@ -48,14 +47,17 @@ export default function Home() {
       </nav>
 
       <section className="section scents">
-        <h2 className="scents-h">Escolha pelo cheiro</h2>
-        {scents.map(([t, count, notes]) => (
-          <Link key={t} to={`/catalogo?tag=${t}`} className="scent">
-            <b>{cap(t)}</b>
-            <span className="scent-notes">{notes.join(' · ')}</span>
-            <em>{count} perfumes →</em>
-          </Link>
-        ))}
+        <div className="sec-head"><h2>Escolha pelo cheiro</h2><Link to="/quiz" className="textlink">Fazer o quiz</Link></div>
+        <div className="scent-grid">
+          {scents.map(([t, count, notes, thumbs]) => (
+            <Link key={t} to={`/catalogo?tag=${t}`} className="scent">
+              <span className="scent-th">{thumbs.map(src => <i key={src}><img src={src} alt="" loading="lazy" /></i>)}</span>
+              <b>{cap(t)}</b>
+              <small>{notes.join(' · ')}</small>
+              <em>{count} perfumes →</em>
+            </Link>
+          ))}
+        </div>
       </section>
 
       <section className="wrap quizband">
