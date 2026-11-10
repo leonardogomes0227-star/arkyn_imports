@@ -2,8 +2,8 @@ import { useEffect, useState, type ReactNode } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import CartDrawer from './CartDrawer'
 import SearchOverlay from './SearchOverlay'
-import { IconBag, IconHeart, IconSearch } from './Icons'
-import { useStore } from '../lib/store'
+import { IconBag, IconHeart, IconSearch, IconTruck } from './Icons'
+import { brl, useStore } from '../lib/store'
 
 export function Logo({ className = 'ax-logo' }: { className?: string }) {
   return (
@@ -21,6 +21,8 @@ const NAV: [string, string][] = [
   ['Todos os perfumes', '/catalogo'],
 ]
 
+const HEAD_NAV: [string, string][] = [['Início', '/'], ...NAV]
+
 const phone = (n: string) => (/^55\d{2}9?\d{8}$/.test(n) ? `(${n.slice(2, 4)}) ${n.slice(4, n.length - 4)}-${n.slice(-4)}` : n)
 
 export default function Layout({ children }: { children: ReactNode }) {
@@ -29,7 +31,7 @@ export default function Layout({ children }: { children: ReactNode }) {
   const [scrolled, setScrolled] = useState(false)
   const [menu, setMenu] = useState(false)
   const [search, setSearch] = useState(false)
-  const msgs = settings.announcement ? [settings.announcement] : ['Pague com Pix ou cartão de crédito', 'Retirada em Coxim – MS', 'Atendimento pelo WhatsApp']
+  const ship = settings.announcement || (settings.freeShippingFrom > 0 ? `Frete grátis acima de ${brl(settings.freeShippingFrom)}` : 'Retirada grátis em Coxim – MS')
 
   // cabeçalho compacto ao rolar
   useEffect(() => {
@@ -65,12 +67,18 @@ export default function Layout({ children }: { children: ReactNode }) {
     <>
       <a className="ax-skip" href="#conteudo">Pular para o conteúdo</a>
       <header className={scrolled ? 'ax-header is-scrolled' : 'ax-header'}>
-        <div className="ax-topbar" aria-label="Avisos da loja"><div className="ax-marquee">{[...msgs, ...msgs, ...msgs, ...msgs].map((m, i) => <span key={i} data-d={i >= msgs.length ? '' : undefined} aria-hidden={i >= msgs.length ? true : undefined}>{m}</span>)}</div></div>
+        <div className="ax-topbar sc-top" aria-label="Avisos da loja">
+          <div className="sc-top-in">
+            <span className="sc-top-l"><IconTruck size={16} />{ship}</span>
+            <span className="sc-top-c"><i aria-hidden="true">✦</i> Perfumes árabes e importados <i aria-hidden="true">✦</i></span>
+            <span className="sc-top-r"><a href={wa} target="_blank" rel="noreferrer">Ajuda e suporte</a><Link to="/quiz">Qual é o seu cheiro?</Link></span>
+          </div>
+        </div>
         <div className="ax-head">
           <button type="button" className="ax-burger" aria-label="Abrir menu" aria-expanded={menu} aria-controls="ax-menu" onClick={() => setMenu(true)}><span /><span /><span /></button>
           <Logo />
           <nav className="ax-nav" aria-label="Principal">
-            {NAV.map(([label, to]) => <Link key={to} to={to} aria-current={active(to) ? 'page' : undefined}>{label}</Link>)}
+            {HEAD_NAV.map(([label, to]) => <Link key={to} to={to} aria-current={active(to) ? 'page' : undefined}>{label}</Link>)}
             <Link to="/quiz" className="ax-quiz" aria-current={loc.pathname === '/quiz' ? 'page' : undefined}>Qual é o seu cheiro?</Link>
           </nav>
           <div className="ax-actions">

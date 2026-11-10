@@ -25,8 +25,8 @@ const CATS: { label: string; to: string; match: (p: Product) => boolean; prefer:
 
 // Banners de coleção: só conteúdo que existe na loja (sem preço, desconto ou promoção).
 const PROMOS = [
-  { k: 'Masculinos', title: 'Presença e personalidade', sub: 'Amadeirados e especiados para o dia a dia e para a noite.', btn: 'Ver masculinos', to: '/catalogo?cat=masculino', img: '/hero/lattafa-asad-elixir-100ml.webp', w: 436, h: 1000, tone: 'navy' },
-  { k: 'Femininos', title: 'Doces, florais e marcantes', sub: 'Fragrâncias que enchem o ambiente de personalidade.', btn: 'Ver femininos', to: '/catalogo?cat=feminino', img: '/hero/maison-alhambra-pink-eclipse-100ml.webp', w: 1000, h: 749, tone: 'rose' },
+  { k: 'Masculinos', title: 'Presença e personalidade', sub: 'Amadeirados e especiados para o dia a dia e para a noite.', btn: 'Ver masculinos', to: '/catalogo?cat=masculino', img: '/hero/lattafa-asad-elixir-100ml.webp', w: 436, h: 1000, tone: 'dark' },
+  { k: 'Femininos', title: 'Doces, florais e marcantes', sub: 'Fragrâncias que enchem o ambiente de personalidade.', btn: 'Ver femininos', to: '/catalogo?cat=feminino', img: '/hero/maison-alhambra-pink-eclipse-100ml.webp', w: 1000, h: 749, tone: 'sand' },
   { k: 'Compre pelo cheiro', title: 'Qual é o seu cheiro?', sub: 'Responda o quiz e veja os perfumes que combinam com você.', btn: 'Fazer o quiz', to: '/quiz', img: '/hero/armaf-club-de-nuit-maleka-105ml.webp', w: 1000, h: 881, tone: 'bronze' },
 ] as const
 
@@ -35,6 +35,17 @@ function SecHead({ eyebrow, title, to, link = 'Ver todos' }: { eyebrow?: string;
     <div className="ax-sec-head">
       <div>{eyebrow && <p className="ax-eyebrow">{eyebrow}</p>}<h2>{title}</h2></div>
       {to && <Link to={to} className="ax-sec-link">{link} <span aria-hidden="true">→</span></Link>}
+    </div>
+  )
+}
+
+function CenterHead({ eyebrow, title, to, link = 'Ver todos' }: { eyebrow: string; title: string; to?: string; link?: string }) {
+  return (
+    <div className="sc-head">
+      <p className="sc-eyebrow">{eyebrow}</p>
+      <h2>{title}</h2>
+      <span className="sc-orn" aria-hidden="true"><i /><b>◆</b><i /></span>
+      {to && <Link to={to} className="sc-all">{link} <span aria-hidden="true">→</span></Link>}
     </div>
   )
 }
@@ -68,8 +79,8 @@ export default function Home() {
 
   // Vitrines: só aparecem quando os dados sustentam. "Mais vendidos" e "Novidades" ficam de fora
   // porque o cadastro não guarda vendas por produto nem data de cadastro.
-  const flagged = live.filter(p => p.featured).slice(0, 4)
-  const featured = flagged.length ? flagged : live.filter(p => !!p.image).slice(0, 4)
+  const flagged = live.filter(p => p.featured)
+  const featured = flagged.length >= 5 ? flagged.slice(0, 5) : [...flagged, ...live.filter(p => !!p.image && !flagged.includes(p))].slice(0, 5)
   const offers = live.filter(p => !!p.old_price && p.old_price > p.price).slice(0, 8)
   const shown = new Set([...featured, ...offers].map(p => p.id))
   const by = (list: Product[]) => list.filter(p => !shown.has(p.id)).slice(0, 4)
@@ -109,12 +120,16 @@ export default function Home() {
           {cats.map(c => (
             <Link key={c.label} to={c.to} className="cat-c">
               <span className="cat-c-img">{c.src && <SizedImg src={c.src} size={480} width={480} height={480} alt="" loading="lazy" decoding="async" className={c.cut ? 'cut' : 'photo'} />}</span>
-              <b>{c.label}</b>
-              <small>{c.count} {c.count === 1 ? 'produto' : 'produtos'}</small>
+              <span className="cat-c-txt"><b>{c.label}</b><small>{c.count} {c.count === 1 ? 'produto' : 'produtos'}</small></span>
             </Link>
           ))}
         </Reveal>
       )}
+
+      <Reveal as="section" className="section sc-feat">
+        <CenterHead eyebrow="Seleção da loja" title="Os mais queridos" to="/catalogo" />
+        <div className="grid shelf sc-five">{featured.map(p => <ProductCard key={p.id} p={p} />)}</div>
+      </Reveal>
 
       <Reveal as="section" className="pm-row">
         {PROMOS.map(b => (
@@ -125,19 +140,11 @@ export default function Home() {
         ))}
       </Reveal>
 
-      <Shelf eyebrow="Para começar" title="Destaques" to="/catalogo" items={featured} />
-
-      <section className="ax-bband" aria-label="Como comprar">
-        <div className="ax-benefits">
-          {benefits.map(([ic, t, s]) => <div key={t}>{ic}<span><b>{t}</b><small>{s}</small></span></div>)}
+      <Reveal as="section" className="sc-why" aria-label="Por que comprar na Arkyn">
+        <p className="sc-eyebrow">Por que comprar na Arkyn</p>
+        <div className="sc-why-row">
+          {benefits.map(([ic, t, d]) => <div key={t}>{ic}<span><b>{t}</b><small>{d}</small></span></div>)}
         </div>
-      </section>
-
-
-      <Reveal as="section" className="statement">
-        <p className="ax-eyebrow">Arkyn Imports</p>
-        <h2>Mais que uma fragrância. Uma assinatura.</h2>
-        <span>Perfumes árabes e importados escolhidos com cuidado, com atendimento próximo, em Coxim – MS.</span>
       </Reveal>
 
       <Shelf eyebrow="Condições especiais" title="Ofertas" to="/catalogo" items={offers} />
