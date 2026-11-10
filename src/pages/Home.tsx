@@ -23,6 +23,13 @@ const CATS: { label: string; to: string; match: (p: Product) => boolean; prefer:
   { label: 'Skincare', to: '/catalogo?cat=skincare', match: p => p.category === 'skincare', prefer: 'celimax-the-vita-a-retinal-shot-15ml' },
 ]
 
+// Banners de coleção: só conteúdo que existe na loja (sem preço, desconto ou promoção).
+const PROMOS = [
+  { k: 'Masculinos', title: 'Presença e personalidade', sub: 'Amadeirados e especiados para o dia a dia e para a noite.', btn: 'Ver masculinos', to: '/catalogo?cat=masculino', img: '/hero/lattafa-asad-elixir-100ml.webp', w: 436, h: 1000, tone: 'navy' },
+  { k: 'Femininos', title: 'Doces, florais e marcantes', sub: 'Fragrâncias que enchem o ambiente de personalidade.', btn: 'Ver femininos', to: '/catalogo?cat=feminino', img: '/hero/maison-alhambra-pink-eclipse-100ml.webp', w: 1000, h: 749, tone: 'rose' },
+  { k: 'Compre pelo cheiro', title: 'Qual é o seu cheiro?', sub: 'Responda o quiz e veja os perfumes que combinam com você.', btn: 'Fazer o quiz', to: '/quiz', img: '/hero/armaf-club-de-nuit-maleka-105ml.webp', w: 1000, h: 881, tone: 'bronze' },
+] as const
+
 function SecHead({ eyebrow, title, to, link = 'Ver todos' }: { eyebrow?: string; title: string; to?: string; link?: string }) {
   return (
     <div className="ax-sec-head">
@@ -97,36 +104,40 @@ export default function Home() {
       <h1 className="sr-only">Arkyn Imports: perfumes árabes e importados em Coxim – MS</h1>
       <CampaignHero />
 
-      <section className="ax-benefits" aria-label="Como comprar">
-        {benefits.map(([ic, t, s]) => <div key={t}>{ic}<span><b>{t}</b><small>{s}</small></span></div>)}
-      </section>
-
       {cats.length > 0 && (
-        <Reveal as="section" className="section">
-          <SecHead eyebrow="Explore" title="Compre por categoria" to="/catalogo" link="Ver tudo" />
-          <div className="cat-ed">
-            {cats.map((c, i) => (
-              <Link key={c.label} to={c.to} className={i < 2 ? 'cat-t cat-t--lg' : 'cat-t cat-t--sm'}>
-                <span className="cat-plate">{c.src && <SizedImg src={c.src} size={480} width={480} height={480} alt="" loading="lazy" decoding="async" className={c.cut ? 'cut' : 'photo'} />}</span>
-                <span className="cat-cap"><b>{c.label}</b><small>{c.count} {c.count === 1 ? 'produto' : 'produtos'}</small><i aria-hidden="true">→</i></span>
-              </Link>
-            ))}
-          </div>
+        <Reveal as="section" className="cat-card" aria-label="Compre por categoria">
+          {cats.map(c => (
+            <Link key={c.label} to={c.to} className="cat-c">
+              <span className="cat-c-img">{c.src && <SizedImg src={c.src} size={480} width={480} height={480} alt="" loading="lazy" decoding="async" className={c.cut ? 'cut' : 'photo'} />}</span>
+              <b>{c.label}</b>
+              <small>{c.count} {c.count === 1 ? 'produto' : 'produtos'}</small>
+            </Link>
+          ))}
         </Reveal>
       )}
 
+      <Reveal as="section" className="pm-row">
+        {PROMOS.map(b => (
+          <Link key={b.to} to={b.to} className={`pm pm--${b.tone}`}>
+            <span className="pm-txt"><small>{b.k}</small><b>{b.title}</b><em>{b.sub}</em><i className="pm-btn">{b.btn}</i></span>
+            <img src={b.img} width={b.w} height={b.h} alt="" loading="lazy" decoding="async" />
+          </Link>
+        ))}
+      </Reveal>
+
       <Shelf eyebrow="Para começar" title="Destaques" to="/catalogo" items={featured} />
 
-      <Reveal as="section" className="bq-promo">
-        <div className="bq-promo-txt">
-          <p>Arkyn Imports</p>
-          <h2>Mais que uma fragrância. Uma assinatura.</h2>
-          <span>Perfumes árabes e importados escolhidos com cuidado, com atendimento próximo, em Coxim – MS.</span>
-          <Link to="/catalogo" className="bq-btn">Conhecer os perfumes</Link>
+      <section className="ax-bband" aria-label="Como comprar">
+        <div className="ax-benefits">
+          {benefits.map(([ic, t, s]) => <div key={t}>{ic}<span><b>{t}</b><small>{s}</small></span></div>)}
         </div>
-        <div className="bq-promo-img" aria-hidden="true">
-          {([['lattafa-afeef-100ml', 970, 824], ['maison-alhambra-pink-eclipse-100ml', 1000, 749], ['lattafa-asad-elixir-100ml', 436, 1000]] as const).map(([id, w, h], i) => <img key={id} src={`/hero/${id}.webp`} width={w} height={h} alt="" loading="lazy" decoding="async" style={{ '--i': i } as React.CSSProperties} />)}
-        </div>
+      </section>
+
+
+      <Reveal as="section" className="statement">
+        <p className="ax-eyebrow">Arkyn Imports</p>
+        <h2>Mais que uma fragrância. Uma assinatura.</h2>
+        <span>Perfumes árabes e importados escolhidos com cuidado, com atendimento próximo, em Coxim – MS.</span>
       </Reveal>
 
       <Shelf eyebrow="Condições especiais" title="Ofertas" to="/catalogo" items={offers} />

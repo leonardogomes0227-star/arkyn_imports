@@ -67,22 +67,20 @@ export default function Layout({ children }: { children: ReactNode }) {
       <header className={scrolled ? 'ax-header is-scrolled' : 'ax-header'}>
         <div className="ax-topbar" aria-label="Avisos da loja"><div className="ax-marquee">{[...msgs, ...msgs, ...msgs, ...msgs].map((m, i) => <span key={i} data-d={i >= msgs.length ? '' : undefined} aria-hidden={i >= msgs.length ? true : undefined}>{m}</span>)}</div></div>
         <div className="ax-head">
-          <div className="ax-left">
-            <button type="button" className="ax-burger" aria-label="Abrir menu" aria-expanded={menu} aria-controls="ax-menu" onClick={() => setMenu(true)}><span /><span /><span /></button>
-            <button type="button" className="ax-icon ax-find" aria-label="Buscar perfumes" onClick={() => setSearch(true)}><IconSearch size={21} /><span>Buscar</span></button>
-          </div>
+          <button type="button" className="ax-burger" aria-label="Abrir menu" aria-expanded={menu} aria-controls="ax-menu" onClick={() => setMenu(true)}><span /><span /><span /></button>
           <Logo />
-          <div className="ax-actions">
+          <nav className="ax-nav" aria-label="Principal">
+            {NAV.map(([label, to]) => <Link key={to} to={to} aria-current={active(to) ? 'page' : undefined}>{label}</Link>)}
             <Link to="/quiz" className="ax-quiz" aria-current={loc.pathname === '/quiz' ? 'page' : undefined}>Qual é o seu cheiro?</Link>
+          </nav>
+          <div className="ax-actions">
+            <button type="button" className="ax-icon ax-find" aria-label="Buscar perfumes" onClick={() => setSearch(true)}><IconSearch size={20} /><span>Buscar perfumes…</span></button>
             <Link to="/favoritos" className="ax-icon ax-fav" aria-label={favs.length ? `Favoritos, ${favs.length}` : 'Favoritos'}><IconHeart size={21} />{favs.length > 0 && <em>{favs.length}</em>}</Link>
             <button type="button" className="ax-icon ax-bag" aria-label={count ? `Abrir sacola, ${count} ${count === 1 ? 'item' : 'itens'}` : 'Abrir sacola'} onClick={() => setOpen(true)}>
               <IconBag size={21} />{count > 0 && <em key={count}>{count}</em>}
             </button>
           </div>
         </div>
-        <nav className="ax-nav" aria-label="Principal">
-          {NAV.map(([label, to]) => <Link key={to} to={to} aria-current={active(to) ? 'page' : undefined}>{label}</Link>)}
-        </nav>
         <SearchOverlay open={search} onClose={() => setSearch(false)} />
       </header>
 
@@ -104,6 +102,10 @@ export default function Layout({ children }: { children: ReactNode }) {
       <CartDrawer />
 
       <footer className="ax-footer">
+        <div className="ax-foot-cta">
+          <div><b>Dúvidas para escolher o seu perfume?</b><span>Fale com a gente direto pelo WhatsApp.</span></div>
+          <a className="btn-gold" href={wa} target="_blank" rel="noreferrer">Chamar no WhatsApp</a>
+        </div>
         <div className="ax-footer-in">
           <div className="ax-foot-brand">
             <Logo className="ax-foot-logo" />

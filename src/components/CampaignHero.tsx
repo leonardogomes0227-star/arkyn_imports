@@ -65,7 +65,7 @@ export default function CampaignHero() {
             <div className="ch-info">
               <p className="ch-eyebrow" style={{ '--d': '.05s' } as CSSProperties}>{s.eyebrow}</p>
               <h2 className="ch-title" aria-label={s.title.join(' ')}>
-                {s.title.map((line, n) => <span key={line} className="ch-line" aria-hidden="true"><b style={{ '--d': `${0.12 + n * 0.1}s` } as CSSProperties}>{line}</b></span>)}
+                {s.title.map((line, n) => { const w = line.split(' '); const last = n === s.title.length - 1; return <span key={line} className="ch-line" aria-hidden="true"><b style={{ '--d': `${0.12 + n * 0.1}s` } as CSSProperties}>{last ? <>{w.slice(0, -1).join(' ')} <em>{w[w.length - 1]}</em></> : line}</b></span> })}
               </h2>
               <p className="ch-sub" style={{ '--d': '.35s' } as CSSProperties}>{s.sub}</p>
               <div className="ch-cta" style={{ '--d': '.45s' } as CSSProperties}>
