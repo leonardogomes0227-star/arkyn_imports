@@ -2,7 +2,7 @@ import { useEffect, useState, type ReactNode } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import CartDrawer from './CartDrawer'
 import SearchOverlay from './SearchOverlay'
-import { IconBag, IconSearch } from './Icons'
+import { IconBag, IconHeart, IconSearch } from './Icons'
 import { useStore } from '../lib/store'
 
 export function Logo({ className = 'ax-logo' }: { className?: string }) {
@@ -24,7 +24,7 @@ const NAV: [string, string][] = [
 const phone = (n: string) => (/^55\d{2}9?\d{8}$/.test(n) ? `(${n.slice(2, 4)}) ${n.slice(4, n.length - 4)}-${n.slice(-4)}` : n)
 
 export default function Layout({ children }: { children: ReactNode }) {
-  const { count, settings, setOpen } = useStore()
+  const { count, settings, setOpen, favs } = useStore()
   const loc = useLocation()
   const [scrolled, setScrolled] = useState(false)
   const [menu, setMenu] = useState(false)
@@ -75,6 +75,7 @@ export default function Layout({ children }: { children: ReactNode }) {
           <div className="ax-actions">
             <Link to="/quiz" className="ax-quiz" aria-current={loc.pathname === '/quiz' ? 'page' : undefined}>Qual é o seu cheiro?</Link>
             <button type="button" className="ax-icon" aria-label="Buscar perfumes" onClick={() => setSearch(true)}><IconSearch size={21} /></button>
+            <Link to="/favoritos" className="ax-icon ax-fav" aria-label={favs.length ? `Favoritos, ${favs.length}` : 'Favoritos'}><IconHeart size={21} />{favs.length > 0 && <em>{favs.length}</em>}</Link>
             <button type="button" className="ax-icon ax-bag" aria-label={count ? `Abrir sacola, ${count} ${count === 1 ? 'item' : 'itens'}` : 'Abrir sacola'} onClick={() => setOpen(true)}>
               <IconBag size={21} />{count > 0 && <em key={count}>{count}</em>}
             </button>

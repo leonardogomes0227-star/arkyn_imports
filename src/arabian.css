@@ -103,3 +103,47 @@ h1,h2,h3 { letter-spacing:0 }
   .ar-brands-track, .ar-smoke { animation:none }
   .ar-ban, .ar-ban img { transition:none }
 }
+
+/* favoritos */
+.card .fav { position:absolute; top:10px; right:10px; z-index:3; width:40px; height:40px; display:grid; place-items:center; border:0; border-radius:50%; background:rgba(16,17,19,.72); color:#f4efe6; cursor:pointer; transition:transform .25s var(--ease),background .2s,color .2s }
+.card .fav:hover { background:var(--obsidian); transform:scale(1.08) }
+.card .fav.on { color:#e5604d; animation:ar-pop .4s var(--ease) }
+.ax-fav { position:relative; display:grid; place-items:center }
+.ax-fav em { position:absolute; top:5px; right:3px; min-width:18px; height:18px; padding:0 5px; border-radius:99px; background:var(--copper); color:#111; font:800 11px/18px var(--sans); font-style:normal; text-align:center }
+.pdp-fav { display:inline-flex; align-items:center; justify-content:center; gap:8px }
+.pdp-fav.on svg { color:#e5604d }
+@keyframes ar-pop { 0% { transform:scale(.7) } 60% { transform:scale(1.25) } 100% { transform:scale(1) } }
+
+/* sacola: bolinha pula ao adicionar */
+.ax-bag em { animation:ar-pop .45s var(--ease); background:var(--copper) }
+.ax-bag em, .ax-fav em { box-shadow:0 0 0 2px var(--obsidian) }
+
+/* sacola: sugestões e visual */
+.ax-drawer-head h2 { font-family:var(--display); font-weight:400; text-transform:uppercase; letter-spacing:.03em; font-size:1.9rem }
+.ax-ship-bar span { background:linear-gradient(90deg,var(--amber),var(--copper)) }
+.ax-suggest { padding:14px 22px; border-top:1px solid var(--line); background:rgba(181,106,53,.07) }
+.ax-suggest > p { font-size:.6875rem; font-weight:800; letter-spacing:.22em; text-transform:uppercase; color:var(--amber); margin-bottom:10px }
+.ax-suggest ul { list-style:none; padding:0; display:grid; gap:8px }
+.ax-suggest li { display:grid; grid-template-columns:56px 1fr 44px; gap:12px; align-items:center }
+.ax-suggest img { width:56px; height:56px; object-fit:contain; background:radial-gradient(circle,#fffaf0,#e8dcc6); border-radius:3px; mix-blend-mode:multiply }
+.ax-suggest small { display:block; font-size:.625rem; letter-spacing:.16em; text-transform:uppercase; color:var(--mute) }
+.ax-suggest b { display:block; font-size:.8125rem; line-height:1.25; font-weight:700 }
+.ax-suggest em { font-style:normal; font-size:.8125rem; color:var(--stone) }
+.ax-suggest button { width:44px; height:44px; border:1px solid var(--obsidian); background:var(--obsidian); color:#fff; border-radius:2px; font-size:1.3rem; cursor:pointer; transition:background .2s }
+.ax-suggest button:hover { background:var(--amber); border-color:var(--amber) }
+
+/* página de produto */
+.pdp-img { background:radial-gradient(90% 80% at 50% 38%,#fffaf0 0,#efe3cf 62%,#e1d2b8 100%); border-radius:4px; box-shadow:none }
+.pdp-img img, .pdp-img img[src*='-net/'] { mix-blend-mode:multiply !important }
+.pdp-img .off, .pdp-off { background:var(--amber); color:#fff; border-radius:2px; font-weight:800 }
+.pdp-info h1 { font-family:var(--display) !important; font-weight:400 !important; text-transform:uppercase; letter-spacing:.015em; font-size:clamp(2.8rem,5vw,4.6rem) !important; line-height:.92 }
+.pdp-now { font-family:var(--display) !important; font-weight:400 !important; letter-spacing:.03em }
+.pdp-cta, .pdp-bar .btn { background:var(--obsidian); border-color:var(--obsidian) } .pdp-cta:hover, .pdp-bar .btn:hover { background:var(--amber); border-color:var(--amber) }
+.pdp-bar { background:var(--obsidian); color:#f4efe6 } .pdp-bar small { color:var(--copper) } .pdp-bar b { font-family:var(--display); font-weight:400; font-size:1.6rem; letter-spacing:.03em } .pdp-bar .btn { background:var(--amber); border-color:var(--amber) }
+.pdp-acc summary { font-weight:800; letter-spacing:.14em; text-transform:uppercase; font-size:.8125rem }
+.thumb.clean, .pdp-thumbs button { border-radius:3px }
+
+/* catálogo e demais títulos */
+.catalog .page-title, .ax-empty-page h1, .ax-empty-results h2 { font-family:var(--display) !important; font-weight:400 !important; text-transform:uppercase; letter-spacing:.015em }
+.catalog .page-title { font-size:clamp(2.6rem,5vw,4.4rem) !important }
+@media (prefers-reduced-motion:reduce) { .card .fav.on, .ax-bag em { animation:none } }

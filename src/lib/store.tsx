@@ -11,6 +11,8 @@ interface Ctx {
   ready: boolean
   setQty: (id: string, qty: number) => void
   clear: () => void
+  favs: string[]
+  toggleFav: (id: string) => void
   count: number
   open: boolean
   setOpen: (v: boolean) => void
@@ -40,6 +42,11 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     ]).finally(() => { window.clearTimeout(timer); setReady(true) })
   }, [])
 
+  const [favs, setFavs] = useState<string[]>(() => {
+    try { const v = JSON.parse(localStorage.getItem('favs') || '[]'); return Array.isArray(v) ? v.filter((x): x is string => typeof x === 'string') : [] } catch { return [] }
+  })
+  useEffect(() => { try { localStorage.setItem('favs', JSON.stringify(favs)) } catch { /* ignore */ } }, [favs])
+
   useEffect(() => { try { localStorage.setItem('cart', JSON.stringify(cart)) } catch { /* ignore */ } }, [cart])
 
   const value = useMemo<Ctx>(() => ({
@@ -53,8 +60,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     ready,
     setQty: (id, qty) => setCart(c => qty <= 0 ? c.filter(i => i.id !== id) : c.map(i => i.id === id ? { ...i, qty } : i)),
     clear: () => setCart([]),
+    favs, toggleFav: (id: string) => setFavs(f => f.includes(id) ? f.filter(x => x !== id) : [...f, id]),
     count: cart.reduce((s, i) => s + i.qty, 0),
-  }), [products, settings, cart, open, ready])
+  }), [products, settings, cart, open, ready, favs])
 
   return <StoreCtx.Provider value={value}>{children}</StoreCtx.Provider>
 }
