@@ -1,28 +1,11 @@
 import type { Category, Gender, Product, Settings } from './types'
 
-// Produtos com foto em public/produtos/<id>.jpg
-const WITH_PHOTO = new Set([
-  'al-wataniah-attar-al-wesal-gold-100ml',
-  'ard-al-zaafaran-sahebat-al-jamal-70ml',
-  'armaf-club-de-nuit-maleka-105ml',
-  'celimax-the-vita-a-retinal-shot-15ml',
-  'french-avenue-liquid-brun-100ml',
-  'french-avenue-vulcan-feu-100ml',
-  'jacques-bogart-silver-scent-intense-100ml',
-  'lattafa-afeef-100ml',
-  'lattafa-asad-elixir-100ml',
-  'lattafa-atheeri-100ml',
-  'lattafa-eclaire-100ml',
-  'lattafa-fakhar-black-100ml',
-  'lattafa-fakhar-rose-100ml',
-  'lattafa-tharwah-gold-100ml',
-  'maison-alhambra-no-2-men-80ml',
-  'maison-alhambra-pink-eclipse-100ml',
-  'maison-alhambra-salvo-elixir-60ml',
-])
-
 // Fotos de embalagem (frasco + caixa, fundo branco) em public/produtos-net/<id>.webp; as demais usam a foto original
 const PACKSHOT = new Set([
+  'celimax-the-vita-a-retinal-shot-15ml',
+  'lattafa-fakhar-rose-100ml',
+  'al-wataniah-attar-al-wesal-gold-100ml',
+  'lattafa-fakhar-black-100ml',
   'jacques-bogart-silver-scent-intense-100ml',
   'lattafa-tharwah-gold-100ml',
   'ard-al-zaafaran-sahebat-al-jamal-70ml',
@@ -86,7 +69,9 @@ const NOTES: Record<string, string[]> = {
   'french-avenue-vulcan-feu-100ml': ['Manga', 'Limão', 'Gengibre', 'Jasmim', 'Fava tonka', 'Cedro'],
   'maison-alhambra-pink-eclipse-100ml': ['Bergamota', 'Tangerina', 'Pera', 'Jasmim', 'Baunilha', 'Almíscar'],
   'lattafa-dalal-100ml': ['Tangerina', 'Maçã', 'Jasmim', 'Baunilha', 'Almíscar'],
-  'lattafa-fakhar-rose-100ml': ['Romã', 'Tuberosa', 'Jasmim', 'Rosa', 'Peônia'],
+  'lattafa-fakhar-rose-100ml': ['Romã', 'Tuberosa', 'Jasmim', 'Rosa', 'Baunilha', 'Almíscar'],
+  'al-wataniah-attar-al-wesal-gold-100ml': ['Toranja', 'Bergamota', 'Lavanda', 'Canela', 'Baunilha', 'Âmbar'],
+  'lattafa-fakhar-black-100ml': ['Maçã', 'Bergamota', 'Gengibre', 'Lavanda', 'Fava tonka', 'Vetiver'],
   'armaf-club-de-nuit-maleka-105ml': ['Lichia', 'Bergamota', 'Pimenta rosa', 'Praliné', 'Sândalo', 'Âmbar'],
   'lattafa-atheeri-100ml': ['Maracujá', 'Orquídea', 'Jasmim', 'Baunilha', 'Madeira âmbar'],
   'lattafa-eclaire-100ml': ['Caramelo', 'Leite', 'Mel', 'Baunilha', 'Praliné', 'Almíscar'],
@@ -94,7 +79,7 @@ const NOTES: Record<string, string[]> = {
 }
 
 const p = (id: string, brand: string, name: string, price: number, category: Category, gender: Gender): Product =>
-  ({ id, brand, name, price, stock: 5, category, gender, family: '', notes: NOTES[id] ?? [], tags: TAGS[id] ?? [], image: PACKSHOT.has(id) ? `/produtos-net/${id}.webp` : WITH_PHOTO.has(id) ? `/produtos/${id}.jpg` : '' })
+  ({ id, brand, name, price, stock: 5, category, gender, family: '', notes: NOTES[id] ?? [], tags: TAGS[id] ?? [], image: PACKSHOT.has(id) ? `/produtos-net/${id}.webp` : '' })
 
 export const SEED_PRODUCTS: Product[] = [
   p('armaf-club-de-nuit-intense-man-edt-105ml', 'Armaf', 'Club de Nuit Intense Man EDT 105ml', 259.90, 'masculino', 'masculino'),

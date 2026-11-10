@@ -288,3 +288,13 @@ select { max-width:100% } .form select,.form input { width:100%; min-width:0 }
 }
 .hero-in { max-width:none; padding:0 0 0 max(clamp(20px,3.2vw,72px), calc((100vw - 1360px) / 2 + clamp(20px,3.2vw,72px))) }
 @media (max-width:820px) { .hero-in { padding:0 } }
+
+/* ===== home: abertura só com a logo, direto nos produtos ===== */
+.intro { display:flex; flex-direction:column; align-items:center; gap:6px; padding:28px 20px 8px; text-align:center }
+.intro img { width:min(300px,62vw); height:auto; mix-blend-mode:multiply }
+.intro p { font-size:12px; letter-spacing:.2em; text-transform:uppercase; color:var(--muted) }
+.scent b { font-size:clamp(30px,4.4vw,60px) } .scent { padding:18px 0 }
+.rail { background:transparent; border-top:1px solid var(--line); margin-top:56px }
+.intro { padding:20px 20px 0; gap:2px } .intro img { width:min(230px,46vw) }
+.intro p { letter-spacing:.14em; font-size:11px }
+.thumb.clean img { padding:5% }
