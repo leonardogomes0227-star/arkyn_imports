@@ -1,27 +1,30 @@
-/* Destaques da Home (banner). Duas colunas: texto à esquerda, frasco sobre painel areia à direita.
-   Sem efeitos decorativos: só entrada suave do texto e troca por fade. */
-.ch { position:relative; isolation:isolate; overflow:hidden; overflow:clip; height:clamp(520px,calc(100svh - 190px),680px); background:var(--bg); color:var(--ink); outline:none; touch-action:pan-y; border-bottom:1px solid var(--line) }
+/* Destaques da Home (banner escuro). Duas colunas: texto à esquerda, frasco com luz dourada e reflexo à direita.
+   Sem efeitos decorativos soltos: só entrada suave do texto e troca por fade. */
+.ch { position:relative; isolation:isolate; overflow:hidden; overflow:clip; height:clamp(540px,calc(100svh - 150px),700px); background:var(--night); color:#f6f1e7; outline:none; touch-action:pan-y }
 .ch-slide { position:absolute; inset:0; overflow:clip; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.1fr); grid-template-rows:minmax(0,1fr); opacity:0; visibility:hidden; transition:opacity .7s var(--ease),visibility 0s .7s }
 .ch-slide.on { opacity:1; visibility:visible; transition:opacity .7s var(--ease) }
 .ch-slide.init { transition:none }
+.ch-slide::before { content:''; position:absolute; inset:0; z-index:0; pointer-events:none; background:radial-gradient(52% 78% at 68% 46%,rgba(201,166,107,.26),transparent 70%),radial-gradient(40% 60% at 8% 100%,rgba(201,166,107,.08),transparent 70%) }
 
 /* texto */
-.ch-info { grid-column:1; grid-row:1; align-self:center; display:flex; flex-direction:column; align-items:flex-start; gap:clamp(14px,1.6vw,22px); padding:0 clamp(24px,5vw,88px) 56px clamp(24px,6vw,110px) }
-.ch-eyebrow { font-size:.75rem; font-weight:700; letter-spacing:.28em; text-transform:uppercase; color:var(--rose) }
-.ch-title { font-family:var(--display); font-weight:600; font-size:clamp(2.5rem,4.6vw,4.4rem); line-height:1.04; letter-spacing:0 }
-.ch-line { display:block; overflow:hidden; padding:.14em 0 .04em; margin-top:-.14em } .ch-line b { display:block; font-weight:600 }
-.ch-sub { font-size:clamp(.9375rem,1.15vw,1.0625rem); line-height:1.65; max-width:30em; color:var(--ink-2) }
-.ch-cta { display:flex; align-items:center; flex-wrap:wrap; gap:12px 28px; margin-top:6px }
-.ch-btn { display:inline-flex; align-items:center; justify-content:center; min-height:52px; padding:0 34px; background:var(--btn); color:#fff; font-weight:700; font-size:.75rem; letter-spacing:.18em; text-transform:uppercase; border-radius:2px; transition:background .25s }
-.ch-btn:hover { background:var(--btn-h) }
-.ch-link { font-weight:700; font-size:.75rem; letter-spacing:.16em; text-transform:uppercase; border-bottom:1px solid var(--champagne); padding:6px 0; min-height:44px; display:inline-flex; align-items:center }
+.ch-info { position:relative; z-index:2; grid-column:1; grid-row:1; align-self:center; display:flex; flex-direction:column; align-items:flex-start; gap:clamp(14px,1.6vw,22px); padding:0 clamp(24px,5vw,88px) 64px clamp(24px,6vw,110px) }
+.ch-eyebrow { font-size:.75rem; font-weight:700; letter-spacing:.3em; text-transform:uppercase; color:var(--gold) }
+.ch-title { font-family:var(--display); font-weight:600; font-size:clamp(2.6rem,4.9vw,4.7rem); line-height:1.04; letter-spacing:0; color:#f6f1e7 }
+.ch-line { display:block; overflow:hidden; padding:.14em 0 .06em; margin-top:-.14em } .ch-line b { display:block; font-weight:600 }
+.ch-line em { font-style:italic; font-weight:600; color:var(--gold-l) }
+.ch-sub { font-size:clamp(.9375rem,1.15vw,1.0625rem); line-height:1.65; max-width:30em; color:#cfc8bb }
+.ch-cta { display:flex; align-items:center; flex-wrap:wrap; gap:12px 16px; margin-top:6px }
+.ch-btn { display:inline-flex; align-items:center; justify-content:center; min-height:52px; padding:0 34px; background:var(--gold); color:#111; font-weight:800; font-size:.75rem; letter-spacing:.16em; text-transform:uppercase; border-radius:3px; transition:background .25s,transform .25s }
+.ch-btn:hover { background:var(--gold-l) }
+.ch-link { display:inline-flex; align-items:center; justify-content:center; min-height:52px; padding:0 28px; border:1px solid rgba(246,241,231,.4); border-radius:3px; color:#f6f1e7; font-weight:700; font-size:.75rem; letter-spacing:.14em; text-transform:uppercase; transition:border-color .25s,color .25s }
+.ch-link:hover { border-color:var(--gold); color:var(--gold-l) }
 
-/* painel do produto */
-.ch-prod { grid-column:2; grid-row:1; position:relative; background:linear-gradient(180deg,#ece6db 0%,var(--sand) 100%) }
-.ch-prod::before { content:''; position:absolute; inset:clamp(14px,1.8vw,26px); border:1px solid color-mix(in srgb,var(--champagne) 60%,transparent); pointer-events:none }
-.ch-plate { position:absolute; inset:0; display:flex; align-items:flex-end; justify-content:center; padding:clamp(48px,6vw,84px) 0 clamp(78px,8vw,112px) }
-.ch-plate::after { content:''; position:absolute; left:32%; right:32%; bottom:clamp(70px,7.4vw,104px); height:14px; background:radial-gradient(closest-side,rgba(37,37,37,.3),transparent); filter:blur(4px) }
-.ch-plate img { position:relative; z-index:1; height:100%; width:auto; max-width:76%; object-fit:contain; filter:drop-shadow(0 18px 20px rgba(37,37,37,.22)) }
+/* palco do produto */
+.ch-prod { grid-column:2; grid-row:1; position:relative; z-index:1 }
+.ch-plate { position:absolute; inset:0; display:flex; align-items:flex-end; justify-content:center; padding:clamp(40px,5vw,70px) 0 clamp(70px,8vw,110px) }
+.ch-plate::before { content:''; position:absolute; left:14%; right:14%; bottom:clamp(60px,7.4vw,104px); height:2px; background:linear-gradient(90deg,transparent,rgba(201,166,107,.7),transparent) }
+.ch-plate::after { content:''; position:absolute; left:22%; right:22%; bottom:clamp(40px,5vw,80px); height:60px; background:radial-gradient(closest-side,rgba(201,166,107,.22),transparent); filter:blur(8px) }
+.ch-plate img { position:relative; z-index:1; height:100%; width:auto; max-width:74%; object-fit:contain; filter:drop-shadow(0 20px 28px rgba(0,0,0,.55)); -webkit-box-reflect:below -2px linear-gradient(transparent 68%,rgba(255,255,255,.18)) }
 
 /* entrada suave a partir da primeira troca (o primeiro slide aparece pronto, para o LCP ser a imagem real) */
 .ch-slide .ch-eyebrow, .ch-slide .ch-sub, .ch-slide .ch-cta, .ch-slide .ch-plate img { opacity:0 }
@@ -36,31 +39,31 @@
 @keyframes ch-img { from { opacity:0; transform:translateY(14px) } to { opacity:1; transform:none } }
 
 /* controles */
-.ch-ctrl { position:absolute; z-index:6; left:clamp(24px,6vw,110px); bottom:clamp(20px,2.4vw,32px); display:flex; align-items:center; gap:14px }
-.ch-pause { flex:none; width:40px; height:40px; border-radius:50%; border:1px solid color-mix(in srgb,var(--ink) 30%,transparent); background:transparent; color:var(--ink); display:grid; place-items:center; cursor:pointer; transition:background .2s,color .2s }
-.ch-pause:hover { background:var(--btn); color:#fff }
+.ch-ctrl { position:absolute; z-index:6; left:clamp(24px,6vw,110px); bottom:clamp(64px,5vw,76px); display:flex; align-items:center; gap:14px }
+.ch-pause { flex:none; width:40px; height:40px; border-radius:50%; border:1px solid rgba(246,241,231,.4); background:transparent; color:#f6f1e7; display:grid; place-items:center; cursor:pointer; transition:background .2s,color .2s,border-color .2s }
+.ch-pause:hover { background:var(--gold); color:#111; border-color:var(--gold) }
 .ch-bars { display:flex; gap:8px; width:clamp(150px,18vw,240px) }
 .ch-bar { flex:1; height:44px; padding:0; border:0; background:none; cursor:pointer; position:relative }
-.ch-bar::before { content:''; position:absolute; left:0; right:0; top:50%; height:2px; transform:translateY(-50%); background:color-mix(in srgb,var(--ink) 18%,transparent) }
-.ch-bar span { position:absolute; left:0; top:50%; height:2px; width:0; transform:translateY(-50%); background:var(--btn) }
+.ch-bar::before { content:''; position:absolute; left:0; right:0; top:50%; height:2px; transform:translateY(-50%); background:rgba(246,241,231,.25) }
+.ch-bar span { position:absolute; left:0; top:50%; height:2px; width:0; transform:translateY(-50%); background:var(--gold) }
 .ch-bar.seen span { width:100% } .ch-bar.on span { animation:ch-fill linear forwards }
 @keyframes ch-fill { from { width:0 } to { width:100% } }
-.ch-count { font-size:.8125rem; letter-spacing:.14em; color:var(--ink-2) } .ch-count b { color:var(--ink) }
-.ch-arrows { position:absolute; z-index:6; right:clamp(24px,3vw,48px); bottom:clamp(20px,2.4vw,32px); display:flex; gap:8px }
-.ch-arrows button { width:46px; height:46px; border:1px solid color-mix(in srgb,var(--ink) 35%,transparent); background:rgba(255,255,255,.6); color:var(--ink); display:grid; place-items:center; cursor:pointer; transition:background .2s,color .2s,border-color .2s }
-.ch-arrows button:hover { background:var(--btn); color:#fff; border-color:var(--btn) }
+.ch-count { font-size:.8125rem; letter-spacing:.14em; color:#cfc8bb } .ch-count b { color:#f6f1e7 }
+.ch-arrows { position:absolute; z-index:6; inset:0 clamp(12px,2vw,28px) 0 clamp(12px,2vw,28px); display:flex; justify-content:space-between; align-items:center; pointer-events:none }
+.ch-arrows button { pointer-events:auto; width:44px; height:44px; border-radius:50%; border:1px solid rgba(246,241,231,.35); background:rgba(11,11,12,.55); color:#f6f1e7; display:grid; place-items:center; cursor:pointer; transition:background .2s,color .2s,border-color .2s }
+.ch-arrows button:hover { background:var(--gold); color:#111; border-color:var(--gold) }
 
 /* celular: frasco em cima, texto embaixo */
 @media (max-width:860px) {
-  .ch { height:clamp(640px,calc(100svh - 110px),760px) }
-  .ch-slide { grid-template-columns:1fr; grid-template-rows:minmax(0,46%) minmax(0,1fr) }
-  .ch-prod { grid-column:1; grid-row:1 } .ch-prod::before { inset:12px }
-  .ch-plate { padding:34px 0 46px } .ch-plate::after { bottom:42px; left:30%; right:30% }
-  .ch-info { grid-column:1; grid-row:2; align-self:start; gap:12px; padding:22px 20px 0 }
+  .ch { height:clamp(660px,calc(100svh - 110px),780px) }
+  .ch-slide { grid-template-columns:1fr; grid-template-rows:minmax(0,44%) minmax(0,1fr) }
+  .ch-prod { grid-column:1; grid-row:1 }
+  .ch-plate { padding:30px 0 44px } .ch-plate::before { bottom:40px } .ch-plate::after { bottom:26px }
+  .ch-info { grid-column:1; grid-row:2; align-self:start; gap:12px; padding:20px 20px 0 }
   .ch-title { font-size:clamp(2.1rem,9vw,2.8rem) }
   .ch-sub { font-size:.9375rem; line-height:1.55; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden }
-  .ch-btn { width:100%; min-height:50px }
-  .ch-cta { width:100%; gap:4px 20px }
+  .ch-btn, .ch-link { flex:1 1 100%; width:100%; min-height:50px }
+  .ch-cta { width:100%; gap:10px }
   .ch-ctrl { left:20px; right:88px; bottom:8px; justify-content:flex-start } .ch-bars { flex:1; width:auto }
   .ch-count, .ch-arrows { display:none }
 }
