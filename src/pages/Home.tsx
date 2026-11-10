@@ -97,6 +97,20 @@ export default function Home() {
         {benefits.map(([ic, t, s]) => <div key={t}>{ic}<span><b>{t}</b><small>{s}</small></span></div>)}
       </Reveal>
 
+
+      <Reveal as="section" className="ar-duo" aria-label="Campanhas">
+        {[
+          { to: '/catalogo?cat=masculino', id: 'lattafa-asad-elixir-100ml', k: 'Para ele', t: 'Noite longa, presença forte', c: 'Ver masculinos', cls: 'night' },
+          { to: '/catalogo?cat=feminino', id: 'maison-alhambra-pink-eclipse-100ml', k: 'Para ela', t: 'Doce, floral e marcante', c: 'Ver femininos', cls: 'rose' },
+        ].map((b, i) => (
+          <Link key={b.id} to={b.to} className={`ar-ban ${b.cls}`} style={{ '--i': i } as React.CSSProperties}>
+            <span className="ar-ban-txt"><small>{b.k}</small><b>{b.t}</b><em>{b.c} <i aria-hidden="true">→</i></em></span>
+            <img src={`/hero/${b.id}.webp`} alt="" loading="lazy" />
+            <span className="ar-smoke" aria-hidden="true" />
+          </Link>
+        ))}
+      </Reveal>
+
       {cats.length > 0 && (
         <Reveal as="section" className="section">
           <SecHead eyebrow="Explore" title="Compre por categoria" to="/catalogo" link="Ver tudo" />
@@ -118,9 +132,10 @@ export default function Home() {
       <Shelf eyebrow="Seleção da casa" title="Destaques" to="/catalogo" items={featured} />
       <Shelf eyebrow="Condições especiais" title="Ofertas" to="/catalogo" items={offers} />
 
-      <nav className="rail" aria-label="Marcas">
-        <span className="ax-eyebrow">Marcas</span>
-        {brands.map(b => <Link key={b} to={`/catalogo?brand=${encodeURIComponent(b)}`}>{b}</Link>)}
+      <nav className="ar-brands" aria-label="Marcas">
+        <div className="ar-brands-track">
+          {[...brands, ...brands].map((b, i) => <Link key={b + i} to={`/catalogo?brand=${encodeURIComponent(b)}`} tabIndex={i >= brands.length ? -1 : 0} aria-hidden={i >= brands.length}>{b}</Link>)}
+        </div>
       </nav>
 
       <section className="ax-band">
