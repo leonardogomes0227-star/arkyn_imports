@@ -1,14 +1,10 @@
 import { Link } from 'react-router-dom'
 import ProductCard from '../components/ProductCard'
-import { IconCard, IconChat, IconStore, IconTruck } from '../components/Icons'
-import { useStore } from '../lib/store'
+import { brl, useStore } from '../lib/store'
 import type { Category, Product } from '../lib/types'
 
-const CATS: [string, string, string, string][] = [
-  ['/catalogo?cat=masculino', 'Para ele', 'Perfumes masculinos', '/produtos/lattafa-asad-elixir-100ml.jpg'],
-  ['/catalogo?cat=feminino', 'Para ela', 'Perfumes femininos', '/produtos/lattafa-tharwah-gold-100ml.jpg'],
-  ['/catalogo?cat=skincare', 'Skincare', 'Cuidados com a pele', '/produtos/celimax-the-vita-a-retinal-shot-15ml.jpg'],
-]
+const SCENTS = ['doce', 'amadeirado', 'fresco', 'floral', 'especiado']
+const cap = (t: string) => t[0].toUpperCase() + t.slice(1)
 
 function Shelf({ title, to, items }: { title: string; to: string; items: Product[] }) {
   if (!items.length) return null
@@ -32,33 +28,43 @@ export default function Home() {
   const by = (list: Product[]) => list.filter(p => !shown.has(p.id)).slice(0, 4)
   const brands = [...new Set(products.filter(p => p.category === 'masculino' || p.category === 'feminino').map(p => p.brand))].sort()
   const n = settings.installments
+  const scents = SCENTS.map(t => {
+    const list = products.filter(p => p.tags?.includes(t))
+    const freq = new Map<string, number>()
+    list.forEach(p => p.notes?.forEach(x => freq.set(x, (freq.get(x) ?? 0) + 1)))
+    const notes = [...freq.entries()].sort((a, b) => b[1] - a[1]).slice(0, 4).map(([x]) => x)
+    return [t, list.length, notes] as [string, number, string[]]
+  }).filter(([, c]) => c > 0)
 
   return (
     <>
-      <section className="wrap">
-        <div className="banner">
-          <Link to={cover ? `/produto/${cover.id}` : '/catalogo'} className="banner-img"><img src="/capa.jpg" alt="Perfume Lattafa Afeef" /></Link>
-          <div className="banner-panel">
-            <span className="b-brand">{cover?.brand ?? 'Lattafa'}</span>
-            <h1>{settings.heroTitle || <>Afeef<br />by Lattafa</>}</h1>
-            <p>Frasco de pavões dourados com pedras coloridas. Uma peça para presentear ou colecionar.</p>
-            <Link to={cover ? `/produto/${cover.id}` : '/catalogo'} className="btn round">Confira agora</Link>
+      <section className="hero">
+        <div className="hero-in">
+          <div className="hero-txt">
+            <span className="hero-k">{cover?.brand ?? 'Lattafa'} · Eau de Parfum 100ml</span>
+            <h1>{settings.heroTitle || 'Afeef'}</h1>
+            <p>O frasco dos pavões dourados, com pedras coloridas. Peça para presentear ou colecionar.</p>
+            {cover && <p className="hero-price">{brl(cover.price)}{n > 1 && <span> · ou {n}x de {brl(cover.price / n)}</span>}</p>}
+            <div className="hero-cta">
+              <Link to={cover ? `/produto/${cover.id}` : '/catalogo'} className="btn round light">Ver o Afeef</Link>
+              <Link to="/catalogo" className="hero-link">Todos os perfumes →</Link>
+            </div>
           </div>
+          <Link to={cover ? `/produto/${cover.id}` : '/catalogo'} className="hero-ph" aria-label="Lattafa Afeef"><img src="/capa.jpg" alt="Perfume Lattafa Afeef" /></Link>
         </div>
       </section>
 
-      <section className="wrap benefits">
-        <div><span className="ic"><IconCard /></span><div><b>{n > 1 ? `Parcele em até ${n}x` : 'Pix e cartão'}</b><small>{n > 1 ? 'no cartão de crédito' : 'pagamento pelo Mercado Pago'}</small></div></div>
-        <div><span className="ic"><IconStore /></span><div><b>Retirada em Coxim</b><small>sem custo de frete</small></div></div>
-        <div><span className="ic"><IconTruck /></span><div><b>Entrega</b><small>{settings.freeShippingFrom > 0 ? `frete grátis acima de R$ ${settings.freeShippingFrom.toFixed(2).replace('.', ',')}` : 'consulte sua cidade'}</small></div></div>
-        <div><span className="ic"><IconChat /></span><div><b>Atendimento</b><small>pelo WhatsApp</small></div></div>
-      </section>
+      <nav className="rail" aria-label="Marcas">
+        {brands.map(b => <Link key={b} to={`/catalogo?brand=${encodeURIComponent(b)}`}>{b}</Link>)}
+      </nav>
 
-      <section className="wrap catcards">
-        {CATS.map(([to, title, label, img]) => (
-          <Link key={title} to={to} className="catcard">
-            <div className="cc-img"><img src={img} alt={label} loading="lazy" /><b>{title}</b><span>Compre agora</span></div>
-            <strong>{label}</strong>
+      <section className="section scents">
+        <h2 className="scents-h">Escolha pelo cheiro</h2>
+        {scents.map(([t, count, notes]) => (
+          <Link key={t} to={`/catalogo?tag=${t}`} className="scent">
+            <b>{cap(t)}</b>
+            <span className="scent-notes">{notes.join(' · ')}</span>
+            <em>{count} perfumes →</em>
           </Link>
         ))}
       </section>
@@ -73,10 +79,6 @@ export default function Home() {
       <Shelf title="Perfumes masculinos" to="/catalogo?cat=masculino" items={by(masc)} />
       <Shelf title="Perfumes femininos" to="/catalogo?cat=feminino" items={by(fem)} />
 
-      <section className="section">
-        <div className="sec-head"><h2>Marcas</h2></div>
-        <div className="brands">{brands.map(b => <Link key={b} to={`/catalogo?brand=${encodeURIComponent(b)}`}>{b}</Link>)}</div>
-      </section>
     </>
   )
 }
