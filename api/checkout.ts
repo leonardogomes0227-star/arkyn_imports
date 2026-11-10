@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { DEFAULT_SETTINGS, SEED_PRODUCTS } from '../src/lib/seed'
+import { DEFAULT_SETTINGS, SEED_PRODUCTS } from '../src/lib/seed.js'
 import type { Product, Settings } from '../src/lib/types'
-import { validateCoupon } from './coupon'
+import { validateCoupon } from './coupon.js'
 
 const SB = process.env.SUPABASE_URL
 const SK = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY

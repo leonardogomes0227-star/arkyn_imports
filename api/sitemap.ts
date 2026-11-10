@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { SEED_PRODUCTS } from '../src/lib/seed'
+import { SEED_PRODUCTS } from '../src/lib/seed.js'
 import type { Product } from '../src/lib/types'
 
 const SB = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL
