@@ -68,6 +68,7 @@ export default function ProductCard({ p }: { p: Product }) {
             {n > 1 && <em className="inst">ou {n}x de {brl(p.price / n)} sem juros</em>}
           </> : <strong className="soldout">Indisponível no momento</strong>}
         </div>
+        {!out && <button type="button" className={done ? 'card-add done' : 'card-add'} onClick={quick}>{done ? 'Adicionado ✓' : 'Adicionar à sacola'}</button>}
       </div>
     </article>
   )
