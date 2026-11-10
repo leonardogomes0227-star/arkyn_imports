@@ -1,4 +1,5 @@
 import { Link, useParams } from 'react-router-dom'
+import { noteGradient } from '../lib/noteColors'
 import Placeholder from '../components/Placeholder'
 import ProductCard from '../components/ProductCard'
 import { brl, useStore } from '../lib/store'
@@ -22,7 +23,11 @@ export default function Product() {
           <p className="muted">{p.stock > 0 ? `${p.stock} em estoque` : 'Esgotado'} · Pix ou cartão de crédito</p>
           {p.description && <p>{p.description}</p>}
           {!!p.tags?.length && <div className="tags">{p.tags.map(t => <span key={t}>{t}</span>)}</div>}
-          {!!p.notes?.length && <p><b>Notas:</b> {p.notes.join(' · ')}</p>}
+          {!!p.notes?.length && (
+            <div className="pdp-notes"><b>Notas do perfume</b>
+              <div>{p.notes.map(nt => <span key={nt} className="chip flat"><i style={{ background: noteGradient(nt) }} />{nt}</span>)}</div>
+            </div>
+          )}
           <button className="btn" disabled={p.stock <= 0} onClick={() => add(p.id)}>ADICIONAR AO CARRINHO</button>
           <a className="btn ghost" href={wa} target="_blank" rel="noreferrer">TIRAR DÚVIDA NO WHATSAPP</a>
         </div>

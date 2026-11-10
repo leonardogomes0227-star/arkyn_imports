@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import Placeholder from './Placeholder'
 import { brl, useStore } from '../lib/store'
+import { noteGradient } from '../lib/noteColors'
 import type { Product } from '../lib/types'
 
 export default function ProductCard({ p }: { p: Product }) {
@@ -20,7 +21,7 @@ export default function ProductCard({ p }: { p: Product }) {
         {!!hint.length && (
           <span className="notes" aria-hidden="true">
             <b>{p.notes?.length ? 'Notas' : 'Perfil'}</b>
-            {hint.slice(0, 6).map(n => <i key={n}>{n}</i>)}
+            {hint.slice(0, 6).map(n => <i key={n}>{p.notes?.length ? <u style={{ background: noteGradient(n) }} /> : null}{n}</i>)}
           </span>
         )}
       </Link>

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { brl, useStore } from '../lib/store'
+import { noteGradient } from '../lib/noteColors'
 
 // Slides de perfumes: cor de fundo suave combinando com o frasco
 const SLIDES: [string, string][] = [
@@ -54,11 +55,16 @@ export default function HeroSlider() {
             <div className="hs-txt">
               <span className="hs-k">{p.brand}</span>
               <h2>{p.name.replace(/ \d+ml$/i, '')}</h2>
-              {!!p.notes?.length && <p className="hs-notes">{p.notes.slice(0, 4).join(' · ')}</p>}
+              {!!p.notes?.length && <p className="hs-notes">Notas: {p.notes.slice(0, 4).join(' · ')}</p>}
               <p className="hs-price">{brl(p.price)}{n > 1 && <span> ou {n}x de {brl(p.price / n)}</span>}</p>
               <Link to={`/produto/${p.id}`} className="btn round">Comprar agora</Link>
             </div>
-            <Link to={`/produto/${p.id}`} className="hs-img" aria-label={p.name}><img src={p.image} alt={`${p.brand} ${p.name}`} /></Link>
+            <div className="hs-img">
+              <Link to={`/produto/${p.id}`} aria-label={p.name}><img src={p.image} alt={`${p.brand} ${p.name}`} /></Link>
+              {p.notes?.slice(0, 4).map((nt, k) => (
+                <span key={nt} className={`chip c${k}`} style={{ animationDelay: `${k * -1.3}s` }}><i style={{ background: noteGradient(nt) }} />{nt}</span>
+              ))}
+            </div>
           </div>
         ))}
       </div>
