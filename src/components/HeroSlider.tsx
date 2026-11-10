@@ -46,7 +46,7 @@ export default function HeroSlider() {
       <div className="hs-track" ref={track} onScroll={onScroll}>
         <div className="hs-slide hs-brand">
           <img src="/logo-full.png" alt="Arkyn Imports" />
-          <p>Perfumes árabes originais<br />Retirada em Coxim – MS</p>
+          <p>Perfumes árabes<br />Retirada em Coxim – MS</p>
           <Link to="/catalogo" className="btn round">Ver todos os perfumes</Link>
         </div>
         {items.map(({ p, bg }) => p && (

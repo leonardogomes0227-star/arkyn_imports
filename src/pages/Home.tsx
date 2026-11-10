@@ -40,7 +40,7 @@ export default function Home() {
     <>
       <HeroSlider />
 
-      <Shelf title="Lançamentos" to="/catalogo" items={featured} />
+      <Shelf title="Destaques" to="/catalogo" items={featured} />
 
       <nav className="rail" aria-label="Marcas">
         {brands.map(b => <Link key={b} to={`/catalogo?brand=${encodeURIComponent(b)}`}>{b}</Link>)}
