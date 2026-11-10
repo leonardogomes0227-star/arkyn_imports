@@ -152,7 +152,7 @@ h1,h2,h3 { letter-spacing:0 }
 .scent { background:#fff; border-radius:var(--r-md); color:var(--ink); box-shadow:var(--sh-1); transition:transform .4s var(--ease),box-shadow .4s var(--ease) }
 @media (hover:hover) { .scent:hover { transform:translateY(-6px); box-shadow:var(--sh-2) } }
 .ax-band .scent b { font-family:var(--display); font-weight:600; font-size:1.7rem; text-transform:none; color:var(--plum) }
-.scent small { color:var(--mute) } .scent em { color:var(--rose-d) }
+.ax-band .scent small { color:var(--mute) } .scent em { color:var(--rose-d) }
 .scent-th i { background:var(--blush) }
 
 /* ---------- sacola ---------- */
