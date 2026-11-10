@@ -1,96 +1,72 @@
-/* Banner de campanha: estrutura e movimento. As cores vêm de boutique.css e dos temas de cada slide. */
-:root { --grain:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>") }
-/* =====================================================================
-   BANNER DE CAMPANHA (tela cheia)
-   ===================================================================== */
-.ch { --px:0; --py:0; position:relative; isolation:isolate; overflow:hidden; overflow:clip; height:clamp(600px,calc(100svh - 130px),780px); background:#0b0b0c; outline:none; touch-action:pan-y; color:#fff }
-.ch-slide { position:absolute; inset:0; overflow:clip; display:grid; grid-template-columns:minmax(0,1.02fr) minmax(0,1fr); grid-template-rows:minmax(0,1fr); align-items:center; padding:0 clamp(24px,6vw,110px) 92px; color:var(--ink); opacity:0; visibility:hidden; transition:opacity .9s var(--ease),visibility 0s .9s }
-.ch-slide.on { opacity:1; visibility:visible; transition:opacity .9s var(--ease) }
+/* Destaques da Home (banner). Duas colunas: texto à esquerda, frasco sobre painel areia à direita.
+   Sem efeitos decorativos: só entrada suave do texto e troca por fade. */
+.ch { position:relative; isolation:isolate; overflow:hidden; overflow:clip; height:clamp(520px,calc(100svh - 190px),680px); background:var(--bg); color:var(--ink); outline:none; touch-action:pan-y; border-bottom:1px solid var(--line) }
+.ch-slide { position:absolute; inset:0; overflow:clip; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.1fr); grid-template-rows:minmax(0,1fr); opacity:0; visibility:hidden; transition:opacity .7s var(--ease),visibility 0s .7s }
+.ch-slide.on { opacity:1; visibility:visible; transition:opacity .7s var(--ease) }
 .ch-slide.init { transition:none }
-.ch-bg { position:absolute; inset:-4%; z-index:-4; background:radial-gradient(70% 90% at 72% 46%,var(--glow) 0,transparent 62%),linear-gradient(115deg,var(--from) 18%,var(--to) 120%) }
-.ch-slide.on .ch-bg { animation:ch-zoom 9s ease-out both }
-@keyframes ch-zoom { from { transform:scale(1.12) } to { transform:scale(1) } }
-.ch-slide::after { content:''; position:absolute; inset:0; z-index:-1; pointer-events:none; background:var(--grain); opacity:.08; mix-blend-mode:overlay }
-
-/* palavra gigante vazada atrás do frasco */
-.ch-word { position:absolute; z-index:-3; right:-1vw; top:50%; font-family:var(--display); font-size:clamp(14rem,34vw,34rem); line-height:.8; letter-spacing:.02em; color:transparent; -webkit-text-stroke:1.5px color-mix(in srgb,var(--accent) 38%,transparent); white-space:nowrap; transform:translate(calc(var(--px)*-22px),calc(-50% + var(--py)*-14px)); transition:transform .5s var(--ease); user-select:none }
-.ch-slide.on .ch-word { animation:ch-word 1.4s var(--ease) both }
-@keyframes ch-word { from { opacity:0; letter-spacing:.14em } to { opacity:1; letter-spacing:.02em } }
-
-/* fumaça e poeira dourada */
-.ch-smoke { position:absolute; z-index:-2; border-radius:50%; filter:blur(48px); background:radial-gradient(closest-side,var(--glow),transparent 72%); opacity:.55; pointer-events:none }
-.ch-smoke.a { width:46vw; height:46vw; right:2vw; bottom:-22%; animation:ch-drift 11s ease-in-out infinite alternate }
-.ch-smoke.b { width:34vw; height:34vw; left:-6vw; top:-14%; opacity:.3; animation:ch-drift 14s ease-in-out infinite alternate-reverse }
-@keyframes ch-drift { from { transform:translate(-5%,4%) scale(1) } to { transform:translate(7%,-6%) scale(1.22) } }
-.ch-dust { position:absolute; inset:0; z-index:-2; pointer-events:none; overflow:hidden }
-.ch-dust i { position:absolute; bottom:-6%; left:calc(8% + var(--n)*6.4%); width:calc(2px + (var(--n) % 3)*1.5px); height:calc(2px + (var(--n) % 3)*1.5px); border-radius:50%; background:var(--accent); opacity:0; animation:ch-rise calc(8s + (var(--n) % 5)*1.6s) linear infinite; animation-delay:calc(var(--n)*-1.3s) }
-@keyframes ch-rise { 0% { transform:translateY(0) translateX(0); opacity:0 } 12% { opacity:.75 } 100% { transform:translateY(-105vh) translateX(calc((var(--n) % 2 - .5)*60px)); opacity:0 } }
-
-/* frasco */
-.ch-prod { position:relative; grid-column:2; grid-row:1; justify-self:center; align-self:end; width:min(100%,640px); height:92%; display:flex; align-items:flex-end; justify-content:center; transform:translate(calc(var(--px)*16px),calc(var(--py)*10px)); transition:transform .5s var(--ease) }
-.ch-pglow { position:absolute; left:50%; top:50%; width:90%; aspect-ratio:1; transform:translate(-50%,-50%); background:radial-gradient(circle,var(--glow),transparent 64%); filter:blur(20px) }
-.ch-float { position:relative; height:90%; width:100%; display:flex; align-items:flex-end; justify-content:center }
-.ch-float img { height:100%; width:auto; max-width:100%; object-fit:contain; filter:drop-shadow(0 34px 38px rgba(0,0,0,.6)) }
-.ch-slide.on .ch-float { animation:ch-in 1.1s var(--ease) .15s both,ch-bob 6s ease-in-out 1.3s infinite alternate }
-@keyframes ch-in { from { opacity:0; transform:translateY(60px) scale(.94) } to { opacity:1; transform:none } }
-@keyframes ch-bob { from { transform:translateY(0) } to { transform:translateY(-14px) } }
-.ch-pfloor { position:absolute; left:20%; right:20%; bottom:2%; height:5%; background:radial-gradient(closest-side,rgba(0,0,0,.55),transparent); filter:blur(8px) }
 
 /* texto */
-.ch-info { position:relative; z-index:2; grid-column:1; grid-row:1; display:flex; flex-direction:column; align-items:flex-start; gap:clamp(14px,1.6vw,22px); max-width:none }
-.ch-eyebrow { font-size:.8125rem; font-weight:800; letter-spacing:.34em; text-transform:uppercase; color:var(--accent); display:flex; align-items:center; gap:14px }
-.ch-eyebrow::before { content:''; width:44px; height:2px; background:var(--accent) }
-.ch-title { font-family:var(--display); font-weight:400; text-transform:uppercase; font-size:clamp(3.2rem,6.6vw,6.8rem); line-height:.88; white-space:nowrap; letter-spacing:.01em }
-.ch-line { display:block; overflow:hidden; padding:.16em 0 .04em; margin-top:-.16em } .ch-line b { display:block; font-weight:400 }
-.ch-sub { font-size:clamp(.9375rem,1.2vw,1.125rem); line-height:1.6; max-width:30em; color:color-mix(in srgb,var(--ink) 76%,transparent) }
-.ch-cta { display:flex; align-items:center; flex-wrap:wrap; gap:14px 28px; margin-top:6px }
-.ch-btn { display:inline-flex; align-items:center; gap:12px; min-height:54px; padding:0 30px; background:var(--btn-bg); color:var(--btn-fg); font-weight:800; font-size:.8125rem; letter-spacing:.16em; text-transform:uppercase; border-radius:2px; box-shadow:0 18px 34px -16px rgba(0,0,0,.7); transition:transform .3s var(--ease),box-shadow .3s }
-.ch-btn svg { transition:transform .3s var(--ease) }
-.ch-btn:hover { transform:translateY(-3px); box-shadow:0 24px 40px -16px rgba(0,0,0,.8) } .ch-btn:hover svg { transform:translateX(5px) }
-.ch-link { font-weight:800; font-size:.8125rem; letter-spacing:.16em; text-transform:uppercase; border-bottom:2px solid var(--accent); padding:6px 0; min-height:44px; display:inline-flex; align-items:center }
+.ch-info { grid-column:1; grid-row:1; align-self:center; display:flex; flex-direction:column; align-items:flex-start; gap:clamp(14px,1.6vw,22px); padding:0 clamp(24px,5vw,88px) 56px clamp(24px,6vw,110px) }
+.ch-eyebrow { font-size:.75rem; font-weight:700; letter-spacing:.28em; text-transform:uppercase; color:var(--rose) }
+.ch-title { font-family:var(--display); font-weight:600; font-size:clamp(2.5rem,4.6vw,4.4rem); line-height:1.04; letter-spacing:0 }
+.ch-line { display:block; overflow:hidden; padding:.14em 0 .04em; margin-top:-.14em } .ch-line b { display:block; font-weight:600 }
+.ch-sub { font-size:clamp(.9375rem,1.15vw,1.0625rem); line-height:1.65; max-width:30em; color:var(--ink-2) }
+.ch-cta { display:flex; align-items:center; flex-wrap:wrap; gap:12px 28px; margin-top:6px }
+.ch-btn { display:inline-flex; align-items:center; justify-content:center; min-height:52px; padding:0 34px; background:var(--btn); color:#fff; font-weight:700; font-size:.75rem; letter-spacing:.18em; text-transform:uppercase; border-radius:2px; transition:background .25s }
+.ch-btn:hover { background:var(--btn-h) }
+.ch-link { font-weight:700; font-size:.75rem; letter-spacing:.16em; text-transform:uppercase; border-bottom:1px solid var(--champagne); padding:6px 0; min-height:44px; display:inline-flex; align-items:center }
 
-/* entrada do texto quando o slide fica ativo */
-.ch-slide .ch-eyebrow, .ch-slide .ch-sub, .ch-slide .ch-cta { opacity:0 }
+/* painel do produto */
+.ch-prod { grid-column:2; grid-row:1; position:relative; background:linear-gradient(180deg,#ece6db 0%,var(--sand) 100%) }
+.ch-prod::before { content:''; position:absolute; inset:clamp(14px,1.8vw,26px); border:1px solid color-mix(in srgb,var(--champagne) 60%,transparent); pointer-events:none }
+.ch-plate { position:absolute; inset:0; display:flex; align-items:flex-end; justify-content:center; padding:clamp(48px,6vw,84px) 0 clamp(78px,8vw,112px) }
+.ch-plate::after { content:''; position:absolute; left:32%; right:32%; bottom:clamp(70px,7.4vw,104px); height:14px; background:radial-gradient(closest-side,rgba(37,37,37,.3),transparent); filter:blur(4px) }
+.ch-plate img { position:relative; z-index:1; height:100%; width:auto; max-width:76%; object-fit:contain; filter:drop-shadow(0 18px 20px rgba(37,37,37,.22)) }
+
+/* entrada suave a partir da primeira troca (o primeiro slide aparece pronto, para o LCP ser a imagem real) */
+.ch-slide .ch-eyebrow, .ch-slide .ch-sub, .ch-slide .ch-cta, .ch-slide .ch-plate img { opacity:0 }
 .ch-slide .ch-line b { transform:translateY(105%) }
-.ch-slide.on .ch-eyebrow, .ch-slide.on .ch-sub, .ch-slide.on .ch-cta { animation:ch-up .8s var(--ease) var(--d,0s) both }
-.ch-slide.on .ch-line b { animation:ch-line .9s var(--ease) var(--d,.2s) both }
-@keyframes ch-up { from { opacity:0; transform:translateY(22px) } to { opacity:1; transform:none } }
+.ch-slide.on .ch-eyebrow, .ch-slide.on .ch-sub, .ch-slide.on .ch-cta { animation:ch-up .6s var(--ease) var(--d,0s) both }
+.ch-slide.on .ch-line b { animation:ch-line .7s var(--ease) var(--d,.1s) both }
+.ch-slide.on .ch-plate img { animation:ch-img .8s var(--ease) .05s both }
+.ch-slide.init.on .ch-eyebrow, .ch-slide.init.on .ch-sub, .ch-slide.init.on .ch-cta, .ch-slide.init.on .ch-plate img { animation:none; opacity:1 }
+.ch-slide.init.on .ch-line b { animation:none; transform:none }
+@keyframes ch-up { from { opacity:0; transform:translateY(14px) } to { opacity:1; transform:none } }
 @keyframes ch-line { from { transform:translateY(105%) } to { transform:none } }
+@keyframes ch-img { from { opacity:0; transform:translateY(14px) } to { opacity:1; transform:none } }
 
 /* controles */
-.ch-ctrl { position:absolute; z-index:6; left:clamp(24px,6vw,110px); right:clamp(24px,6vw,110px); bottom:clamp(18px,2.6vw,34px); display:flex; align-items:center; gap:clamp(14px,2vw,28px); color:#f4efe6 }
-.ch-bars { display:flex; gap:8px; flex:1; max-width:520px }
+.ch-ctrl { position:absolute; z-index:6; left:clamp(24px,6vw,110px); bottom:clamp(20px,2.4vw,32px); display:flex; align-items:center; gap:14px }
+.ch-pause { flex:none; width:40px; height:40px; border-radius:50%; border:1px solid color-mix(in srgb,var(--ink) 30%,transparent); background:transparent; color:var(--ink); display:grid; place-items:center; cursor:pointer; transition:background .2s,color .2s }
+.ch-pause:hover { background:var(--btn); color:#fff }
+.ch-bars { display:flex; gap:8px; width:clamp(150px,18vw,240px) }
 .ch-bar { flex:1; height:44px; padding:0; border:0; background:none; cursor:pointer; position:relative }
-.ch-bar::before { content:''; position:absolute; left:0; right:0; top:50%; height:3px; transform:translateY(-50%); background:rgba(244,239,230,.26) }
-.ch-bar span { position:absolute; left:0; top:50%; height:3px; width:0; transform:translateY(-50%); background:var(--copper) }
-.ch-bar.seen span { width:100% }
-.ch-bar.on span { animation:ch-fill linear forwards }
+.ch-bar::before { content:''; position:absolute; left:0; right:0; top:50%; height:2px; transform:translateY(-50%); background:color-mix(in srgb,var(--ink) 18%,transparent) }
+.ch-bar span { position:absolute; left:0; top:50%; height:2px; width:0; transform:translateY(-50%); background:var(--btn) }
+.ch-bar.seen span { width:100% } .ch-bar.on span { animation:ch-fill linear forwards }
 @keyframes ch-fill { from { width:0 } to { width:100% } }
-.ch-count { font-size:.8125rem; letter-spacing:.14em; opacity:.85 } .ch-count b { font-size:1rem }
-.ch-arrows { display:flex; gap:10px; margin-left:auto }
-.ch-arrows button { width:48px; height:48px; border-radius:50%; border:1px solid rgba(244,239,230,.4); background:rgba(16,17,19,.4); color:inherit; display:grid; place-items:center; cursor:pointer; transition:background .25s,border-color .25s,transform .25s }
-.ch-arrows button:hover { background:var(--amber); border-color:var(--amber); transform:scale(1.06) }
+.ch-count { font-size:.8125rem; letter-spacing:.14em; color:var(--ink-2) } .ch-count b { color:var(--ink) }
+.ch-arrows { position:absolute; z-index:6; right:clamp(24px,3vw,48px); bottom:clamp(20px,2.4vw,32px); display:flex; gap:8px }
+.ch-arrows button { width:46px; height:46px; border:1px solid color-mix(in srgb,var(--ink) 35%,transparent); background:rgba(255,255,255,.6); color:var(--ink); display:grid; place-items:center; cursor:pointer; transition:background .2s,color .2s,border-color .2s }
+.ch-arrows button:hover { background:var(--btn); color:#fff; border-color:var(--btn) }
 
-/* celular: composição própria (frasco em cima, texto embaixo) */
+/* celular: frasco em cima, texto embaixo */
 @media (max-width:860px) {
-  .ch { height:clamp(640px,calc(100svh - 100px),760px) }
-  .ch-slide { grid-template-columns:1fr; grid-template-rows:minmax(0,46%) auto; align-content:start; align-items:start; padding:0 20px; row-gap:0 }
-  .ch-slide { padding-bottom:0 }
-  .ch-prod { grid-column:1; grid-row:1; width:100%; height:100%; align-self:end }
-  .ch-float { height:96% }
-  .ch-word { font-size:clamp(9rem,46vw,14rem); right:auto; left:50%; top:24%; transform:translate(-50%,-50%) }
-  .ch-info { grid-column:1; grid-row:2; gap:12px; padding-top:14px; max-width:none }
-  .ch-title { font-size:clamp(3rem,15vw,4.6rem); white-space:normal }
-  .ch-sub { font-size:.9375rem; line-height:1.5; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden }
-  .ch-btn { min-height:50px; padding:0 22px; width:100% ; justify-content:center }
-  .ch-cta { width:100%; gap:6px 20px }
-  .ch-ctrl { left:20px; right:20px; bottom:10px }
-  .ch-count, .ch-arrows { display:none } .ch-bars { max-width:none }
-  .ch-smoke.a { width:90vw; height:90vw; bottom:20%; right:-20% }
+  .ch { height:clamp(640px,calc(100svh - 110px),760px) }
+  .ch-slide { grid-template-columns:1fr; grid-template-rows:minmax(0,46%) minmax(0,1fr) }
+  .ch-prod { grid-column:1; grid-row:1 } .ch-prod::before { inset:12px }
+  .ch-plate { padding:34px 0 46px } .ch-plate::after { bottom:42px; left:30%; right:30% }
+  .ch-info { grid-column:1; grid-row:2; align-self:start; gap:12px; padding:22px 20px 0 }
+  .ch-title { font-size:clamp(2.1rem,9vw,2.8rem) }
+  .ch-sub { font-size:.9375rem; line-height:1.55; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden }
+  .ch-btn { width:100%; min-height:50px }
+  .ch-cta { width:100%; gap:4px 20px }
+  .ch-ctrl { left:20px; right:88px; bottom:8px; justify-content:flex-start } .ch-bars { flex:1; width:auto }
+  .ch-count, .ch-arrows { display:none }
 }
 @media (max-width:860px) and (max-height:700px) { .ch-sub { display:none } }
 @media (prefers-reduced-motion:reduce) {
   .ch-slide, .ch-slide.on { transition:none }
-  .ch-slide.on .ch-bg, .ch-slide.on .ch-word, .ch-slide.on .ch-float, .ch-smoke, .ch-dust i, .ch-slide.on .ch-eyebrow, .ch-slide.on .ch-sub, .ch-slide.on .ch-cta, .ch-slide.on .ch-line b { animation:none }
-  .ch-slide .ch-eyebrow, .ch-slide .ch-sub, .ch-slide .ch-cta { opacity:1 } .ch-slide .ch-line b { transform:none } .ch-dust { display:none }
+  .ch-slide.on .ch-eyebrow, .ch-slide.on .ch-sub, .ch-slide.on .ch-cta, .ch-slide.on .ch-plate img { opacity:1; animation:none }
+  .ch-slide.on .ch-line b { transform:none; animation:none }
 }

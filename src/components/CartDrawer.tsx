@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
+import SizedImg from './SizedImg'
 import { brl, useStore } from '../lib/store'
 
 const FOCUSABLE = 'a[href],button:not([disabled]),input,select,[tabindex]:not([tabindex="-1"])'
@@ -72,7 +73,7 @@ export default function CartDrawer() {
             <ul className="ax-lines">
               {lines.map(({ p, qty }) => (
                 <li key={p.id}>
-                  <Link to={`/produto/${p.id}`} className="ax-line-img" onClick={close} tabIndex={open ? 0 : -1}>{p.image ? <img src={p.image} alt="" width="160" height="160" /> : null}</Link>
+                  <Link to={`/produto/${p.id}`} className="ax-line-img" onClick={close} tabIndex={open ? 0 : -1}>{p.image ? <SizedImg src={p.image} size={480} alt="" width={160} height={160} /> : null}</Link>
                   <div className="ax-line-t">
                     <small>{p.brand}</small>
                     <Link to={`/produto/${p.id}`} onClick={close} tabIndex={open ? 0 : -1}>{p.name}</Link>
@@ -98,7 +99,7 @@ export default function CartDrawer() {
             <ul>
               {suggest.map(x => (
                 <li key={x.id}>
-                  <img src={x.image} alt="" width="72" height="72" loading="lazy" />
+                  <SizedImg src={x.image ?? ""} size={160} alt="" width={72} height={72} loading="lazy" />
                   <span><small>{x.brand}</small><b>{x.name}</b><em>{brl(x.price)}</em></span>
                   <button type="button" aria-label={`Adicionar ${x.name}`} tabIndex={open ? 0 : -1} onClick={() => add(x.id, false)}>+</button>
                 </li>

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Placeholder from './Placeholder'
+import SizedImg from './SizedImg'
 import { useToast } from './Toast'
 import { brl, useStore } from '../lib/store'
 import { IconHeart } from './Icons'
@@ -40,17 +41,10 @@ export default function ProductCard({ p }: { p: Product }) {
       <Link to={`/produto/${p.id}`} className={`thumb${clean ? ' clean' : ''}${loaded || !p.image ? ' ready' : ''}`} aria-label={`${p.brand} ${p.name}`}>
         {!loaded && p.image && <span className="ax-skel thumb-skel" />}
         {sale && <span className="off">-{Math.round((1 - p.price / p.old_price!) * 100)}%</span>}
-        {p.image ? <img ref={img} className="m" src={p.image} width={800} height={800} alt={`${p.brand} ${p.name}`} loading="lazy" decoding="async" onLoad={() => setLoaded(true)} /> : <Placeholder brand={p.brand} />}
-        {second && <img className="alt" src={second} width={800} height={800} alt="" loading="lazy" decoding="async" />}
+        {p.image ? <SizedImg ref={img} className="m" src={p.image} size={480} responsive sizes="(max-width:560px) 45vw, (max-width:1100px) 30vw, 300px" width={800} height={800} alt={`${p.brand} ${p.name}`} loading="lazy" decoding="async" onLoad={() => setLoaded(true)} /> : <Placeholder brand={p.brand} />}
+        {second && <SizedImg className="alt" src={second} size={480} width={800} height={800} alt="" loading="lazy" decoding="async" />}
         {out && <span className="sold">Esgotado</span>}
         <button type="button" className={fav ? 'fav on' : 'fav'} aria-pressed={fav} aria-label={fav ? `Remover ${p.name} dos favoritos` : `Favoritar ${p.name}`} onClick={e => { e.preventDefault(); toggleFav(p.id) }}><IconHeart size={18} filled={fav} /></button>
-        {!out && (
-          <button type="button" className={done ? 'quick done' : 'quick'} aria-label={`Adicionar ${p.name} à sacola`} onClick={quick}>
-            {done
-              ? <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
-              : <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" /></svg>}
-          </button>
-        )}
         {!!hint.length && !out && (
           <span className="notes" aria-hidden="true">
             <b>{p.notes?.length ? 'Notas' : 'Perfil'}</b>
