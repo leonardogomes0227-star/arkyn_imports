@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import Placeholder from './Placeholder'
 import { useToast } from './Toast'
 import { brl, useStore } from '../lib/store'
+import { IconHeart } from './Icons'
 import { noteGradient } from '../lib/noteColors'
 import type { Product } from '../lib/types'
 
@@ -13,7 +14,8 @@ export function ProductSkeleton({ n = 4 }: { n?: number }) {
 }
 
 export default function ProductCard({ p }: { p: Product }) {
-  const { add, settings, setOpen } = useStore()
+  const { add, settings, setOpen, favs, toggleFav } = useStore()
+  const fav = favs.includes(p.id)
   const { toast } = useToast()
   const [loaded, setLoaded] = useState(false)
   const [done, setDone] = useState(false)
@@ -41,6 +43,7 @@ export default function ProductCard({ p }: { p: Product }) {
         {p.image ? <img ref={img} className="m" src={p.image} width={800} height={800} alt={`${p.brand} ${p.name}`} loading="lazy" decoding="async" onLoad={() => setLoaded(true)} /> : <Placeholder brand={p.brand} />}
         {second && <img className="alt" src={second} width={800} height={800} alt="" loading="lazy" decoding="async" />}
         {out && <span className="sold">Esgotado</span>}
+        <button type="button" className={fav ? 'fav on' : 'fav'} aria-pressed={fav} aria-label={fav ? `Remover ${p.name} dos favoritos` : `Favoritar ${p.name}`} onClick={e => { e.preventDefault(); toggleFav(p.id) }}><IconHeart size={18} filled={fav} /></button>
         {!out && (
           <button type="button" className={done ? 'quick done' : 'quick'} aria-label={`Adicionar ${p.name} à sacola`} onClick={quick}>
             {done

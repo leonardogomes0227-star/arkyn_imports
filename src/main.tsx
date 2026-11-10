@@ -9,9 +9,13 @@ import '@fontsource/dm-sans/500.css'
 import '@fontsource/dm-sans/700.css'
 import '@fontsource/cormorant-garamond/600.css'
 import '@fontsource/cormorant-garamond/500-italic.css'
+import '@fontsource/bebas-neue/400.css'
+import '@fontsource/manrope/500.css'
+import '@fontsource/manrope/700.css'
 import './styles.css'
 import './design.css'
 import './admin.css'
+import './arabian.css'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode><BrowserRouter><StoreProvider><ToastProvider><App /></ToastProvider></StoreProvider></BrowserRouter></StrictMode>,

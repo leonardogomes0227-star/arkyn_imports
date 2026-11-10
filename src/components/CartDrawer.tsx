@@ -5,7 +5,7 @@ import { brl, useStore } from '../lib/store'
 const FOCUSABLE = 'a[href],button:not([disabled]),input,select,[tabindex]:not([tabindex="-1"])'
 
 export default function CartDrawer() {
-  const { open, setOpen, cart, products, settings, setQty } = useStore()
+  const { open, setOpen, cart, products, settings, setQty, add } = useStore()
   const box = useRef<HTMLElement>(null)
   const lastFocus = useRef<HTMLElement | null>(null)
   const lines = cart.flatMap(i => { const p = products.find(x => x.id === i.id); return p ? [{ p, qty: i.qty }] : [] })
@@ -13,6 +13,14 @@ export default function CartDrawer() {
   const items = lines.reduce((s, l) => s + l.qty, 0)
   const goal = settings.freeShippingFrom
   const close = () => setOpen(false)
+  // sugestões: mesma marca ou perfil dos itens da sacola, só com estoque
+  const inCart = new Set(lines.map(l => l.p.id))
+  const tags = new Set(lines.flatMap(l => l.p.tags ?? []))
+  const brandsIn = new Set(lines.map(l => l.p.brand))
+  const suggest = lines.length ? products
+    .filter(x => !inCart.has(x.id) && x.stock > 0 && !!x.image && (x.category === 'masculino' || x.category === 'feminino'))
+    .map(x => ({ x, s: (x.tags ?? []).filter(t => tags.has(t)).length + (brandsIn.has(x.brand) ? 1 : 0) }))
+    .sort((a, b) => b.s - a.s).slice(0, 3).map(r => r.x) : []
 
   // acessibilidade: foco entra na sacola, Tab fica preso nela, Esc fecha, fundo não rola, foco volta ao fechar
   useEffect(() => {
@@ -83,6 +91,21 @@ export default function CartDrawer() {
             </ul>
           )}
         </div>
+
+        {suggest.length > 0 && (
+          <div className="ax-suggest">
+            <p>Combina com o seu pedido</p>
+            <ul>
+              {suggest.map(x => (
+                <li key={x.id}>
+                  <img src={x.image} alt="" width="72" height="72" loading="lazy" />
+                  <span><small>{x.brand}</small><b>{x.name}</b><em>{brl(x.price)}</em></span>
+                  <button type="button" aria-label={`Adicionar ${x.name}`} tabIndex={open ? 0 : -1} onClick={() => add(x.id, false)}>+</button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         {!!lines.length && (
           <div className="ax-drawer-foot">

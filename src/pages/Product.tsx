@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import { IconHeart } from '../components/Icons'
 import Placeholder from '../components/Placeholder'
 import ProductCard, { ProductSkeleton } from '../components/ProductCard'
 import { noteGradient } from '../lib/noteColors'
@@ -13,7 +14,7 @@ const cap = (s: string) => s[0].toUpperCase() + s.slice(1)
 
 export default function Product() {
   const { id } = useParams()
-  const { products, settings, add, ready, setOpen } = useStore()
+  const { products, settings, add, ready, favs, toggleFav } = useStore()
   const [qty, setQty] = useState(1)
   const [pic, setPic] = useState(0)
   const [bar, setBar] = useState(false)
@@ -106,6 +107,7 @@ export default function Product() {
             </div>
           )}
           {!out && p.stock <= 3 && <p className="low">{p.stock === 1 ? 'Última unidade em estoque' : `Restam ${p.stock} unidades`}</p>}
+          <button type="button" className={favs.includes(p.id) ? 'btn ghost block pdp-fav on' : 'btn ghost block pdp-fav'} aria-pressed={favs.includes(p.id)} onClick={() => toggleFav(p.id)}><IconHeart size={18} filled={favs.includes(p.id)} /> {favs.includes(p.id) ? 'Nos seus favoritos' : 'Salvar nos favoritos'}</button>
           <a className="btn ghost block" href={wa} target="_blank" rel="noreferrer">Tirar dúvida no WhatsApp</a>
 
           <ul className="pdp-ship">
