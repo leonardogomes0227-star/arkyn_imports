@@ -55,15 +55,18 @@ export default function HeroSlider() {
             <div className="hs-txt">
               <span className="hs-k">{p.brand}</span>
               <h2>{p.name.replace(/ \d+ml$/i, '')}</h2>
-              {!!p.notes?.length && <p className="hs-notes">Notas: {p.notes.slice(0, 4).join(' · ')}</p>}
+              {!!p.notes?.length && (
+                <div className="hs-chips">{p.notes.slice(0, 4).map(nt => <span key={nt} className="chip flat"><i style={{ background: noteGradient(nt) }} />{nt}</span>)}</div>
+              )}
               <p className="hs-price">{brl(p.price)}{n > 1 && <span> ou {n}x de {brl(p.price / n)}</span>}</p>
               <Link to={`/produto/${p.id}`} className="btn round">Comprar agora</Link>
             </div>
             <div className="hs-img">
-              <Link to={`/produto/${p.id}`} aria-label={p.name}><img src={p.image} alt={`${p.brand} ${p.name}`} /></Link>
+              <span className="halo" />
               {p.notes?.slice(0, 4).map((nt, k) => (
-                <span key={nt} className={`chip c${k}`} style={{ animationDelay: `${k * -1.3}s` }}><i style={{ background: noteGradient(nt) }} />{nt}</span>
+                <span key={nt} className={`orb o${k}`} style={{ background: noteGradient(nt), animationDelay: `${k * -1.8}s` }} />
               ))}
+              <Link to={`/produto/${p.id}`} aria-label={p.name}><img src={p.image} alt={`${p.brand} ${p.name}`} /></Link>
             </div>
           </div>
         ))}
