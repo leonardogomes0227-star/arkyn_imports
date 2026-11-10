@@ -23,6 +23,8 @@ const WITH_PHOTO = new Set([
 
 // Fotos de embalagem (frasco + caixa, fundo branco) em public/produtos-net/<id>.webp; as demais usam a foto original
 const PACKSHOT = new Set([
+  'jacques-bogart-silver-scent-intense-100ml',
+  'lattafa-tharwah-gold-100ml',
   'ard-al-zaafaran-sahebat-al-jamal-70ml',
   'armaf-club-de-nuit-intense-man-edt-105ml',
   'armaf-club-de-nuit-maleka-105ml',
