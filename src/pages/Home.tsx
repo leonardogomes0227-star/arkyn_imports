@@ -1,14 +1,16 @@
+import type { CSSProperties } from 'react'
 import { Link } from 'react-router-dom'
 import CampaignHero from '../components/CampaignHero'
 import ProductCard from '../components/ProductCard'
 import Reveal from '../components/Reveal'
 import SizedImg from '../components/SizedImg'
-import { IconCard, IconChat, IconStore, IconTruck } from '../components/Icons'
-import { brl, useStore } from '../lib/store'
+import { useStore } from '../lib/store'
 import { usePageMeta } from '../lib/seo'
 import type { Category, Product } from '../lib/types'
 
 const SCENTS = ['doce', 'amadeirado', 'fresco', 'floral', 'especiado']
+// cor de cada família olfativa (campo de cor da seção "Escolha pelo cheiro")
+const FAM: Record<string, string> = { doce: '#b5623f', amadeirado: '#4b3423', fresco: '#2e5a60', floral: '#9c4a64', especiado: '#8a3a1c' }
 const cap = (t: string) => t[0].toUpperCase() + t.slice(1)
 
 // Recortes sem fundo disponíveis (public/hero). Para os demais, usa a foto do produto.
@@ -39,12 +41,10 @@ function SecHead({ eyebrow, title, to, link = 'Ver todos' }: { eyebrow?: string;
   )
 }
 
-function CenterHead({ eyebrow, title, to, link = 'Ver todos' }: { eyebrow: string; title: string; to?: string; link?: string }) {
+function CenterHead({ title, to, link = 'Ver todos' }: { title: string; to?: string; link?: string }) {
   return (
     <div className="sc-head">
-      <p className="sc-eyebrow">{eyebrow}</p>
       <h2>{title}</h2>
-      <span className="sc-orn" aria-hidden="true"><i /><b>◆</b><i /></span>
       {to && <Link to={to} className="sc-all">{link} <span aria-hidden="true">→</span></Link>}
     </div>
   )
@@ -102,14 +102,6 @@ export default function Home() {
     return [t, list.length, notes, thumbs] as [string, number, string[], string[]]
   }).filter(([, c]) => c > 0)
 
-  const n = settings.installments
-  const benefits: [JSX.Element, string, string][] = [
-    [<IconCard key="c" size={26} />, n > 1 ? `Parcele em até ${n}x` : 'Pix e cartão', 'Pagamento seguro pelo Mercado Pago'],
-    [<IconStore key="s" size={26} />, 'Retirada em Coxim', 'Sem custo de frete'],
-    [<IconTruck key="t" size={26} />, 'Entrega', settings.freeShippingFrom > 0 ? `Frete grátis acima de ${brl(settings.freeShippingFrom)}` : 'Consulte a sua cidade'],
-    [<IconChat key="w" size={26} />, 'Atendimento', 'Direto pelo WhatsApp'],
-  ]
-
   return (
     <>
       <h1 className="sr-only">Arkyn Imports: perfumes árabes e importados em Coxim – MS</h1>
@@ -127,7 +119,7 @@ export default function Home() {
       )}
 
       <Reveal as="section" className="section sc-feat">
-        <CenterHead eyebrow="Seleção da loja" title="Os mais queridos" to="/catalogo" />
+        <CenterHead title="Os mais queridos" to="/catalogo" />
         <div className="grid shelf sc-five">{featured.map(p => <ProductCard key={p.id} p={p} />)}</div>
       </Reveal>
 
@@ -140,13 +132,25 @@ export default function Home() {
         ))}
       </Reveal>
 
-      <Reveal as="section" className="sc-why" aria-label="Por que comprar na Arkyn">
-        <p className="sc-eyebrow">Por que comprar na Arkyn</p>
-        <div className="sc-why-row">
-          {benefits.map(([ic, t, d]) => <div key={t}>{ic}<span><b>{t}</b><small>{d}</small></span></div>)}
+      <section className="sc-fam" aria-labelledby="fam-t">
+        <Reveal className="sc-fam-head">
+          <h2 id="fam-t">Escolha pelo cheiro</h2>
+          <p>Doce, amadeirado, fresco, floral ou especiado. Cada família reúne os perfumes do catálogo com aquele perfil.</p>
+          <Link to="/quiz" className="ch-btn">Fazer o quiz</Link>
+        </Reveal>
+        <div className="sc-fam-grid">
+          {scents.map(([t, count, notes, thumbs], i) => (
+            <Reveal key={t} delay={i * 70}>
+              <Link to={`/catalogo?tag=${t}`} className="sc-fam-c" style={{ '--fam': FAM[t] ?? '#3a2e22' } as CSSProperties}>
+                <b>{cap(t)}</b>
+                <small>{notes.join(' · ')}</small>
+                <span className="sc-fam-th">{thumbs.map(src => <i key={src}><SizedImg src={src} size={160} width={160} height={160} alt="" loading="lazy" decoding="async" /></i>)}</span>
+                <em>{count} perfumes →</em>
+              </Link>
+            </Reveal>
+          ))}
         </div>
-      </Reveal>
-
+      </section>
       <Shelf eyebrow="Condições especiais" title="Ofertas" to="/catalogo" items={offers} />
       <Shelf eyebrow="Para ele" title="Perfumes masculinos" to="/catalogo?cat=masculino" items={by(masc)} />
       <Shelf eyebrow="Para ela" title="Perfumes femininos" to="/catalogo?cat=feminino" items={by(fem)} />
@@ -159,28 +163,6 @@ export default function Home() {
           </nav>
         </Reveal>
       )}
-
-      <section className="ax-band">
-        <div className="ax-band-in">
-          <Reveal className="ax-band-head">
-            <div><p className="ax-eyebrow">Famílias olfativas</p><h2>Escolha pelo cheiro que você gosta</h2></div>
-            <p className="ax-band-p">Cada família reúne os perfumes do catálogo com aquele perfil. Veja as notas mais presentes e explore.</p>
-            <Link to="/quiz" className="btn">Fazer o quiz</Link>
-          </Reveal>
-          <div className="scent-grid">
-            {scents.map(([t, count, notes, thumbs], i) => (
-              <Reveal key={t} delay={i * 70}>
-                <Link to={`/catalogo?tag=${t}`} className="scent">
-                  <span className="scent-th">{thumbs.map(src => <i key={src}><SizedImg src={src} size={160} width={160} height={160} alt="" loading="lazy" decoding="async" /></i>)}</span>
-                  <b>{cap(t)}</b>
-                  <small>{notes.join(' · ')}</small>
-                  <em>{count} perfumes →</em>
-                </Link>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
     </>
   )
 }
