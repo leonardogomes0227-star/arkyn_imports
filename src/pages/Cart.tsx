@@ -71,7 +71,12 @@ export default function Cart() {
       const d = await r.json()
       if (!r.ok || !d.url) throw new Error(d.error || 'Falha ao iniciar pagamento')
       clear(); window.location.href = d.url
-    } catch (e) { setErr((e as Error).message); setBusy(false) }
+    } catch (e) {
+      const msg = (e as Error).message
+      // erro de configuração do pagamento: não mostra texto técnico ao cliente
+      setErr(/MP_ACCESS_TOKEN|Mercado Pago|Unexpected token|Failed to fetch/i.test(msg) ? 'O pagamento online está indisponível no momento. Você pode finalizar pelo WhatsApp, é rápido.' : msg)
+      setBusy(false)
+    }
   }
 
   return (
