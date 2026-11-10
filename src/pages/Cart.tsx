@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useToast } from '../components/Toast'
+import { usePageMeta } from '../lib/seo'
 import { brl, useStore } from '../lib/store'
 
 const maskPhone = (v: string) => {
@@ -14,6 +15,7 @@ const maskPhone = (v: string) => {
 export default function Cart() {
   const { cart, products, settings, setQty, clear } = useStore()
   const { toast } = useToast()
+  usePageMeta({ title: 'Finalizar compra | Arkyn Imports', description: 'Finalize sua compra com Pix ou cartão de crédito.', noindex: true })
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
   const [touched, setTouched] = useState({ name: false, phone: false })

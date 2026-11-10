@@ -4,6 +4,7 @@ import Placeholder from '../components/Placeholder'
 import ProductCard, { ProductSkeleton } from '../components/ProductCard'
 import { noteGradient } from '../lib/noteColors'
 import { CAT_LABEL } from '../lib/search'
+import { usePageMeta } from '../lib/seo'
 import { brl, useStore } from '../lib/store'
 
 const FAMILIES = ['doce', 'amadeirado', 'fresco', 'floral', 'especiado']
@@ -18,6 +19,16 @@ export default function Product() {
   const [bar, setBar] = useState(false)
   const buyRef = useRef<HTMLButtonElement>(null)
   const p = products.find(x => x.id === id)
+  const origin = typeof window !== 'undefined' ? window.location.origin : ''
+  const abs = (s?: string) => (s ? (s.startsWith('http') ? s : origin + s) : undefined)
+  usePageMeta(p ? {
+    title: `${p.brand} ${p.name} | Arkyn Imports`,
+    description: p.description || `${p.brand} ${p.name}${p.notes?.length ? `, com notas de ${p.notes.slice(0, 4).join(', ').toLowerCase()}` : ''}. Pix ou cartão de crédito e retirada em Coxim – MS.`,
+    path: `/produto/${p.id}`, image: p.image, type: 'product',
+    jsonLd: { '@context': 'https://schema.org', '@type': 'Product', name: `${p.brand} ${p.name}`, sku: p.id, brand: { '@type': 'Brand', name: p.brand }, category: CAT_LABEL[p.category],
+      ...(p.image ? { image: [abs(p.image)] } : {}), ...(p.description ? { description: p.description } : {}),
+      offers: { '@type': 'Offer', url: `${origin}/produto/${p.id}`, priceCurrency: 'BRL', price: p.price.toFixed(2), availability: p.stock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock' } },
+  } : { title: 'Perfume não encontrado | Arkyn Imports', description: 'Este produto não está disponível.', noindex: true })
 
   useEffect(() => { setQty(1); setPic(0) }, [id])
   // barra de compra fixa no celular, quando o botão principal sai da tela

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import ProductCard, { ProductSkeleton } from '../components/ProductCard'
 import { CAT_LABEL, matchProduct } from '../lib/search'
+import { usePageMeta } from '../lib/seo'
 import { useStore } from '../lib/store'
 import type { Category, Product } from '../lib/types'
 
@@ -38,6 +39,12 @@ export default function Catalog() {
   const brands = [...new Set(products.map(p => p.brand))].sort()
   const title = q ? `Resultados para “${q}”` : CATS.find(c => c[0] === cat)?.[1] ?? (brand || tag ? [brand, tag && cap(tag)].filter(Boolean).join(' · ') : 'Todos os perfumes')
   const any = cat || brand || tag || max || stockOnly || offersOnly
+  usePageMeta({
+    title: `${title} | Arkyn Imports`,
+    description: `${title} na Arkyn Imports, em Coxim – MS. Perfumes árabes e importados com Pix ou cartão de crédito.`,
+    path: `/catalogo${[cat && `cat=${cat}`, brand && `brand=${encodeURIComponent(brand)}`, tag && `tag=${tag}`].filter(Boolean).length ? '?' + [cat && `cat=${cat}`, brand && `brand=${encodeURIComponent(brand)}`, tag && `tag=${tag}`].filter(Boolean).join('&') : ''}`,
+    noindex: !!q,
+  })
   const clear = () => { setCat(''); setBrand(''); setTag(''); setMax(0); setStockOnly(false); setOffersOnly(false) }
 
   const opt = (on: boolean, label: string, n: number, click: () => void) =>

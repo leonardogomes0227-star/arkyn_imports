@@ -4,6 +4,7 @@ import ProductCard from '../components/ProductCard'
 import Reveal from '../components/Reveal'
 import { IconCard, IconChat, IconStore, IconTruck } from '../components/Icons'
 import { brl, useStore } from '../lib/store'
+import { usePageMeta } from '../lib/seo'
 import type { Category, Product } from '../lib/types'
 
 const SCENTS = ['doce', 'amadeirado', 'fresco', 'floral', 'especiado']
@@ -40,6 +41,17 @@ function Shelf({ eyebrow, title, to, items }: { eyebrow?: string; title: string;
 
 export default function Home() {
   const { products, settings } = useStore()
+  const origin = typeof window !== 'undefined' ? window.location.origin : ''
+  usePageMeta({
+    title: 'Arkyn Imports | Perfumes árabes e importados em Coxim – MS',
+    description: 'Perfumes árabes e importados em Coxim – MS. Compre online com Pix ou cartão de crédito, ou retire na loja.',
+    path: '/',
+    jsonLd: [
+      { '@context': 'https://schema.org', '@type': 'Organization', name: 'Arkyn Imports', url: origin, logo: `${origin}/logo-full.png`, sameAs: ['https://instagram.com/arkyn_imports'],
+        address: { '@type': 'PostalAddress', addressLocality: 'Coxim', addressRegion: 'MS', addressCountry: 'BR' }, telephone: `+${settings.whatsapp}` },
+      { '@context': 'https://schema.org', '@type': 'WebSite', name: 'Arkyn Imports', url: origin, potentialAction: { '@type': 'SearchAction', target: `${origin}/catalogo?q={search_term_string}`, 'query-input': 'required name=search_term_string' } },
+    ],
+  })
   const live = products.filter(p => p.stock > 0)
   const withPhoto = (c: Category) => live.filter(p => p.category === c && !!p.image)
   const masc = withPhoto('masculino'), fem = withPhoto('feminino')

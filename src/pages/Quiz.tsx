@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import ProductCard from '../components/ProductCard'
+import { usePageMeta } from '../lib/seo'
 import { brl, useStore } from '../lib/store'
 import type { Product } from '../lib/types'
 
@@ -16,6 +17,7 @@ const QUESTIONS: Q[] = [
 ]
 
 export default function Quiz() {
+  usePageMeta({ title: 'Qual é o seu cheiro? | Arkyn Imports', description: 'Responda algumas perguntas rápidas e receba indicações de perfumes combinando com o seu estilo.' })
   const { products, settings } = useStore()
   const [sp] = useSearchParams()
   const start = sp.get('p')

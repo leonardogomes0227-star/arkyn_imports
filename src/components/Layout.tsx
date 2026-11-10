@@ -8,7 +8,7 @@ import { useStore } from '../lib/store'
 export function Logo({ className = 'ax-logo' }: { className?: string }) {
   return (
     <Link to="/" className={className} aria-label="Arkyn Imports, página inicial">
-      <img src="/logo-sm.webp" width="440" height="357" alt="Arkyn Imports" />
+      <img src="/logo-xs.webp" width="260" height="211" alt="Arkyn Imports" />
     </Link>
   )
 }

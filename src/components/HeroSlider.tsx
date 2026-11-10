@@ -8,10 +8,10 @@ import { noteGradient } from '../lib/noteColors'
 type Theme = { from: string; to: string; spot: string; ink: string; mute: string; accent: string; rule: string; btnBg: string; btnFg: string; floor: string }
 const SLIDES: [string, Theme][] = [
   ['french-avenue-vulcan-feu-100ml', { from: '#052b35', to: '#0e5866', spot: 'rgba(96,204,210,.55)', ink: '#f5efe3', mute: 'rgba(245,239,227,.68)', accent: '#e2c78c', rule: 'rgba(245,239,227,.22)', btnBg: '#f5efe3', btnFg: '#052b35', floor: 'rgba(0,18,24,.34)' }],
-  ['lattafa-afeef-100ml', { from: '#f3e9d7', to: '#dec9a2', spot: 'rgba(255,255,255,.9)', ink: '#2a2015', mute: 'rgba(42,32,21,.64)', accent: '#94742f', rule: 'rgba(42,32,21,.2)', btnBg: '#2a2015', btnFg: '#f3e9d7', floor: 'rgba(90,64,20,.16)' }],
+  ['lattafa-afeef-100ml', { from: '#f3e9d7', to: '#dec9a2', spot: 'rgba(255,255,255,.9)', ink: '#2a2015', mute: 'rgba(42,32,21,.64)', accent: '#7a5f1e', rule: 'rgba(42,32,21,.2)', btnBg: '#2a2015', btnFg: '#f3e9d7', floor: 'rgba(90,64,20,.16)' }],
   ['armaf-club-de-nuit-maleka-105ml', { from: '#211630', to: '#46305f', spot: 'rgba(192,152,232,.46)', ink: '#f4edf9', mute: 'rgba(244,237,249,.68)', accent: '#dcc4f2', rule: 'rgba(244,237,249,.22)', btnBg: '#f4edf9', btnFg: '#211630', floor: 'rgba(14,6,24,.4)' }],
   ['lattafa-asad-elixir-100ml', { from: '#0e0f12', to: '#2b2e36', spot: 'rgba(160,168,186,.42)', ink: '#f2f2f3', mute: 'rgba(242,242,243,.64)', accent: '#c6cad2', rule: 'rgba(242,242,243,.2)', btnBg: '#f2f2f3', btnFg: '#0e0f12', floor: 'rgba(0,0,0,.42)' }],
-  ['maison-alhambra-pink-eclipse-100ml', { from: '#f8e5e1', to: '#ecc5c0', spot: 'rgba(255,255,255,.88)', ink: '#2b1819', mute: 'rgba(43,24,25,.62)', accent: '#a34f59', rule: 'rgba(43,24,25,.18)', btnBg: '#2b1819', btnFg: '#f8e5e1', floor: 'rgba(120,50,56,.14)' }],
+  ['maison-alhambra-pink-eclipse-100ml', { from: '#f8e5e1', to: '#ecc5c0', spot: 'rgba(255,255,255,.88)', ink: '#2b1819', mute: 'rgba(43,24,25,.62)', accent: '#8f3f49', rule: 'rgba(43,24,25,.18)', btnBg: '#2b1819', btnFg: '#f8e5e1', floor: 'rgba(120,50,56,.14)' }],
   ['maison-alhambra-victorioso-nero-100ml', { from: '#090909', to: '#1e1a11', spot: 'rgba(188,153,82,.4)', ink: '#f3ebd9', mute: 'rgba(243,235,217,.66)', accent: '#cba85c', rule: 'rgba(243,235,217,.2)', btnBg: '#f3ebd9', btnFg: '#090909', floor: 'rgba(0,0,0,.45)' }],
 ]
 const AUTOPLAY_MS = 6500
@@ -24,6 +24,9 @@ export default function HeroSlider() {
   const [added, setAdded] = useState('')
   const [reduced, setReduced] = useState(false)
   const root = useRef<HTMLElement>(null)
+  const loaded = useRef(new Set<number>([0]))
+  const [moved, setMoved] = useState(false) // o primeiro slide aparece direto (sem fade), para a imagem principal contar logo no LCP
+  const [warm, setWarm] = useState(false) // só pré-carrega os slides vizinhos depois do primeiro (evita disputar banda com o LCP)
   const drag = useRef<number | null>(null)
   const frame = useRef(0)
   const n = settings.installments
@@ -38,7 +41,9 @@ export default function HeroSlider() {
     return () => q.removeEventListener('change', on)
   }, [])
 
-  const go = (k: number) => total && setI(((k % total) + total) % total)
+  ;(warm || i > 0 ? [i, i + 1, i - 1] : [i]).forEach(k => { if (total) loaded.current.add(((k % total) + total) % total) })
+  useEffect(() => { const t = window.setTimeout(() => setWarm(true), 3500); return () => window.clearTimeout(t) }, [])
+  const go = (k: number) => { if (total) { setWarm(true); setMoved(true); setI(((k % total) + total) % total) } }
 
   // Profundidade: o frasco e a luz se movem um pouco com o mouse (só em telas com mouse)
   const onMove = (e: PointerEvent<HTMLElement>) => {
@@ -73,7 +78,7 @@ export default function HeroSlider() {
           const profile = (p.tags ?? []).filter(t => ['doce', 'amadeirado', 'fresco', 'floral', 'especiado'].includes(t)).slice(0, 2).map(cap).join(' · ')
           const tab = on ? 0 : -1
           return (
-            <article key={p.id} className={on ? 'lx-slide on' : 'lx-slide'} style={vars} role="group" aria-roledescription="slide" aria-label={`${k + 1} de ${total}: ${p.brand} ${p.name}`} aria-hidden={!on}>
+            <div key={p.id} className={on ? `lx-slide on${moved ? '' : ' init'}` : 'lx-slide'} style={vars} role="group" aria-roledescription="slide" aria-label={`${k + 1} de ${total}: ${p.brand} ${p.name}`} aria-hidden={!on}>
               <div className="lx-stage" aria-hidden="true">
                 <span className="lx-wall" />
                 <span className="lx-floor" />
@@ -81,8 +86,8 @@ export default function HeroSlider() {
                   <span className="lx-pshadow" />
                   <div className="lx-enter">
                     <div className="lx-pimg">
-                      <img src={img} alt="" className="lx-refl" loading="lazy" decoding="async" />
-                      <img src={img} alt="" className="lx-photo" loading={k === 0 ? 'eager' : 'lazy'} decoding="async" />
+                      <img src={loaded.current.has(k) ? img : undefined} alt="" className="lx-refl" decoding="async" />
+                      <img src={loaded.current.has(k) ? img : undefined} alt="" className="lx-photo" loading={k === 0 ? 'eager' : 'lazy'} decoding="async" />
                     </div>
                   </div>
                 </div>
@@ -110,7 +115,7 @@ export default function HeroSlider() {
                   </div>
                 </div>
               </div>
-            </article>
+            </div>
           )
         })}
       </div>
