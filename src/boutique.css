@@ -71,7 +71,8 @@ h1,h2,h3 { letter-spacing:0 }
 .ch-pfloor { left:6%; right:6%; bottom:0; height:12%; border-radius:14px 14px 4px 4px; filter:none; background:linear-gradient(180deg,#fcfaf6 0,#e9e1d4 55%,#d3c8b6 100%); box-shadow:0 18px 30px -12px rgba(37,35,31,.35),inset 0 2px 0 rgba(255,255,255,.9); z-index:-1 }
 .ch-prod { padding-bottom:5.5% } .ch-float { height:88% }
 .ch-ctrl { position:static; color:var(--ink) } .ch-count { display:none }
-.ch-bars { position:absolute; z-index:6; left:50%; bottom:14px; transform:translateX(-50%); flex:none; width:min(360px,60%) } .ch-bar::before { background:rgba(43,32,37,.2) } .ch-bar span { background:var(--btn) }
+.ch-bottom { position:absolute; z-index:6; left:50%; bottom:8px; transform:translateX(-50%); display:flex; align-items:center; gap:8px; width:min(440px,88%) }
+.ch-bars { flex:1; max-width:none } .ch-bar::before { background:rgba(43,32,37,.2) } .ch-bar span { background:var(--btn) }
 .ch-arrows { display:block; margin:0 }
 .ch-arrows button { position:absolute; z-index:6; top:50%; transform:translateY(-50%); width:46px; height:46px; background:rgba(255,255,255,.85); color:var(--ink); border:0; box-shadow:var(--sh-1) }
 .ch-arrows button:first-child { left:clamp(10px,2vw,28px) } .ch-arrows button:last-child { right:clamp(10px,2vw,28px) }

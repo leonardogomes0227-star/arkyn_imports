@@ -30,6 +30,7 @@ const MS = 6500
 export default function CampaignHero() {
   const [i, setI] = useState(0)
   const [paused, setPaused] = useState(false)
+  const [userPaused, setUserPaused] = useState(false)
   const [offscreen, setOffscreen] = useState(false)
   const [reduced, setReduced] = useState(false)
   const [moved, setMoved] = useState(false)
@@ -60,10 +61,10 @@ export default function CampaignHero() {
     frame.current = requestAnimationFrame(() => { root.current?.style.setProperty('--px', x.toFixed(3)); root.current?.style.setProperty('--py', y.toFixed(3)) })
   }
   const onKey = (e: KeyboardEvent) => { if (e.key === 'ArrowRight') go(i + 1); if (e.key === 'ArrowLeft') go(i - 1) }
-  const stop = paused || offscreen
+  const stop = paused || offscreen || userPaused
 
   return (
-    <section ref={root} className="ch" aria-roledescription="carrossel" aria-label="Campanhas" tabIndex={0} onKeyDown={onKey} onPointerMove={onMove}
+    <section ref={root} className={userPaused ? 'ch is-paused' : 'ch'} aria-roledescription="carrossel" aria-label="Campanhas" tabIndex={0} onKeyDown={onKey} onPointerMove={onMove}
       onPointerDown={e => { drag.current = e.clientX }}
       onPointerUp={e => { if (drag.current === null) return; const dx = e.clientX - drag.current; drag.current = null; if (Math.abs(dx) > 48) go(dx < 0 ? i + 1 : i - 1) }}
       onPointerCancel={() => { drag.current = null }}
@@ -102,12 +103,19 @@ export default function CampaignHero() {
       })}
 
       <div className="ch-ctrl">
+        <div className="ch-bottom">
+        <button type="button" className="ch-pause" aria-pressed={userPaused} aria-label={userPaused ? 'Retomar troca automática das campanhas' : 'Pausar troca automática das campanhas'} onClick={() => setUserPaused(v => !v)}>
+          {userPaused
+            ? <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M8 5l11 7-11 7z" fill="currentColor" /></svg>
+            : <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M7 5h3v14H7zM14 5h3v14h-3z" fill="currentColor" /></svg>}
+        </button>
         <div className="ch-bars" role="tablist" aria-label="Escolher campanha">
           {SLIDES.map((s, k) => (
             <button key={s.id} type="button" role="tab" aria-selected={k === i} aria-label={`${s.eyebrow}: ${s.title.join(' ')}`} className={k === i ? 'ch-bar on' : k < i ? 'ch-bar seen' : 'ch-bar'} onClick={() => go(k)}>
               <span style={{ animationPlayState: stop ? 'paused' : 'running', animationDuration: `${MS}ms` }} onAnimationEnd={() => { if (k === i && !reduced) go(i + 1) }} />
             </button>
           ))}
+        </div>
         </div>
         <span className="ch-count" aria-hidden="true"><b>{String(i + 1).padStart(2, '0')}</b> / {String(total).padStart(2, '0')}</span>
         <div className="ch-arrows">

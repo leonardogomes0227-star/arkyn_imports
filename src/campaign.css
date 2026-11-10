@@ -15,7 +15,7 @@
 /* palavra gigante vazada atrás do frasco */
 .ch-word { position:absolute; z-index:-3; right:-1vw; top:50%; font-family:var(--display); font-size:clamp(14rem,34vw,34rem); line-height:.8; letter-spacing:.02em; color:transparent; -webkit-text-stroke:1.5px color-mix(in srgb,var(--accent) 38%,transparent); white-space:nowrap; transform:translate(calc(var(--px)*-22px),calc(-50% + var(--py)*-14px)); transition:transform .5s var(--ease); user-select:none }
 .ch-slide.on .ch-word { animation:ch-word 1.4s var(--ease) both }
-@keyframes ch-word { from { opacity:0; letter-spacing:.14em } to { opacity:1; letter-spacing:.02em } }
+@keyframes ch-word { from { opacity:0 } to { opacity:1 } }
 
 /* fumaça e poeira dourada */
 .ch-smoke { position:absolute; z-index:-2; border-radius:50%; filter:blur(48px); background:radial-gradient(closest-side,var(--glow),transparent 72%); opacity:.55; pointer-events:none }
@@ -94,3 +94,15 @@
   .ch-slide.on .ch-bg, .ch-slide.on .ch-word, .ch-slide.on .ch-float, .ch-smoke, .ch-dust i, .ch-slide.on .ch-eyebrow, .ch-slide.on .ch-sub, .ch-slide.on .ch-cta, .ch-slide.on .ch-line b { animation:none }
   .ch-slide .ch-eyebrow, .ch-slide .ch-sub, .ch-slide .ch-cta { opacity:1 } .ch-slide .ch-line b { transform:none } .ch-dust { display:none }
 }
+
+/* pausar: troca automática e movimentos de fundo (WCAG 2.2.2) */
+.ch.is-paused .ch-float, .ch.is-paused .ch-smoke, .ch.is-paused .ch-dust i, .ch.is-paused .ch-bg { animation-play-state:paused }
+.ch-pause { flex:none; width:44px; height:44px; border-radius:50%; border:1px solid rgba(37,35,31,.35); background:rgba(255,255,255,.85); color:inherit; display:grid; place-items:center; cursor:pointer; transition:background .25s,color .25s }
+.ch-pause:hover { background:var(--btn,#111); color:#fff }
+
+/* primeira exibição: o slide inicial aparece completo e imediato (sem entrada animada), para o LCP ser a imagem real.
+   As entradas animadas valem a partir da primeira troca. O movimento de fundo continua. */
+.ch-slide.init.on .ch-eyebrow, .ch-slide.init.on .ch-sub, .ch-slide.init.on .ch-cta { animation:none; opacity:1 }
+.ch-slide.init.on .ch-line b { animation:none; transform:none }
+.ch-slide.init.on .ch-word { animation:none }
+.ch-slide.init.on .ch-float { animation:ch-bob 6s ease-in-out infinite alternate }
