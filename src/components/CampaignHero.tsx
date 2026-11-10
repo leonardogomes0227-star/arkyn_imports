@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent, type PointerEvent } from 'react'
 import { Link } from 'react-router-dom'
-import { IconCard, IconChat, IconHeart, IconStore } from './Icons'
 
 // Destaques editoriais da Home. As imagens são recortes dos frascos reais (public/hero); trocar por fotos de
 // campanha é só mudar o campo `img`. Os textos não afirmam preço, desconto nem estoque.
@@ -16,12 +15,7 @@ const SLIDES: Slide[] = [
     sub: 'Responda o quiz e veja os perfumes do catálogo que combinam com você.', cta: ['Fazer o quiz', '/quiz'] },
 ]
 const MS = 7000
-const PERKS: [JSX.Element, string, string][] = [
-  [<IconHeart key="h" size={22} />, 'Seleção cuidadosa', 'Árabes e importados'],
-  [<IconCard key="c" size={22} />, 'Pix e cartão', 'Pagamento seguro'],
-  [<IconStore key="s" size={22} />, 'Retirada em Coxim', 'Sem custo de frete'],
-  [<IconChat key="w" size={22} />, 'Atendimento', 'Direto pelo WhatsApp'],
-]
+const PERKS = ['Pix e cartão de crédito', 'Retirada em Coxim – MS', 'Atendimento direto no WhatsApp']
 
 export default function CampaignHero() {
   const [i, setI] = useState(0)
@@ -106,9 +100,7 @@ export default function CampaignHero() {
         <button type="button" aria-label="Destaque anterior" onClick={() => go(i - 1)}><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg></button>
         <button type="button" aria-label="Próximo destaque" onClick={() => go(i + 1)}><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg></button>
       </div>
-      <ul className="ch-perks" aria-label="Vantagens da loja">
-        {PERKS.map(([ic, t, d]) => <li key={t}><span className="ch-perk-ic">{ic}</span><span><b>{t}</b><small>{d}</small></span></li>)}
-      </ul>
+      <p className="ch-perks">{PERKS.map(t => <span key={t}>{t}</span>)}</p>
     </section>
   )
 }
