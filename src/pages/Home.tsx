@@ -4,7 +4,8 @@ import CampaignHero from '../components/CampaignHero'
 import ProductCard from '../components/ProductCard'
 import Reveal from '../components/Reveal'
 import SizedImg from '../components/SizedImg'
-import { useStore } from '../lib/store'
+import { IconCard, IconChat, IconStore, IconTruck } from '../components/Icons'
+import { brl, useStore } from '../lib/store'
 import { usePageMeta } from '../lib/seo'
 import type { Category, Product } from '../lib/types'
 
@@ -41,10 +42,12 @@ function SecHead({ eyebrow, title, to, link = 'Ver todos' }: { eyebrow?: string;
   )
 }
 
-function CenterHead({ title, to, link = 'Ver todos' }: { title: string; to?: string; link?: string }) {
+function CenterHead({ eyebrow, title, to, link = 'Ver todos' }: { eyebrow: string; title: string; to?: string; link?: string }) {
   return (
     <div className="sc-head">
+      <p className="sc-eyebrow">{eyebrow}</p>
       <h2>{title}</h2>
+      <span className="sc-orn" aria-hidden="true"><i /><b>◆</b><i /></span>
       {to && <Link to={to} className="sc-all">{link} <span aria-hidden="true">→</span></Link>}
     </div>
   )
@@ -102,6 +105,14 @@ export default function Home() {
     return [t, list.length, notes, thumbs] as [string, number, string[], string[]]
   }).filter(([, c]) => c > 0)
 
+  const n = settings.installments
+  const benefits: [JSX.Element, string, string][] = [
+    [<IconCard key="c" size={26} />, n > 1 ? `Parcele em até ${n}x` : 'Pix e cartão', 'Pagamento seguro pelo Mercado Pago'],
+    [<IconStore key="s" size={26} />, 'Retirada em Coxim', 'Sem custo de frete'],
+    [<IconTruck key="t" size={26} />, 'Entrega', settings.freeShippingFrom > 0 ? `Frete grátis acima de ${brl(settings.freeShippingFrom)}` : 'Consulte a sua cidade'],
+    [<IconChat key="w" size={26} />, 'Atendimento', 'Direto pelo WhatsApp'],
+  ]
+
   return (
     <>
       <h1 className="sr-only">Arkyn Imports: perfumes árabes e importados em Coxim – MS</h1>
@@ -119,7 +130,7 @@ export default function Home() {
       )}
 
       <Reveal as="section" className="section sc-feat">
-        <CenterHead title="Os mais queridos" to="/catalogo" />
+        <CenterHead eyebrow="Seleção da loja" title="Os mais queridos" to="/catalogo" />
         <div className="grid shelf sc-five">{featured.map(p => <ProductCard key={p.id} p={p} />)}</div>
       </Reveal>
 
@@ -130,6 +141,13 @@ export default function Home() {
             <img src={b.img} width={b.w} height={b.h} alt="" loading="lazy" decoding="async" />
           </Link>
         ))}
+      </Reveal>
+
+      <Reveal as="section" className="sc-why" aria-label="Por que comprar na Arkyn">
+        <p className="sc-eyebrow">Por que comprar na Arkyn</p>
+        <div className="sc-why-row">
+          {benefits.map(([ic, t, d]) => <div key={t}>{ic}<span><b>{t}</b><small>{d}</small></span></div>)}
+        </div>
       </Reveal>
 
       <section className="sc-fam" aria-labelledby="fam-t">

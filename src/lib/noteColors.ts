@@ -14,3 +14,12 @@ const C: Record<string, [string, string]> = {
 }
 export const noteColor = (n: string) => C[n.toLowerCase()] ?? ['#f0dc9a', '#a8822c']
 export const noteGradient = (n: string) => { const [a, b] = noteColor(n); return `radial-gradient(circle at 32% 28%, #fff 0, ${a} 28%, ${b} 100%)` }
+
+// Ícone de cada nota (fruta, flor, erva, madeira...). Nota sem ícone adequado fica com a esfera de cor.
+const E: Record<string, string> = {
+  'limão': '🍋', 'limão siciliano': '🍋', 'abacaxi': '🍍', 'bergamota': '🍋', 'jasmim': '🌼', 'flor de laranjeira': '🌼', 'baunilha': '🍦',
+  'lavanda': '🪻', 'hortelã': '🌿', 'sálvia': '🌿', 'tabaco': '🍂', 'pimenta rosa': '🌶️', 'maçã': '🍎', 'gengibre': '🫚', 'vetiver': '🌾',
+  'íris': '💐', 'chocolate amargo': '🍫', 'sândalo': '🪵', 'oud': '🪵', 'madeira âmbar': '🪵', 'cedro': '🌲', 'praliné': '🌰', 'noz-moscada': '🌰',
+  'toranja': '🍊', 'tangerina': '🍊', 'manga': '🥭', 'pera': '🍐', 'rosa': '🌹', 'orquídea': '🌸', 'caramelo': '🍮', 'leite': '🥛', 'mel': '🍯', 'patchouli': '🍃', 'fava tonka': '🫘', 'cardamomo': '🫛',
+}
+export const noteIcon = (n: string) => E[n.toLowerCase()]

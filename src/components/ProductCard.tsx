@@ -5,7 +5,7 @@ import SizedImg from './SizedImg'
 import { useToast } from './Toast'
 import { brl, useStore } from '../lib/store'
 import { IconHeart } from './Icons'
-import { noteGradient } from '../lib/noteColors'
+import { noteGradient, noteIcon } from '../lib/noteColors'
 import type { Product } from '../lib/types'
 
 export function ProductSkeleton({ n = 4 }: { n?: number }) {
@@ -48,7 +48,7 @@ export default function ProductCard({ p }: { p: Product }) {
         {!!hint.length && !out && (
           <span className="notes" aria-hidden="true">
             <b>{p.notes?.length ? 'Notas' : 'Perfil'}</b>
-            {hint.slice(0, 6).map(x => <i key={x}>{p.notes?.length ? <u style={{ background: noteGradient(x) }} /> : null}{x}</i>)}
+            {hint.slice(0, 6).map(x => <i key={x}>{p.notes?.length ? (noteIcon(x) ? <span className="ni" aria-hidden="true">{noteIcon(x)}</span> : <u style={{ background: noteGradient(x) }} />) : null}{x}</i>)}
           </span>
         )}
       </Link>

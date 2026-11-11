@@ -4,7 +4,7 @@ import { IconHeart } from '../components/Icons'
 import Placeholder from '../components/Placeholder'
 import SizedImg from '../components/SizedImg'
 import ProductCard, { ProductSkeleton } from '../components/ProductCard'
-import { noteGradient } from '../lib/noteColors'
+import { noteGradient, noteIcon } from '../lib/noteColors'
 import { CAT_LABEL } from '../lib/search'
 import { usePageMeta } from '../lib/seo'
 import { brl, useStore } from '../lib/store'
@@ -121,7 +121,7 @@ export default function Product() {
               <details open>
                 <summary>Notas olfativas</summary>
                 <ol className="pdp-notes-list">
-                  {p.notes.map((nt, i) => <li key={nt}><em>{String(i + 1).padStart(2, '0')}</em><i style={{ background: noteGradient(nt) }} />{nt}</li>)}
+                  {p.notes.map((nt, i) => <li key={nt}><em>{String(i + 1).padStart(2, '0')}</em>{noteIcon(nt) ? <i className="emo" aria-hidden="true">{noteIcon(nt)}</i> : <i style={{ background: noteGradient(nt) }} />}{nt}</li>)}
                 </ol>
               </details>
             )}
