@@ -70,7 +70,7 @@ export default function Layout({ children }: { children: ReactNode }) {
         <div className="ax-topbar sc-top" aria-label="Avisos da loja">
           <div className="sc-top-in">
             <span className="sc-top-l"><IconTruck size={16} />{ship}</span>
-            <span className="sc-top-c">Perfumes árabes e importados</span>
+            <span className="sc-top-c"><i aria-hidden="true">✦</i> Perfumes árabes e importados <i aria-hidden="true">✦</i></span>
             <span className="sc-top-r"><a href={wa} target="_blank" rel="noreferrer">Ajuda e suporte</a><Link to="/quiz">Qual é o seu cheiro?</Link></span>
           </div>
         </div>
