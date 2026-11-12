@@ -20,8 +20,10 @@ h1,h2,h3 { font-family:var(--display); font-weight:600; letter-spacing:-.015em; 
 .ax-header, .ax-header.is-scrolled { background:#120e0c; color:#f6efe6; border-bottom:0; box-shadow:none }
 .ax-header.is-scrolled { background:rgba(18,14,12,.94); box-shadow:0 12px 30px -18px rgba(0,0,0,.7) }
 .ax-topbar { background:#e3a23a; color:#1c1410; font-weight:700; letter-spacing:.12em }
-.ax-header .ax-logo img { mix-blend-mode:screen; filter:none; height:112px }
-.ax-header.is-scrolled .ax-logo img { height:76px }
+.ax-header .ax-logo { position:relative }
+.ax-header .ax-logo::before { content:''; position:absolute; z-index:0; left:50%; top:54%; width:78%; height:62%; transform:translate(-50%,-50%); border-radius:50%; background:radial-gradient(circle, rgba(255,244,220,.8) 0%, rgba(227,162,58,.32) 46%, transparent 72%); filter:blur(6px); pointer-events:none }
+.ax-header .ax-logo img { position:relative; z-index:1; mix-blend-mode:screen; height:112px; filter:contrast(1.25) brightness(1.45) saturate(1.25) drop-shadow(0 0 10px rgba(255,236,196,.85)) drop-shadow(0 0 2px rgba(255,248,230,1)) }
+.ax-header.is-scrolled .ax-logo img { height:78px }
 .ax-icon, .ax-burger, .ax-quiz, .ax-nav a { color:#f6efe6 }
 .ax-burger span { background:#f6efe6 }
 .ax-find { border-color:rgba(255,255,255,.18); color:#f6efe6; background:rgba(255,255,255,.04) }

@@ -89,7 +89,7 @@ export default function Layout({ children }: { children: ReactNode }) {
           <Logo />
           <form className="ax-q" role="search" onSubmit={e => { e.preventDefault(); const term = q.trim(); if (!term) { setSearch(true); return } setSearch(false); go(`/catalogo?q=${encodeURIComponent(term)}`); setQ('') }}>
             <IconSearch size={18} />
-            <input value={q} onChange={e => setQ(e.target.value)} placeholder="Buscar perfume, marca ou nota" aria-label="Buscar perfumes" />
+            <input value={q} onChange={e => setQ(e.target.value)} placeholder="Buscar perfume" aria-label="Buscar perfumes" />
           </form>
           <div className="ax-actions">
             <Link to="/quiz" className="ax-quiz" aria-current={loc.pathname === '/quiz' ? 'page' : undefined}>Me ajuda a escolher</Link>
