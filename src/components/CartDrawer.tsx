@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import SizedImg from './SizedImg'
+import { pixPrice } from '../lib/pricing'
 import { brl, useStore } from '../lib/store'
 
 const FOCUSABLE = 'a[href],button:not([disabled]),input,select,[tabindex]:not([tabindex="-1"])'
@@ -56,7 +57,7 @@ export default function CartDrawer() {
 
         {goal > 0 && lines.length > 0 && (
           <div className="ax-ship">
-            <p>{subtotal >= goal ? 'Você ganhou frete grátis!' : <>Faltam <b>{brl(goal - subtotal)}</b> para ganhar frete grátis.</>}</p>
+            <p>{subtotal >= goal ? 'Você ganhou frete grátis.' : <>Faltam <b>{brl(goal - subtotal)}</b> para o frete grátis.</>}</p>
             <div className="ax-ship-bar" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.min(100, Math.round((subtotal / goal) * 100))}><span style={{ width: `${Math.min(100, (subtotal / goal) * 100)}%` }} /></div>
           </div>
         )}
@@ -66,8 +67,8 @@ export default function CartDrawer() {
             <div className="ax-cart-empty">
               <svg width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 8h14l-1 12H6L5 8z" /><path d="M9 8a3 3 0 0 1 6 0" /></svg>
               <h3>Sua sacola está vazia</h3>
-              <p className="muted">Explore o catálogo e escolha o perfume ideal.</p>
-              <Link to="/catalogo" className="btn" onClick={close}>Explorar o catálogo</Link>
+              <p className="muted">Os perfumes que você escolher aparecem aqui.</p>
+              <Link to="/catalogo" className="btn" onClick={close}>Ver perfumes</Link>
             </div>
           ) : (
             <ul className="ax-lines">
@@ -95,7 +96,7 @@ export default function CartDrawer() {
 
         {suggest.length > 0 && (
           <div className="ax-suggest">
-            <p>Combina com o seu pedido</p>
+            <p>Para completar</p>
             <ul>
               {suggest.map(x => (
                 <li key={x.id}>
@@ -111,7 +112,8 @@ export default function CartDrawer() {
         {!!lines.length && (
           <div className="ax-drawer-foot">
             <div className="ax-tot"><span>Subtotal</span><b>{brl(subtotal)}</b></div>
-            <p className="ax-note">Frete e cupom são calculados na finalização.</p>
+            {(settings.pixDiscount ?? 0) > 0 && <p className="ax-note">{brl(pixPrice(subtotal, settings.pixDiscount))} no Pix{settings.installments > 1 ? ` · até ${settings.installments}x no cartão` : ''}</p>}
+            <p className="ax-note">Frete e cupom entram no checkout.</p>
             <Link to="/carrinho" className="btn block" onClick={close} tabIndex={open ? 0 : -1}>Finalizar compra</Link>
             <button type="button" className="btn ghost block" onClick={close} tabIndex={open ? 0 : -1}>Continuar comprando</button>
           </div>

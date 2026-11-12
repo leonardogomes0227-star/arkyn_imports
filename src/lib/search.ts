@@ -4,7 +4,7 @@ export const CAT_LABEL: Record<Category, string> = {
   masculino: 'Perfumes masculinos', feminino: 'Perfumes femininos', splash: 'Splash e miniaturas', skincare: 'Skincare',
 }
 export const norm = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim()
-const text = (p: Product) => norm([p.brand, p.name, p.family, CAT_LABEL[p.category], ...(p.notes ?? []), ...(p.tags ?? [])].filter(Boolean).join(' '))
+const text = (p: Product) => norm([p.brand, p.name, p.family, p.gender, CAT_LABEL[p.category], ...(p.notes ?? []), ...(p.tags ?? [])].filter(Boolean).join(' '))
 
 /** Todas as palavras da busca precisam aparecer (marca, nome, categoria, família, notas ou perfil), sem acento e sem maiúsculas. */
 export function matchProduct(p: Product, q: string) {

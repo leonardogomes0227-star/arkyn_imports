@@ -8,16 +8,16 @@ import type { Product } from '../lib/types'
 type Opt = [string, string]
 interface Q { title: string; multi?: boolean; opts: Opt[] }
 const QUESTIONS: Q[] = [
-  { title: 'Pra quem é?', opts: [['masculino', 'Pra mim (masculino)'], ['feminino', 'Pra mim (feminino)'], ['any', 'Tanto faz'], ['present', 'Presente']] },
-  { title: 'Quando vai usar?', opts: [['dia', 'Dia a dia e trabalho'], ['noite', 'Encontro e noite'], ['fresco', 'Calor e praia'], ['intenso', 'Ocasião especial']] },
-  { title: 'Que cheiro te atrai?', opts: [['doce', 'Doce e cremoso (baunilha)'], ['fresco', 'Fresco e limpo'], ['especiado', 'Quente e apimentado'], ['amadeirado', 'Amadeirado e marcante'], ['floral', 'Flores']] },
-  { title: 'Qual intensidade?', opts: [['suave', 'Discreto'], ['intenso', 'Marcante'], ['intenso2', 'Quero que perguntem qual é meu perfume']] },
-  { title: 'O que você NÃO curte?', multi: true, opts: [['nodoce', 'Muito doce'], ['noforte', 'Muito forte']] },
-  { title: 'Qual seu orçamento?', opts: [['250', 'Até R$ 250'], ['350', 'Até R$ 350'], ['0', 'Sem limite']] },
+  { title: 'Para quem é o perfume?', opts: [['masculino', 'Para mim, masculino'], ['feminino', 'Para mim, feminino'], ['any', 'Tanto faz'], ['present', 'É um presente']] },
+  { title: 'Quando você vai usar?', opts: [['dia', 'No dia a dia'], ['noite', 'À noite e em encontro'], ['fresco', 'No calor'], ['intenso', 'Em uma ocasião especial']] },
+  { title: 'Que cheiro você prefere?', opts: [['doce', 'Doce, tipo baunilha'], ['fresco', 'Fresco e limpo'], ['especiado', 'Especiado'], ['amadeirado', 'Amadeirado'], ['floral', 'Floral']] },
+  { title: 'Qual a intensidade?', opts: [['suave', 'Mais discreto'], ['intenso', 'Marcante'], ['intenso2', 'Bem forte']] },
+  { title: 'Tem algo que você não gosta?', multi: true, opts: [['nodoce', 'Muito doce'], ['noforte', 'Muito forte']] },
+  { title: 'Até quanto quer gastar?', opts: [['250', 'Até R$ 250'], ['350', 'Até R$ 350'], ['0', 'Sem limite']] },
 ]
 
 export default function Quiz() {
-  usePageMeta({ title: 'Qual é o seu cheiro? | Arkyn Imports', description: 'Responda algumas perguntas rápidas e receba indicações de perfumes combinando com o seu estilo.' })
+  usePageMeta({ title: 'Me ajuda a escolher | Arkyn Imports', description: 'Responda algumas perguntas e veja perfumes do catálogo da Arkyn que combinam com você.' })
   const { products, settings } = useStore()
   const [sp] = useSearchParams()
   const start = sp.get('p')
@@ -57,7 +57,7 @@ export default function Quiz() {
 
   return (
     <section className="section quiz">
-      <h1>Qual é o seu cheiro?</h1>
+      <h1>Me ajuda a escolher</h1>
       {!done ? (
         <>
           <p className="muted">Pergunta {step + 1} de {QUESTIONS.length}</p>
@@ -67,20 +67,20 @@ export default function Quiz() {
               ? <button key={v} className={pick.includes(v) ? 'opt sel' : 'opt'} onClick={() => setPick(pick.includes(v) ? pick.filter(x => x !== v) : [...pick, v])}>{l}</button>
               : <button key={v} className="opt" onClick={() => next([v === 'intenso2' ? 'intenso' : v])}>{l}</button>)}
           </div>
-          {q.multi && <button className="btn" onClick={() => next(pick)}>{pick.length ? 'CONTINUAR' : 'NENHUM, CONTINUAR'}</button>}
+          {q.multi && <button className="btn" onClick={() => next(pick)}>{pick.length ? 'Continuar' : 'Nenhum destes'}</button>}
           {step > 0 && <p><button className="link" onClick={() => setAnswers(answers.slice(0, -1))}>← Voltar</button></p>}
         </>
       ) : (
         <>
-          <h3 className="q">Nossas indicações para você</h3>
-          {!results.length && <p className="muted">Não encontramos uma combinação exata. Fale com a gente no WhatsApp que ajudamos!</p>}
+          <h3 className="q">Sugestões para você</h3>
+          {!results.length && <p className="muted">Não achamos uma combinação exata. Chama no WhatsApp que a gente ajuda.</p>}
           <div className="grid">{results.map(r => (
-            <div key={r.p.id}><ProductCard p={r.p} />{!!r.why.length && <p className="why">Combina porque: {r.why.join(', ')}</p>}</div>
+            <div key={r.p.id}><ProductCard p={r.p} />{!!r.why.length && <p className="why">Combina com: {r.why.join(', ')}</p>}</div>
           ))}</div>
           <p style={{ marginTop: 20, display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-            <a className="btn" href={wa} target="_blank" rel="noreferrer">RECEBER NO WHATSAPP</a>
-            <button className="btn ghost" onClick={() => setAnswers([])}>REFAZER O QUIZ</button>
-            <Link to="/catalogo" className="btn ghost">VER CATÁLOGO</Link>
+            <a className="btn" href={wa} target="_blank" rel="noreferrer">Receber no WhatsApp</a>
+            <button className="btn ghost" onClick={() => setAnswers([])}>Refazer</button>
+            <Link to="/catalogo" className="btn ghost">Ver perfumes</Link>
           </p>
         </>
       )}

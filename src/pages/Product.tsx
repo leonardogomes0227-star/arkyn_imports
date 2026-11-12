@@ -2,14 +2,17 @@ import { useEffect, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { IconHeart } from '../components/Icons'
 import Placeholder from '../components/Placeholder'
-import SizedImg from '../components/SizedImg'
+import PriceBlock from '../components/PriceBlock'
 import ProductCard, { ProductSkeleton } from '../components/ProductCard'
-import { noteGradient } from '../lib/noteColors'
+import Reviews from '../components/Reviews'
+import SizedImg from '../components/SizedImg'
+import { notePyramid, primaryFamily, sizeOptions, volumeMl } from '../lib/fragrance'
+import { offPercent } from '../lib/pricing'
+import { REVIEWS } from '../lib/reviews'
 import { CAT_LABEL } from '../lib/search'
 import { usePageMeta } from '../lib/seo'
 import { brl, useStore } from '../lib/store'
 
-const FAMILIES = ['doce', 'amadeirado', 'fresco', 'floral', 'especiado']
 const GENDER = { masculino: 'Masculino', feminino: 'Feminino', unissex: 'Unissex' }
 const cap = (s: string) => s[0].toUpperCase() + s.slice(1)
 
@@ -25,7 +28,7 @@ export default function Product() {
   const abs = (s?: string) => (s ? (s.startsWith('http') ? s : origin + s) : undefined)
   usePageMeta(p ? {
     title: `${p.brand} ${p.name} | Arkyn Imports`,
-    description: p.description || `${p.brand} ${p.name}${p.notes?.length ? `, com notas de ${p.notes.slice(0, 4).join(', ').toLowerCase()}` : ''}. Pix ou cartão de crédito e retirada em Coxim – MS.`,
+    description: p.description || `${p.brand} ${p.name}${p.notes?.length ? `. Notas de ${p.notes.slice(0, 4).join(', ').toLowerCase()}` : ''}. Pix, cartão e envio para todo o Brasil. Retirada em Coxim – MS.`,
     path: `/produto/${p.id}`, image: p.image, type: 'product',
     jsonLd: { '@context': 'https://schema.org', '@type': 'Product', name: `${p.brand} ${p.name}`, sku: p.id, brand: { '@type': 'Brand', name: p.brand }, category: CAT_LABEL[p.category],
       ...(p.image ? { image: [abs(p.image)] } : {}), ...(p.description ? { description: p.description } : {}),
@@ -43,15 +46,18 @@ export default function Product() {
   useEffect(() => { document.body.classList.toggle('has-buybar', bar); return () => document.body.classList.remove('has-buybar') }, [bar])
 
   if (!p && !ready) return <section className="section"><div className="pdp"><div className="pdp-img ax-skel" /><div className="pdp-info"><span className="ax-skel sk-l m" /><span className="ax-skel sk-l p" /></div></div></section>
-  if (!p) return <section className="section ax-empty-page"><p className="ax-eyebrow">404</p><h1>Perfume não encontrado</h1><p className="muted">Este produto pode ter saído do catálogo.</p><Link to="/catalogo" className="btn">Ver o catálogo</Link></section>
+  if (!p) return <section className="section ax-empty-page"><p className="ax-eyebrow">404</p><h1>Esse perfume não está no catálogo</h1><p className="muted">Ele pode ter saído de linha. Veja os outros perfumes da loja.</p><Link to="/catalogo" className="btn">Ver perfumes</Link></section>
 
   const out = p.stock <= 0
   const sale = !!p.old_price && p.old_price > p.price
-  const n = settings.installments
+  const pct = offPercent(p.price, p.old_price)
   const images = [p.image, ...(p.images ?? [])].filter((x, i, a): x is string => !!x && a.indexOf(x) === i)
-  const family = (p.tags ?? []).filter(t => FAMILIES.includes(t))
+  const family = primaryFamily(p)
   const when = (p.tags ?? []).filter(t => t === 'dia' || t === 'noite')
-  const volume = p.name.match(/(\d+)\s?ml/i)?.[1]
+  const volume = volumeMl(p)
+  const sizes = sizeOptions(products, p)
+  const pyramid = notePyramid(p.notes)
+  const ownReviews = REVIEWS.filter(r => r.productId === p.id)
   const related = products
     .filter(x => x.id !== p.id && x.category === p.category && x.stock > 0)
     .map(x => ({ x, s: (x.tags ?? []).filter(t => (p.tags ?? []).includes(t)).length + (x.brand === p.brand ? 1 : 0) }))
@@ -78,7 +84,7 @@ export default function Product() {
             </div>
           )}
           <div className={`pdp-img${images[pic]?.includes('-net/') ? ' clean' : ''}`} onMouseMove={zoom}>
-            {sale && <span className="off">-{Math.round((1 - p.price / p.old_price!) * 100)}%</span>}
+            {sale && <span className="off">-{pct}%</span>}
             {images[pic] ? <img key={images[pic]} src={images[pic]} width={800} height={800} alt={`${p.brand} ${p.name}`} decoding="async" /> : <Placeholder brand={p.brand} />}
           </div>
         </div>
@@ -88,14 +94,28 @@ export default function Product() {
           <h1>{p.name.replace(/\s?\d+\s?ml$/i, '')}</h1>
 
           <div className="pdp-price">
-            {!out ? <>
-              <span className="pdp-now">{brl(p.price)}</span>
-              {sale && <><span className="old">{brl(p.old_price!)}</span><span className="pdp-off">-{Math.round((1 - p.price / p.old_price!) * 100)}%</span></>}
-            </> : <span className="pdp-now soldout">Indisponível no momento</span>}
+            {!out
+              ? <PriceBlock large price={p.price} oldPrice={p.old_price} installments={settings.installments} pixDiscount={settings.pixDiscount ?? 0} />
+              : <span className="pdp-now soldout">Esgotado</span>}
           </div>
-          <p className="pdp-pay">{n > 1 ? `ou ${n}x de ${brl(p.price / n)} sem juros no cartão · ` : ''}Pix ou cartão de crédito, pelo Mercado Pago</p>
+          <p className="pdp-pay">Pix e cartão pelo Mercado Pago. O desconto do Pix entra na hora de pagar.</p>
 
           {p.description && <p className="pdp-desc">{p.description}</p>}
+
+          {sizes.length > 0 && volume && (
+            <div className="pdp-sizes">
+              <span>Tamanho</span>
+              <div role="list">
+                {sizes.map(s => {
+                  const ml = volumeMl(s)
+                  const current = s.id === p.id
+                  return current
+                    ? <b key={s.id} role="listitem" aria-current="true">{ml} ml</b>
+                    : <Link key={s.id} role="listitem" to={`/produto/${s.id}`}>{ml} ml</Link>
+                })}
+              </div>
+            </div>
+          )}
 
           {!out && (
             <div className="pdp-buy">
@@ -104,25 +124,29 @@ export default function Product() {
                 <output aria-live="polite">{qty}</output>
                 <button type="button" aria-label="Aumentar quantidade" onClick={() => setQty(q => Math.min(p.stock, q + 1))} disabled={qty >= p.stock}>+</button>
               </div>
-              <button ref={buyRef} type="button" className="btn pdp-cta" onClick={buy}>Adicionar à sacola</button>
+              <button ref={buyRef} type="button" className="btn pdp-cta" onClick={buy}>Comprar</button>
             </div>
           )}
           {!out && p.stock <= 3 && <p className="low">{p.stock === 1 ? 'Última unidade em estoque' : `Restam ${p.stock} unidades`}</p>}
-          <button type="button" className={favs.includes(p.id) ? 'btn ghost block pdp-fav on' : 'btn ghost block pdp-fav'} aria-pressed={favs.includes(p.id)} onClick={() => toggleFav(p.id)}><IconHeart size={18} filled={favs.includes(p.id)} /> {favs.includes(p.id) ? 'Nos seus favoritos' : 'Salvar nos favoritos'}</button>
-          <a className="btn ghost block" href={wa} target="_blank" rel="noreferrer">Tirar dúvida no WhatsApp</a>
+          <button type="button" className={favs.includes(p.id) ? 'btn ghost block pdp-fav on' : 'btn ghost block pdp-fav'} aria-pressed={favs.includes(p.id)} onClick={() => toggleFav(p.id)}><IconHeart size={18} filled={favs.includes(p.id)} /> {favs.includes(p.id) ? 'Salvo nos favoritos' : 'Salvar nos favoritos'}</button>
+          <a className="btn ghost block" href={wa} target="_blank" rel="noreferrer">Perguntar no WhatsApp</a>
 
           <ul className="pdp-ship">
-            <li><b>Retirada em Coxim</b><span>Sem custo de frete · {settings.pickupAddress}</span></li>
-            <li><b>Entrega</b><span>{settings.freeShippingFrom > 0 ? `Frete grátis acima de ${brl(settings.freeShippingFrom)}. ` : ''}Consulte a sua cidade pelo WhatsApp</span></li>
+            <li><b>Envio para todo o Brasil</b><span>{settings.freeShippingFrom > 0 ? `Frete grátis acima de ${brl(settings.freeShippingFrom)}. ` : ''}O valor do frete entra no checkout.</span></li>
+            <li><b>Retirada em Coxim</b><span>Sem frete. {settings.pickupAddress}</span></li>
           </ul>
 
           <div className="pdp-acc">
-            {!!p.notes?.length && (
+            {pyramid && (
               <details open>
                 <summary>Notas olfativas</summary>
-                <ol className="pdp-notes-list">
-                  {p.notes.map((nt, i) => <li key={nt}><em>{String(i + 1).padStart(2, '0')}</em><i style={{ background: noteGradient(nt) }} />{nt}</li>)}
-                </ol>
+                <div className="pdp-pyr">
+                  {([['Topo', pyramid.topo], ['Coração', pyramid.coracao], ['Fundo', pyramid.fundo]] as [string, string[]][])
+                    .filter(([, notes]) => notes.length)
+                    .map(([label, notes]) => (
+                      <div key={label}><b>{label}</b><span>{notes.join(' · ')}</span></div>
+                    ))}
+                </div>
               </details>
             )}
             <details open>
@@ -130,9 +154,9 @@ export default function Product() {
               <dl className="pdp-specs">
                 <div><dt>Marca</dt><dd>{p.brand}</dd></div>
                 <div><dt>Categoria</dt><dd>{CAT_LABEL[p.category]}</dd></div>
-                {p.category !== 'skincare' && <div><dt>Público</dt><dd>{GENDER[p.gender]}</dd></div>}
+                {p.category !== 'skincare' && <div><dt>Para</dt><dd>{GENDER[p.gender]}</dd></div>}
                 {volume && <div><dt>Volume</dt><dd>{volume} ml</dd></div>}
-                {!!family.length && <div><dt>Família olfativa</dt><dd>{family.map(cap).join(' · ')}</dd></div>}
+                {family && <div><dt>Família olfativa</dt><dd>{cap(family)}</dd></div>}
                 {!!when.length && <div><dt>Ocasião</dt><dd>{when.map(cap).join(' · ')}</dd></div>}
               </dl>
             </details>
@@ -140,15 +164,17 @@ export default function Product() {
         </div>
       </div>
 
+      {ownReviews.length > 0 && <Reviews items={ownReviews} kicker="Avaliações" title="Quem comprou este perfume" />}
+
       {(!!related.length || !ready) && <>
-        <div className="ax-sec-head pdp-rel"><div><p className="ax-eyebrow">Continue explorando</p><h2>Você também pode gostar</h2></div></div>
+        <div className="ax-sec-head pdp-rel"><div><p className="ax-eyebrow">Veja também</p><h2>Perfumes parecidos</h2></div></div>
         <div className="grid shelf">{ready ? related.map(r => <ProductCard key={r.id} p={r} />) : <ProductSkeleton />}</div>
       </>}
 
       {!out && (
         <div className={bar ? 'pdp-bar on' : 'pdp-bar'} aria-hidden={!bar}>
           <div><small>{p.brand}</small><b>{brl(p.price)}</b></div>
-          <button type="button" className="btn" tabIndex={bar ? 0 : -1} onClick={buy}>Adicionar à sacola</button>
+          <button type="button" className="btn" tabIndex={bar ? 0 : -1} onClick={buy}>Comprar</button>
         </div>
       )}
     </section>

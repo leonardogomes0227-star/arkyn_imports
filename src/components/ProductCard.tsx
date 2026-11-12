@@ -3,8 +3,11 @@ import { Link } from 'react-router-dom'
 import Placeholder from './Placeholder'
 import SizedImg from './SizedImg'
 import { useToast } from './Toast'
-import { brl, useStore } from '../lib/store'
+import { volumeMl } from '../lib/fragrance'
+import { offPercent } from '../lib/pricing'
+import { useStore } from '../lib/store'
 import { IconHeart } from './Icons'
+import PriceBlock from './PriceBlock'
 import { noteGradient } from '../lib/noteColors'
 import type { Product } from '../lib/types'
 
@@ -25,13 +28,14 @@ export default function ProductCard({ p }: { p: Product }) {
 
   const out = p.stock <= 0
   const sale = !!p.old_price && p.old_price > p.price && !out
-  const n = settings.installments
+  const pct = offPercent(p.price, p.old_price)
+  const ml = volumeMl(p)
   const clean = !!p.image?.includes('-net/')
   const second = p.images?.find(x => x && x !== p.image) // segunda foto real do cadastro, se existir
-  const hint = p.notes?.length ? p.notes : [p.family, ...(p.tags ?? [])].filter(Boolean) as string[]
+  const hint = [...new Set(p.notes?.length ? p.notes : [p.family, ...(p.tags ?? [])].filter(Boolean) as string[])]
   const quick = (e: React.MouseEvent) => {
     e.preventDefault()
-    add(p.id, false)
+    add(p.id, true)
     setDone(true); window.setTimeout(() => setDone(false), 1400)
     toast(`${p.name} adicionado à sacola`, { label: 'Ver sacola', run: () => setOpen(true) })
   }
@@ -40,7 +44,7 @@ export default function ProductCard({ p }: { p: Product }) {
     <article className={out ? 'card is-out' : 'card'}>
       <Link to={`/produto/${p.id}`} className={`thumb${clean ? ' clean' : ''}${loaded || !p.image ? ' ready' : ''}`} aria-label={`${p.brand} ${p.name}`}>
         {!loaded && p.image && <span className="ax-skel thumb-skel" />}
-        {sale && <span className="off">-{Math.round((1 - p.price / p.old_price!) * 100)}%</span>}
+        {sale && <span className="off">-{pct}%</span>}
         {p.image ? <SizedImg ref={img} className="m" src={p.image} size={480} responsive sizes="(max-width:560px) 45vw, (max-width:1100px) 30vw, 300px" width={800} height={800} alt={`${p.brand} ${p.name}`} loading="lazy" decoding="async" onLoad={() => setLoaded(true)} /> : <Placeholder brand={p.brand} />}
         {second && <SizedImg className="alt" src={second} size={480} width={800} height={800} alt="" loading="lazy" decoding="async" />}
         {out && <span className="sold">Esgotado</span>}
@@ -53,16 +57,11 @@ export default function ProductCard({ p }: { p: Product }) {
         )}
       </Link>
       <div className="info">
-        <small>{p.brand}</small>
-        <Link to={`/produto/${p.id}`}><h3>{p.name}</h3></Link>
+        <small>{p.brand}{ml ? ` · ${ml} ml` : ''}</small>
+        <Link to={`/produto/${p.id}`}><h3>{p.name.replace(/\s?\d+\s?ml$/i, '')}</h3></Link>
         {!out && p.stock <= 3 && <span className="low">{p.stock === 1 ? 'Última unidade' : `Restam ${p.stock} unidades`}</span>}
-        <div className="pr">
-          {!out ? <>
-            <span className="pline">{sale && <em className="old">{brl(p.old_price!)}</em>}<strong>{brl(p.price)}</strong></span>
-            {n > 1 && <em className="inst">ou {n}x de {brl(p.price / n)} sem juros</em>}
-          </> : <strong className="soldout">Indisponível no momento</strong>}
-        </div>
-        {!out && <button type="button" className={done ? 'card-add done' : 'card-add'} onClick={quick}>{done ? 'Adicionado ✓' : 'Adicionar à sacola'}</button>}
+        {!out ? <PriceBlock price={p.price} oldPrice={p.old_price} installments={settings.installments} pixDiscount={settings.pixDiscount ?? 0} /> : <strong className="soldout">Esgotado</strong>}
+        {!out && <button type="button" className={done ? 'card-add done' : 'card-add'} onClick={quick}>{done ? 'Na sacola ✓' : 'Comprar'}</button>}
       </div>
     </article>
   )

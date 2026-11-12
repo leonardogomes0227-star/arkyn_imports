@@ -85,9 +85,9 @@ export default function SearchOverlay({ open, onClose }: { open: boolean; onClos
 
           {!!nq && results.length === 0 && (
             <div className="ax-empty">
-              <p><b>Nenhum perfume encontrado para “{q.trim()}”.</b></p>
-              <p className="muted">Confira a escrita ou explore por categoria e família olfativa.</p>
-              <div className="ax-chips">{FAMILIES.map(f => <Link key={f} to={`/catalogo?tag=${f}`} onClick={onClose} tabIndex={open ? 0 : -1}>{cap(f)}</Link>)}<Link to="/catalogo" onClick={onClose} tabIndex={open ? 0 : -1}>Ver todo o catálogo</Link></div>
+              <p><b>Nada encontrado para “{q.trim()}”.</b></p>
+              <p className="muted">Confira a escrita ou veja por categoria e tipo de cheiro.</p>
+              <div className="ax-chips">{FAMILIES.map(f => <Link key={f} to={`/catalogo?tag=${f}`} onClick={onClose} tabIndex={open ? 0 : -1}>{cap(f)}</Link>)}<Link to="/catalogo" onClick={onClose} tabIndex={open ? 0 : -1}>Ver todos os perfumes</Link></div>
             </div>
           )}
         </div>

@@ -1,0 +1,32 @@
+/**
+ * Descrições curtas da vitrine. Troque pelo texto do lojista quando tiver.
+ */
+export const BLURBS: Record<string, string> = {
+  'armaf-club-de-nuit-intense-man-edt-105ml': 'Limão e abacaxi na saída, jasmim no meio e baunilha no fundo. Masculino amadeirado, forte, para a noite.',
+  'jacques-bogart-silver-scent-intense-100ml': 'Flor de laranjeira, lavanda e cardamomo, com oud no fundo. Fresco, bom para usar de dia.',
+  'lattafa-the-kingdom-masculino-100ml': 'Lavanda, hortelã e baunilha, com um toque de tabaco no fundo. Masculino leve para o dia.',
+  'maison-alhambra-victorioso-nero-100ml': 'Limão, pimenta rosa, incenso e baunilha. Doce e especiado, para a noite.',
+  'lattafa-fakhar-extrait-gold-100ml': 'Maçã, gengibre e fava tonka. Doce, com fundo amadeirado, em concentração extrait.',
+  'lattafa-al-noble-wazeer-100ml': 'Hortelã e íris na saída, chocolate amargo e sândalo no fundo.',
+  'al-wataniah-attar-al-wesal-gold-100ml': 'Toranja e bergamota no começo, canela, baunilha e âmbar no fim.',
+  'lattafa-fakhar-black-100ml': 'Maçã, gengibre e vetiver. Mais fresco que o Fakhar Gold, bom para o dia.',
+  'french-avenue-liquid-brun-100ml': 'Canela, cardamomo, baunilha e praliné. Doce e amadeirado.',
+  'lattafa-asad-elixir-100ml': 'Pimenta rosa, açafrão e tabaco, com baunilha no fundo. Masculino para a noite.',
+  'maison-alhambra-no-2-men-80ml': 'Perfume masculino fresco, para o dia. Frasco de 80 ml.',
+  'maison-alhambra-salvo-elixir-60ml': 'Canela, noz-moscada e cardamomo, com âmbar no fundo. Frasco de 60 ml.',
+  'french-avenue-vulcan-feu-100ml': 'Manga, gengibre e fava tonka, com cedro no fundo. Frutado e especiado.',
+  'lattafa-yara-rosa-100ml': 'Doce e floral, leve. Um dos femininos mais pedidos para presente.',
+  'maison-alhambra-pink-eclipse-100ml': 'Pera, jasmim e baunilha. Floral doce, para a noite.',
+  'paris-corner-marshmallow-blush-100ml': 'Doce cremoso, no estilo marshmallow. Bom para o dia.',
+  'lattafa-dalal-100ml': 'Tangerina, jasmim e baunilha. Floral doce e mais intenso.',
+  'lattafa-fakhar-rose-100ml': 'Romã, rosa e tuberosa, com baunilha no fundo. Floral.',
+  'armaf-club-de-nuit-maleka-105ml': 'Lichia, praliné e âmbar, com um toque de pimenta rosa. Doce.',
+  'lattafa-tharwah-gold-100ml': 'Perfume feminino doce e intenso. Fica bastante na roupa.',
+  'lattafa-atheeri-100ml': 'Maracujá, orquídea e baunilha, com madeira âmbar no fundo.',
+  'lattafa-eclaire-100ml': 'Caramelo, leite e baunilha. Doce, e um dos mais pedidos de presente.',
+  'lattafa-afeef-100ml': 'Bergamota, pêssego e jasmim, com sândalo no fundo. Doce e elegante.',
+  'ard-al-zaafaran-sahebat-al-jamal-70ml': 'Doce e floral, em frasco de 70 ml. Opção mais em conta da linha feminina.',
+  'lattafa-body-splash-200ml': 'Body splash de 200 ml, para usar ao longo do dia, sozinho ou por cima do perfume.',
+  'arabic-miniatura-25ml': 'Miniatura de 25 ml, para testar um perfume ou levar na bolsa.',
+  'celimax-the-vita-a-retinal-shot-15ml': 'Sérum facial com retinal, em ampola de 15 ml.',
+}

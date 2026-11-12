@@ -13,7 +13,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const token = process.env.MP_ACCESS_TOKEN
   if (!token) return res.status(500).json({ error: 'MP_ACCESS_TOKEN não configurado' })
 
-  const { items, name, phone, method, coupon } = req.body as { items: { id: string; qty: number }[]; name: string; phone: string; method: string; coupon?: string }
+  const { items, name, phone, method, coupon, pay } = req.body as { items: { id: string; qty: number }[]; name: string; phone: string; method: string; coupon?: string; pay?: 'pix' | 'card' }
   let products: Product[] = SEED_PRODUCTS
   let settings: Settings = DEFAULT_SETTINGS
   if (SB && SK) {
@@ -35,7 +35,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const shipping = method === 'pickup' || free ? 0 : city?.price ?? 0
 
   const cp = coupon ? await validateCoupon(coupon, subtotal) : null
-  const discount = cp?.ok ? cp.discount : 0
+  const couponDiscount = cp?.ok ? cp.discount : 0
+  const pixPct = pay === 'pix' ? Math.min(30, Math.max(0, settings.pixDiscount ?? 0)) : 0
+  const pixDiscount = Math.round(subtotal * (pixPct / 100) * 100) / 100
+  const discount = Math.min(subtotal, Math.round((couponDiscount + pixDiscount) * 100) / 100)
   const total = Math.round((subtotal - discount + shipping) * 100) / 100
 
   let orderId = `pedido-${Date.now()}`

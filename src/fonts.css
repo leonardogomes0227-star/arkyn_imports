@@ -1,5 +1,7 @@
-/* Fontes hospedadas no próprio site e pré-carregadas em index.html: evitam a troca tardia de fonte,
-   que deslocava o layout. Só o subconjunto latino (cobre português). */
+/* Fontes locais, subconjunto latino (acentos do português). font-display: swap evita texto invisível. */
+@font-face { font-family:'Manrope'; font-style:normal; font-weight:400; font-display:swap; src:url('/fonts/manrope-latin-400-normal.woff2') format('woff2') }
 @font-face { font-family:'Manrope'; font-style:normal; font-weight:500; font-display:swap; src:url('/fonts/manrope-latin-500-normal.woff2') format('woff2') }
+@font-face { font-family:'Manrope'; font-style:normal; font-weight:600; font-display:swap; src:url('/fonts/manrope-latin-600-normal.woff2') format('woff2') }
 @font-face { font-family:'Manrope'; font-style:normal; font-weight:700; font-display:swap; src:url('/fonts/manrope-latin-700-normal.woff2') format('woff2') }
+@font-face { font-family:'Cormorant Garamond'; font-style:normal; font-weight:500; font-display:swap; src:url('/fonts/cormorant-garamond-latin-500-normal.woff2') format('woff2') }
 @font-face { font-family:'Cormorant Garamond'; font-style:normal; font-weight:600; font-display:swap; src:url('/fonts/cormorant-garamond-latin-600-normal.woff2') format('woff2') }

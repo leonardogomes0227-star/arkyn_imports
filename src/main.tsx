@@ -9,6 +9,7 @@ import './styles.css'
 import './design.css'
 import './campaign.css'
 import './boutique.css'
+import './commerce.css'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode><BrowserRouter><StoreProvider><ToastProvider><App /></ToastProvider></StoreProvider></BrowserRouter></StrictMode>,

@@ -1,3 +1,3 @@
 export default function Placeholder({ brand }: { brand: string }) {
-  return <div className="ph-img"><span>{brand}</span><small>foto em breve</small></div>
+  return <div className="ph-img"><span>{brand}</span><small>Foto em breve</small></div>
 }
