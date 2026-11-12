@@ -28,6 +28,7 @@ export interface Settings {
   announcement?: string
   heroTitle?: string
   installments: number // parcelas máximas no cartão (1 = sem parcelamento)
+  pixDiscount: number // % de desconto no Pix (0 = preço cheio)
   shipping: { city: string; price: number }[]
 }
 

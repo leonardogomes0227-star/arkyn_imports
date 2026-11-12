@@ -1,3 +1,6 @@
+import { BLURBS } from './blurbs'
+import { ARAB_BRANDS, FAMILIES } from './fragrance'
+import { FEATURED_IDS, GIFT_IDS, PROMO_PRICE } from './merch'
 import type { Category, Gender, Product, Settings } from './types'
 
 // Fotos de embalagem (frasco + caixa, fundo branco) em public/produtos-net/<id>.webp; as demais usam a foto original
@@ -81,7 +84,7 @@ const NOTES: Record<string, string[]> = {
 const p = (id: string, brand: string, name: string, price: number, category: Category, gender: Gender): Product =>
   ({ id, brand, name, price, stock: 5, category, gender, family: '', notes: NOTES[id] ?? [], tags: TAGS[id] ?? [], image: PACKSHOT.has(id) ? `/produtos-net/${id}.webp` : '' })
 
-export const SEED_PRODUCTS: Product[] = [
+const RAW_PRODUCTS: Product[] = [
   p('armaf-club-de-nuit-intense-man-edt-105ml', 'Armaf', 'Club de Nuit Intense Man EDT 105ml', 259.90, 'masculino', 'masculino'),
   p('jacques-bogart-silver-scent-intense-100ml', 'Jacques Bogart', 'Silver Scent Intense 100ml', 229.90, 'masculino', 'masculino'),
   p('lattafa-the-kingdom-masculino-100ml', 'Lattafa', 'The Kingdom Masculino 100ml', 229.90, 'masculino', 'masculino'),
@@ -111,10 +114,28 @@ export const SEED_PRODUCTS: Product[] = [
   p('celimax-the-vita-a-retinal-shot-15ml', 'Celimax', 'The Vita-A Retinal Shot 15ml', 149.90, 'skincare', 'unissex'),
 ]
 
+const scentOf = (tags?: string[]) => tags?.find(t => (FAMILIES as readonly string[]).includes(t)) ?? ''
+
+export const SEED_PRODUCTS: Product[] = RAW_PRODUCTS.map(p => {
+  const tags = [...(p.tags ?? [])]
+  if (ARAB_BRANDS.has(p.brand) && !tags.includes('arabe')) tags.push('arabe')
+  if (GIFT_IDS.includes(p.id) && !tags.includes('presente')) tags.push('presente')
+  return {
+    ...p,
+    tags,
+    family: p.family || scentOf(tags),
+    featured: FEATURED_IDS.includes(p.id),
+    old_price: PROMO_PRICE[p.id] ?? null,
+    description: BLURBS[p.id] ?? p.description ?? null,
+  }
+})
+
 export const DEFAULT_SETTINGS: Settings = {
   whatsapp: '5567996277503',
   pickupAddress: 'Coxim - MS (combinar endereço pelo WhatsApp)',
-  installments: 1, // ex.: 3 para exibir/permitir até 3x no cartão
-  freeShippingFrom: 0, // 0 = sem frete grátis. Ajuste quando definir o valor.
-  shipping: [{ city: 'Coxim', price: 0 }], // TODO: confirmar cidades e valores
+  // Vitrine: ajuste no painel (ou aqui) quando o lojista fechar parcelamento, Pix e frete.
+  installments: 12,
+  pixDiscount: 5,
+  freeShippingFrom: 399,
+  shipping: [{ city: 'todo o Brasil', price: 29.9 }],
 }

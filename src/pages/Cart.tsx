@@ -21,6 +21,7 @@ export default function Cart() {
   const [phone, setPhone] = useState('')
   const [touched, setTouched] = useState({ name: false, phone: false })
   const [method, setMethod] = useState('pickup')
+  const [pay, setPay] = useState<'pix' | 'card'>('pix')
   const [busy, setBusy] = useState(false)
   const [code, setCode] = useState('')
   const [cp, setCp] = useState<{ code: string; discount: number; label: string } | null>(null)
@@ -34,7 +35,10 @@ export default function Cart() {
   const free = settings.freeShippingFrom > 0 && subtotal >= settings.freeShippingFrom
   const shipping = method === 'pickup' || free ? 0 : city?.price ?? 0
   const discount = cp ? Math.min(cp.discount, subtotal) : 0
-  const total = subtotal - discount + shipping
+  const pixOff = pay === 'pix' ? Math.round(subtotal * ((settings.pixDiscount ?? 0) / 100) * 100) / 100 : 0
+  const total = Math.max(0, subtotal - discount - pixOff) + shipping
+  const cardTotal = Math.max(0, subtotal - discount) + shipping
+  const pixTotal = Math.max(0, subtotal - discount - Math.round(subtotal * ((settings.pixDiscount ?? 0) / 100) * 100) / 100) + shipping
 
   const nameErr = name.trim().length < 2 ? 'Informe seu nome.' : ''
   const phoneErr = phone.replace(/\D/g, '').length < 10 ? 'Informe um telefone com DDD.' : ''
@@ -60,14 +64,14 @@ export default function Cart() {
     setCpBusy(false)
   }
 
-  async function pay() {
+  async function checkout() {
     setTouched({ name: true, phone: true })
     if (nameErr || phoneErr) return setErr('Confira os dados destacados para continuar.')
     setErr(''); setBusy(true)
     try {
       const r = await fetch('/api/checkout', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ items: cart, name, phone, method, coupon: cp?.code }),
+        body: JSON.stringify({ items: cart, name, phone, method, coupon: cp?.code, pay }),
       })
       const d = await r.json()
       if (!r.ok || !d.url) throw new Error(d.error || 'Falha ao iniciar pagamento')
@@ -114,7 +118,21 @@ export default function Cart() {
           </fieldset>
 
           <fieldset className="ck-card">
-            <legend><i>3</i> Cupom de desconto</legend>
+            <legend><i>3</i> Pagamento</legend>
+            <label className={pay === 'pix' ? 'ck-opt on' : 'ck-opt'}>
+              <input type="radio" name="pay" checked={pay === 'pix'} onChange={() => setPay('pix')} />
+              <span><b>Pix</b><small>{(settings.pixDiscount ?? 0) > 0 ? `${settings.pixDiscount}% de desconto` : 'Aprovação na hora'}</small></span>
+              <em>{brl(pixTotal)}</em>
+            </label>
+            <label className={pay === 'card' ? 'ck-opt on' : 'ck-opt'}>
+              <input type="radio" name="pay" checked={pay === 'card'} onChange={() => setPay('card')} />
+              <span><b>Cartão de crédito</b><small>{settings.installments > 1 ? `até ${settings.installments}x de ${brl(cardTotal / settings.installments)}` : 'Pelo Mercado Pago'}</small></span>
+              <em>{brl(cardTotal)}</em>
+            </label>
+          </fieldset>
+
+          <fieldset className="ck-card">
+            <legend><i>4</i> Cupom de desconto</legend>
             {cp ? (
               <p className="ck-coupon-ok"><b>{cp.code}</b> · {cp.label} (−{brl(discount)}) <button type="button" className="link" onClick={() => { setCp(null); setCode('') }}>Remover</button></p>
             ) : (
@@ -151,12 +169,13 @@ export default function Cart() {
           </ul>
           <dl className="ck-totals">
             <div><dt>Subtotal</dt><dd>{brl(subtotal)}</dd></div>
-            {discount > 0 && <div><dt>Desconto</dt><dd>−{brl(discount)}</dd></div>}
+            {discount > 0 && <div><dt>Cupom</dt><dd>−{brl(discount)}</dd></div>}
+            {pixOff > 0 && <div><dt>Desconto Pix</dt><dd>−{brl(pixOff)}</dd></div>}
             <div><dt>Frete</dt><dd>{shipping ? brl(shipping) : 'Grátis'}</dd></div>
             <div className="ck-total"><dt>Total</dt><dd>{brl(total)}</dd></div>
           </dl>
           {err && <p className="ck-err ck-err-box" role="alert">{err}</p>}
-          <button type="button" className={busy ? 'btn block is-busy' : 'btn block'} disabled={busy} onClick={pay}>{busy ? 'Aguarde…' : 'Pagar com Pix ou cartão'}</button>
+          <button type="button" className={busy ? 'btn block is-busy' : 'btn block'} disabled={busy} onClick={checkout}>{busy ? 'Aguarde…' : pay === 'pix' ? `Pagar ${brl(total)} no Pix` : `Pagar ${brl(total)} no cartão`}</button>
           <a className="btn ghost block" href={wa} target="_blank" rel="noreferrer">Finalizar pelo WhatsApp</a>
           <p className="ck-secure">Pagamento seguro pelo Mercado Pago. Você será levado ao ambiente deles para concluir.</p>
         </aside>

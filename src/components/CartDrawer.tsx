@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import SizedImg from './SizedImg'
+import { pixPrice } from '../lib/pricing'
 import { brl, useStore } from '../lib/store'
 
 const FOCUSABLE = 'a[href],button:not([disabled]),input,select,[tabindex]:not([tabindex="-1"])'
@@ -111,7 +112,8 @@ export default function CartDrawer() {
         {!!lines.length && (
           <div className="ax-drawer-foot">
             <div className="ax-tot"><span>Subtotal</span><b>{brl(subtotal)}</b></div>
-            <p className="ax-note">Frete e cupom são calculados na finalização.</p>
+            {(settings.pixDiscount ?? 0) > 0 && <p className="ax-note">{brl(pixPrice(subtotal, settings.pixDiscount))} no Pix{settings.installments > 1 ? ` · até ${settings.installments}x no cartão` : ''}</p>}
+            <p className="ax-note">Frete e cupom entram na finalização.</p>
             <Link to="/carrinho" className="btn block" onClick={close} tabIndex={open ? 0 : -1}>Finalizar compra</Link>
             <button type="button" className="btn ghost block" onClick={close} tabIndex={open ? 0 : -1}>Continuar comprando</button>
           </div>

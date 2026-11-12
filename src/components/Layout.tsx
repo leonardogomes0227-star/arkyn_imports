@@ -1,9 +1,10 @@
 import { useEffect, useState, type ReactNode } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import CartDrawer from './CartDrawer'
+import Newsletter from './Newsletter'
 import SearchOverlay from './SearchOverlay'
 import { IconBag, IconHeart, IconSearch } from './Icons'
-import { useStore } from '../lib/store'
+import { brl, useStore } from '../lib/store'
 
 export function Logo({ className = 'ax-logo' }: { className?: string }) {
   return (
@@ -14,11 +15,13 @@ export function Logo({ className = 'ax-logo' }: { className?: string }) {
 }
 
 const NAV: [string, string][] = [
-  ['Masculinos', '/catalogo?cat=masculino'],
-  ['Femininos', '/catalogo?cat=feminino'],
-  ['Splash e miniaturas', '/catalogo?cat=splash'],
-  ['Skincare', '/catalogo?cat=skincare'],
-  ['Todos os perfumes', '/catalogo'],
+  ['Feminino', '/catalogo?cat=feminino'],
+  ['Masculino', '/catalogo?cat=masculino'],
+  ['Unissex', '/catalogo?col=unissex'],
+  ['Árabes', '/catalogo?col=arabe'],
+  ['Kits e presentes', '/catalogo?col=presente'],
+  ['Ofertas', '/catalogo?col=oferta'],
+  ['Miniaturas', '/catalogo?cat=splash'],
 ]
 
 const phone = (n: string) => (/^55\d{2}9?\d{8}$/.test(n) ? `(${n.slice(2, 4)}) ${n.slice(4, n.length - 4)}-${n.slice(-4)}` : n)
@@ -26,10 +29,22 @@ const phone = (n: string) => (/^55\d{2}9?\d{8}$/.test(n) ? `(${n.slice(2, 4)}) $
 export default function Layout({ children }: { children: ReactNode }) {
   const { count, settings, setOpen, favs } = useStore()
   const loc = useLocation()
+  const go = useNavigate()
   const [scrolled, setScrolled] = useState(false)
   const [menu, setMenu] = useState(false)
   const [search, setSearch] = useState(false)
-  const msgs = settings.announcement ? [settings.announcement] : ['Pague com Pix ou cartão de crédito', 'Retirada em Coxim – MS', 'Atendimento pelo WhatsApp']
+  const [q, setQ] = useState('')
+  const pix = settings.pixDiscount ?? 0
+  const n = settings.installments
+  const msgs = settings.announcement
+    ? [settings.announcement]
+    : [
+        'Enviamos para todo o Brasil',
+        'Originais e lacrados',
+        n > 1 ? `Parcele em até ${n}x no cartão` : 'Cartão de crédito',
+        pix > 0 ? `${pix}% de desconto no Pix` : 'Pague no Pix',
+        'Retirada em Coxim – MS',
+      ]
 
   // cabeçalho compacto ao rolar
   useEffect(() => {
@@ -72,6 +87,10 @@ export default function Layout({ children }: { children: ReactNode }) {
             <button type="button" className="ax-icon ax-find" aria-label="Buscar perfumes" onClick={() => setSearch(true)}><IconSearch size={21} /><span>Buscar</span></button>
           </div>
           <Logo />
+          <form className="ax-q" role="search" onSubmit={e => { e.preventDefault(); const term = q.trim(); if (!term) { setSearch(true); return } setSearch(false); go(`/catalogo?q=${encodeURIComponent(term)}`); setQ('') }}>
+            <IconSearch size={18} />
+            <input value={q} onChange={e => setQ(e.target.value)} placeholder="Buscar perfume, marca ou nota" aria-label="Buscar perfumes" />
+          </form>
           <div className="ax-actions">
             <Link to="/quiz" className="ax-quiz" aria-current={loc.pathname === '/quiz' ? 'page' : undefined}>Qual é o seu cheiro?</Link>
             <Link to="/favoritos" className="ax-icon ax-fav" aria-label={favs.length ? `Favoritos, ${favs.length}` : 'Favoritos'}><IconHeart size={21} />{favs.length > 0 && <em>{favs.length}</em>}</Link>
@@ -96,6 +115,7 @@ export default function Layout({ children }: { children: ReactNode }) {
         <nav className="ax-menu-nav" aria-label="Categorias">
           {NAV.map(([label, to]) => <Link key={to} to={to} tabIndex={menu ? 0 : -1} aria-current={active(to) ? 'page' : undefined}>{label}</Link>)}
           <Link to="/quiz" className="hl" tabIndex={menu ? 0 : -1}>Qual é o seu cheiro?</Link>
+          <Link to="/catalogo" tabIndex={menu ? 0 : -1}>Todos os perfumes</Link>
         </nav>
         <a className="btn ax-menu-wa" href={wa} target="_blank" rel="noreferrer" tabIndex={menu ? 0 : -1}>Falar no WhatsApp</a>
       </aside>
@@ -107,12 +127,14 @@ export default function Layout({ children }: { children: ReactNode }) {
         <div className="ax-footer-in">
           <div className="ax-foot-brand">
             <Logo className="ax-foot-logo" />
-            <p>Perfumaria árabe e importada em Coxim – MS. Atendimento próximo, do pedido à retirada.</p>
+            <p>Perfumes árabes e importados, originais e lacrados. Enviamos para todo o Brasil e também retiramos em Coxim – MS.</p>
             <a className="ax-foot-ig" href="https://instagram.com/arkyn_imports" target="_blank" rel="noreferrer">@arkyn_imports no Instagram</a>
           </div>
           <div>
             <h4>Comprar</h4>
             {NAV.map(([label, to]) => <Link key={to} to={to}>{label}</Link>)}
+            <Link to="/catalogo">Todos os perfumes</Link>
+            <Link to="/catalogo?cat=skincare">Skincare</Link>
             <Link to="/quiz">Qual é o seu cheiro?</Link>
             <Link to="/favoritos">Favoritos</Link>
           </div>
@@ -120,20 +142,24 @@ export default function Layout({ children }: { children: ReactNode }) {
             <h4>Atendimento</h4>
             <a href={wa} target="_blank" rel="noreferrer">WhatsApp {phone(settings.whatsapp)}</a>
             <span>Retirada: {settings.pickupAddress}</span>
+            <span>{settings.freeShippingFrom > 0 ? `Frete grátis acima de ${brl(settings.freeShippingFrom)}` : 'Envio para todo o Brasil'}</span>
             <Link to="/carrinho">Minha sacola</Link>
           </div>
           <div>
             <h4>Pagamento</h4>
-            <span>Pix e cartão de crédito</span>
+            <span>{pix > 0 ? `${pix}% de desconto no Pix` : 'Pix'}</span>
+            <span>{n > 1 ? `Cartão em até ${n}x` : 'Cartão de crédito'}</span>
             <span>Pagamento seguro pelo Mercado Pago</span>
-            <div className="ax-pay"><i>Pix</i><i>Cartão</i></div>
+            <div className="ax-pay"><i>Pix</i><i>Cartão</i><i>Mercado Pago</i></div>
+            <Newsletter variant="compact" />
           </div>
         </div>
         <p className="ax-copy"><span>© {new Date().getFullYear()} Arkyn Imports · Coxim – MS</span><Link to="/admin">Área do lojista</Link></p>
       </footer>
 
       <a className="wa-float" href={wa} target="_blank" rel="noreferrer" aria-label="Falar no WhatsApp">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.2 14.2c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.2-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.1 1 2.1 1.3 2.4 1.5.3.1.4.1.6-.1l.8-1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.1.1.6-.1 1.2z" /></svg>
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.2 14.2c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.2-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.1 1 2.1 1.3 2.4 1.5.3.1.4.1.6-.1l.8-1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.1.1.6-.1 1.2z" /></svg>
+        <span>WhatsApp</span>
       </a>
     </>
   )

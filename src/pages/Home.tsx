@@ -1,27 +1,20 @@
 import { Link } from 'react-router-dom'
 import CampaignHero from '../components/CampaignHero'
+import Newsletter from '../components/Newsletter'
 import ProductCard from '../components/ProductCard'
 import Reveal from '../components/Reveal'
+import Reviews from '../components/Reviews'
 import SizedImg from '../components/SizedImg'
 import { IconCard, IconChat, IconStore, IconTruck } from '../components/Icons'
+import { isArab } from '../lib/fragrance'
+import { BESTSELLER_IDS, LAUNCH_IDS, pickByIds } from '../lib/merch'
+import { REVIEWS } from '../lib/reviews'
 import { brl, useStore } from '../lib/store'
 import { usePageMeta } from '../lib/seo'
-import type { Category, Product } from '../lib/types'
+import type { Product } from '../lib/types'
 
-const SCENTS = ['doce', 'amadeirado', 'fresco', 'floral', 'especiado']
 const cap = (t: string) => t[0].toUpperCase() + t.slice(1)
-
-// Recortes sem fundo disponíveis (public/hero). Para os demais, usa a foto do produto.
-const CUTOUTS = new Set(['french-avenue-vulcan-feu-100ml', 'lattafa-afeef-100ml', 'armaf-club-de-nuit-maleka-105ml', 'lattafa-asad-elixir-100ml', 'maison-alhambra-pink-eclipse-100ml', 'maison-alhambra-victorioso-nero-100ml'])
-// Categorias editoriais: produto de capa preferido. Só aparecem as que têm produto com foto.
-const CATS: { label: string; to: string; match: (p: Product) => boolean; prefer: string }[] = [
-  { label: 'Masculinos', to: '/catalogo?cat=masculino', match: p => p.category === 'masculino', prefer: 'lattafa-asad-elixir-100ml' },
-  { label: 'Femininos', to: '/catalogo?cat=feminino', match: p => p.category === 'feminino', prefer: 'maison-alhambra-pink-eclipse-100ml' },
-  { label: 'Doces', to: '/catalogo?tag=doce', match: p => !!p.tags?.includes('doce'), prefer: 'lattafa-afeef-100ml' },
-  { label: 'Amadeirados', to: '/catalogo?tag=amadeirado', match: p => !!p.tags?.includes('amadeirado'), prefer: 'maison-alhambra-victorioso-nero-100ml' },
-  { label: 'Splash e miniaturas', to: '/catalogo?cat=splash', match: p => p.category === 'splash', prefer: '' },
-  { label: 'Skincare', to: '/catalogo?cat=skincare', match: p => p.category === 'skincare', prefer: 'celimax-the-vita-a-retinal-shot-15ml' },
-]
+const SCENTS = ['doce', 'amadeirado', 'fresco', 'floral', 'especiado']
 
 function SecHead({ eyebrow, title, to, link = 'Ver todos' }: { eyebrow?: string; title: string; to?: string; link?: string }) {
   return (
@@ -46,8 +39,8 @@ export default function Home() {
   const { products, settings } = useStore()
   const origin = typeof window !== 'undefined' ? window.location.origin : ''
   usePageMeta({
-    title: 'Arkyn Imports | Perfumes árabes e importados em Coxim – MS',
-    description: 'Perfumes árabes e importados em Coxim – MS. Compre online com Pix ou cartão de crédito, ou retire na loja.',
+    title: 'Arkyn Imports | Perfumes árabes e importados para todo o Brasil',
+    description: 'Loja de perfumes árabes e importados. Originais e lacrados, com Pix, parcelamento no cartão e envio para todo o Brasil. Retirada em Coxim – MS.',
     path: '/',
     jsonLd: [
       { '@context': 'https://schema.org', '@type': 'Organization', name: 'Arkyn Imports', url: origin, logo: `${origin}/logo-full.png`, sameAs: ['https://instagram.com/arkyn_imports'],
@@ -55,98 +48,90 @@ export default function Home() {
       { '@context': 'https://schema.org', '@type': 'WebSite', name: 'Arkyn Imports', url: origin, potentialAction: { '@type': 'SearchAction', target: `${origin}/catalogo?q={search_term_string}`, 'query-input': 'required name=search_term_string' } },
     ],
   })
-  const live = products.filter(p => p.stock > 0)
-  const withPhoto = (c: Category) => live.filter(p => p.category === c && !!p.image)
-  const masc = withPhoto('masculino'), fem = withPhoto('feminino')
 
-  // Vitrines: só aparecem quando os dados sustentam. "Mais vendidos" e "Novidades" ficam de fora
-  // porque o cadastro não guarda vendas por produto nem data de cadastro.
-  const flagged = live.filter(p => p.featured).slice(0, 4)
-  const featured = flagged.length ? flagged : live.filter(p => !!p.image).slice(0, 4)
+  const live = products.filter(p => p.stock > 0 && p.active !== false && p.image)
+  const best = pickByIds(live, BESTSELLER_IDS).slice(0, 8)
+  const launches = pickByIds(live, LAUNCH_IDS).filter(p => !best.some(b => b.id === p.id)).slice(0, 8)
   const offers = live.filter(p => !!p.old_price && p.old_price > p.price).slice(0, 8)
-  const shown = new Set([...featured, ...offers].map(p => p.id))
-  const by = (list: Product[]) => list.filter(p => !shown.has(p.id)).slice(0, 4)
-  const brands = [...new Set(products.filter(p => p.category === 'masculino' || p.category === 'feminino').map(p => p.brand))].sort()
+  const brands = [...new Set(products.map(p => p.brand))].sort()
+  const n = settings.installments
+  const pix = settings.pixDiscount ?? 0
+  const ship = settings.freeShippingFrom > 0 ? `Grátis acima de ${brl(settings.freeShippingFrom)}` : 'Consulte o prazo no WhatsApp'
 
-  const cats = CATS.map(c => {
-    const inCat = products.filter(c.match)
-    const pick = inCat.find(p => p.id === c.prefer && p.image) ?? inCat.find(p => p.image)
-    const src = pick ? (CUTOUTS.has(pick.id) ? `/hero/${pick.id}.webp` : pick.image!) : ''
-    return { ...c, count: inCat.length, src, cut: !!pick && CUTOUTS.has(pick.id) }
-  }).filter(c => c.count > 0 && !!c.src)
+  const cats: { label: string; to: string; img?: string; count: number; plain?: boolean }[] = [
+    { label: 'Feminino', to: '/catalogo?cat=feminino', img: '/hero/maison-alhambra-pink-eclipse-100ml.webp', count: products.filter(p => p.category === 'feminino').length },
+    { label: 'Masculino', to: '/catalogo?cat=masculino', img: '/hero/lattafa-asad-elixir-100ml.webp', count: products.filter(p => p.category === 'masculino').length },
+    { label: 'Unissex', to: '/catalogo?col=unissex', count: products.filter(p => p.gender === 'unissex').length, plain: true },
+    { label: 'Árabes', to: '/catalogo?col=arabe', img: '/hero/armaf-club-de-nuit-maleka-105ml.webp', count: products.filter(isArab).length },
+    { label: 'Kits e presentes', to: '/catalogo?col=presente', img: '/hero/lattafa-afeef-100ml.webp', count: products.filter(p => p.tags?.includes('presente')).length },
+  ]
 
   const scents = SCENTS.map(t => {
     const list = products.filter(p => p.tags?.includes(t))
     const freq = new Map<string, number>()
     list.forEach(p => p.notes?.forEach(x => freq.set(x, (freq.get(x) ?? 0) + 1)))
-    const notes = [...freq.entries()].sort((a, b) => b[1] - a[1]).slice(0, 4).map(([x]) => x)
+    const notes = [...freq.entries()].sort((a, b) => b[1] - a[1]).slice(0, 3).map(([x]) => x)
     const thumbs = list.filter(p => p.image).slice(0, 3).map(p => p.image as string)
     return [t, list.length, notes, thumbs] as [string, number, string[], string[]]
   }).filter(([, c]) => c > 0)
 
-  const n = settings.installments
   const benefits: [JSX.Element, string, string][] = [
-    [<IconCard key="c" size={26} />, n > 1 ? `Parcele em até ${n}x` : 'Pix e cartão', 'Pagamento seguro pelo Mercado Pago'],
-    [<IconStore key="s" size={26} />, 'Retirada em Coxim', 'Sem custo de frete'],
-    [<IconTruck key="t" size={26} />, 'Entrega', settings.freeShippingFrom > 0 ? `Frete grátis acima de ${brl(settings.freeShippingFrom)}` : 'Consulte a sua cidade'],
-    [<IconChat key="w" size={26} />, 'Atendimento', 'Direto pelo WhatsApp'],
+    [<IconTruck key="t" size={26} />, 'Todo o Brasil', ship],
+    [<IconStore key="s" size={26} />, 'Originais', 'Lacrados, direto da importação'],
+    [<IconCard key="c" size={26} />, n > 1 ? `Até ${n}x no cartão` : 'Cartão de crédito', 'Pagamento seguro, Mercado Pago'],
+    [<IconChat key="w" size={26} />, pix > 0 ? `${pix}% off no Pix` : 'Pix na hora', pix > 0 ? 'O desconto já aparece no preço' : 'Atendimento pelo WhatsApp'],
   ]
 
   return (
     <>
-      <h1 className="sr-only">Arkyn Imports: perfumes árabes e importados em Coxim – MS</h1>
+      <h1 className="sr-only">Arkyn Imports: perfumes árabes e importados para todo o Brasil</h1>
       <CampaignHero />
 
-      <section className="ax-benefits" aria-label="Como comprar">
+      <section className="ax-benefits" aria-label="Vantagens da loja">
         {benefits.map(([ic, t, s]) => <div key={t}>{ic}<span><b>{t}</b><small>{s}</small></span></div>)}
       </section>
 
-      {cats.length > 0 && (
-        <Reveal as="section" className="section">
-          <SecHead eyebrow="Explore" title="Compre por categoria" to="/catalogo" link="Ver tudo" />
-          <div className="cat-ed">
-            {cats.map((c, i) => (
-              <Link key={c.label} to={c.to} className={i < 2 ? 'cat-t cat-t--lg' : 'cat-t cat-t--sm'}>
-                <span className="cat-plate">{c.src && <SizedImg src={c.src} size={480} width={480} height={480} alt="" loading="lazy" decoding="async" className={c.cut ? 'cut' : 'photo'} />}</span>
-                <span className="cat-cap"><b>{c.label}</b><small>{c.count} {c.count === 1 ? 'produto' : 'produtos'}</small><i aria-hidden="true">→</i></span>
-              </Link>
-            ))}
-          </div>
-        </Reveal>
-      )}
-
-      <Shelf eyebrow="Para começar" title="Destaques" to="/catalogo" items={featured} />
-
-      <Reveal as="section" className="bq-promo">
-        <div className="bq-promo-txt">
-          <p>Arkyn Imports</p>
-          <h2>Mais que uma fragrância. Uma assinatura.</h2>
-          <span>Perfumes árabes e importados escolhidos com cuidado, com atendimento próximo, em Coxim – MS.</span>
-          <Link to="/catalogo" className="bq-btn">Conhecer os perfumes</Link>
-        </div>
-        <div className="bq-promo-img" aria-hidden="true">
-          {([['lattafa-afeef-100ml', 970, 824], ['maison-alhambra-pink-eclipse-100ml', 1000, 749], ['lattafa-asad-elixir-100ml', 436, 1000]] as const).map(([id, w, h], i) => <img key={id} src={`/hero/${id}.webp`} width={w} height={h} alt="" loading="lazy" decoding="async" style={{ '--i': i } as React.CSSProperties} />)}
+      <Reveal as="section" className="section ak-cat-sec">
+        <SecHead eyebrow="Compre por" title="Categorias" to="/catalogo" link="Ver tudo" />
+        <div className="ak-cats">
+          {cats.map(c => (
+            <Link key={c.label} to={c.to} className={c.plain ? 'ak-cat ak-cat--plain' : 'ak-cat'}>
+              {c.img && <img src={c.img} alt="" width={480} height={640} loading="lazy" decoding="async" />}
+              <span><small>{c.count} {c.count === 1 ? 'item' : 'itens'}</small><b>{c.label}</b></span>
+            </Link>
+          ))}
         </div>
       </Reveal>
 
-      <Shelf eyebrow="Condições especiais" title="Ofertas" to="/catalogo" items={offers} />
-      <Shelf eyebrow="Para ele" title="Perfumes masculinos" to="/catalogo?cat=masculino" items={by(masc)} />
-      <Shelf eyebrow="Para ela" title="Perfumes femininos" to="/catalogo?cat=feminino" items={by(fem)} />
+      <Shelf eyebrow="Os que mais saem" title="Mais vendidos" to="/catalogo" items={best} />
+
+      <section className="ak-mid">
+        <div>
+          <p className="ax-eyebrow">Na hora de pagar</p>
+          <h2>{pix > 0 ? `${pix}% de desconto no Pix` : 'Pix ou cartão'}{n > 1 ? ` e até ${n}x` : ''}.</h2>
+          <p>O valor no Pix e as parcelas ficam visíveis em cada perfume. Envio para todo o Brasil{settings.freeShippingFrom > 0 ? `, com frete grátis acima de ${brl(settings.freeShippingFrom)}` : ''}.</p>
+          <Link to="/catalogo?col=oferta" className="btn light">Ver ofertas</Link>
+        </div>
+        <img src="/hero/french-avenue-vulcan-feu-100ml.webp" width={800} height={800} alt="" />
+      </section>
+
+      <Shelf eyebrow="Acabaram de chegar" title="Lançamentos" to="/catalogo" items={launches} />
+      <Shelf eyebrow="Preço menor" title="Ofertas" to="/catalogo?col=oferta" items={offers} />
 
       {brands.length > 0 && (
-        <Reveal as="section" className="ar-brands">
-          <nav aria-label="Marcas">
-            <p className="ax-eyebrow">Marcas</p>
-            <div>{brands.map(b => <Link key={b} to={`/catalogo?brand=${encodeURIComponent(b)}`}>{b}</Link>)}</div>
-          </nav>
-        </Reveal>
+        <section className="ak-brands" aria-label="Marcas">
+          <p className="ax-eyebrow">Marcas em destaque</p>
+          <div className="ak-brand-row">
+            {[...brands, ...brands].map((b, i) => <Link key={`${b}-${i}`} to={`/catalogo?brand=${encodeURIComponent(b)}`} aria-hidden={i >= brands.length ? true : undefined} tabIndex={i >= brands.length ? -1 : undefined}>{b}</Link>)}
+          </div>
+        </section>
       )}
 
       <section className="ax-band">
         <div className="ax-band-in">
           <Reveal className="ax-band-head">
-            <div><p className="ax-eyebrow">Famílias olfativas</p><h2>Escolha pelo cheiro que você gosta</h2></div>
-            <p className="ax-band-p">Cada família reúne os perfumes do catálogo com aquele perfil. Veja as notas mais presentes e explore.</p>
+            <div><p className="ax-eyebrow">Famílias olfativas</p><h2>Escolha pelo cheiro</h2></div>
+            <p className="ax-band-p">Doce, amadeirado, fresco, floral ou especiado. Cada família reúne os frascos do catálogo com esse perfil.</p>
             <Link to="/quiz" className="btn">Fazer o quiz</Link>
           </Reveal>
           <div className="scent-grid">
@@ -163,6 +148,18 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <Link to="/quiz" className="ak-quizband">
+        <div>
+          <p className="ax-eyebrow">Um minuto</p>
+          <h2>Qual é o seu cheiro?</h2>
+          <span>O quiz cruza o catálogo com o que você gosta de sentir.</span>
+        </div>
+        <span className="btn light">Começar o quiz</span>
+      </Link>
+
+      <Reviews items={REVIEWS} title="O que dizem de quem já comprou" />
+      <Newsletter />
     </>
   )
 }

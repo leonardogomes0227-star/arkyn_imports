@@ -2,14 +2,17 @@ import { useEffect, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { IconHeart } from '../components/Icons'
 import Placeholder from '../components/Placeholder'
-import SizedImg from '../components/SizedImg'
+import PriceBlock from '../components/PriceBlock'
 import ProductCard, { ProductSkeleton } from '../components/ProductCard'
-import { noteGradient } from '../lib/noteColors'
+import Reviews from '../components/Reviews'
+import SizedImg from '../components/SizedImg'
+import { notePyramid, primaryFamily, sizeOptions, volumeMl } from '../lib/fragrance'
+import { offPercent } from '../lib/pricing'
+import { REVIEWS } from '../lib/reviews'
 import { CAT_LABEL } from '../lib/search'
 import { usePageMeta } from '../lib/seo'
 import { brl, useStore } from '../lib/store'
 
-const FAMILIES = ['doce', 'amadeirado', 'fresco', 'floral', 'especiado']
 const GENDER = { masculino: 'Masculino', feminino: 'Feminino', unissex: 'Unissex' }
 const cap = (s: string) => s[0].toUpperCase() + s.slice(1)
 
@@ -47,11 +50,14 @@ export default function Product() {
 
   const out = p.stock <= 0
   const sale = !!p.old_price && p.old_price > p.price
-  const n = settings.installments
+  const pct = offPercent(p.price, p.old_price)
   const images = [p.image, ...(p.images ?? [])].filter((x, i, a): x is string => !!x && a.indexOf(x) === i)
-  const family = (p.tags ?? []).filter(t => FAMILIES.includes(t))
+  const family = primaryFamily(p)
   const when = (p.tags ?? []).filter(t => t === 'dia' || t === 'noite')
-  const volume = p.name.match(/(\d+)\s?ml/i)?.[1]
+  const volume = volumeMl(p)
+  const sizes = sizeOptions(products, p)
+  const pyramid = notePyramid(p.notes)
+  const ownReviews = REVIEWS.filter(r => r.productId === p.id)
   const related = products
     .filter(x => x.id !== p.id && x.category === p.category && x.stock > 0)
     .map(x => ({ x, s: (x.tags ?? []).filter(t => (p.tags ?? []).includes(t)).length + (x.brand === p.brand ? 1 : 0) }))
@@ -78,7 +84,7 @@ export default function Product() {
             </div>
           )}
           <div className={`pdp-img${images[pic]?.includes('-net/') ? ' clean' : ''}`} onMouseMove={zoom}>
-            {sale && <span className="off">-{Math.round((1 - p.price / p.old_price!) * 100)}%</span>}
+            {sale && <span className="off">-{pct}%</span>}
             {images[pic] ? <img key={images[pic]} src={images[pic]} width={800} height={800} alt={`${p.brand} ${p.name}`} decoding="async" /> : <Placeholder brand={p.brand} />}
           </div>
         </div>
@@ -88,14 +94,28 @@ export default function Product() {
           <h1>{p.name.replace(/\s?\d+\s?ml$/i, '')}</h1>
 
           <div className="pdp-price">
-            {!out ? <>
-              <span className="pdp-now">{brl(p.price)}</span>
-              {sale && <><span className="old">{brl(p.old_price!)}</span><span className="pdp-off">-{Math.round((1 - p.price / p.old_price!) * 100)}%</span></>}
-            </> : <span className="pdp-now soldout">Indisponível no momento</span>}
+            {!out
+              ? <PriceBlock large price={p.price} oldPrice={p.old_price} installments={settings.installments} pixDiscount={settings.pixDiscount ?? 0} />
+              : <span className="pdp-now soldout">Indisponível no momento</span>}
           </div>
-          <p className="pdp-pay">{n > 1 ? `ou ${n}x de ${brl(p.price / n)} sem juros no cartão · ` : ''}Pix ou cartão de crédito, pelo Mercado Pago</p>
+          <p className="pdp-pay">Pagamento pelo Mercado Pago. O desconto do Pix entra na finalização da compra.</p>
 
           {p.description && <p className="pdp-desc">{p.description}</p>}
+
+          {sizes.length > 0 && volume && (
+            <div className="pdp-sizes">
+              <span>Tamanho</span>
+              <div role="list">
+                {sizes.map(s => {
+                  const ml = volumeMl(s)
+                  const current = s.id === p.id
+                  return current
+                    ? <b key={s.id} role="listitem" aria-current="true">{ml} ml</b>
+                    : <Link key={s.id} role="listitem" to={`/produto/${s.id}`}>{ml} ml</Link>
+                })}
+              </div>
+            </div>
+          )}
 
           {!out && (
             <div className="pdp-buy">
@@ -112,17 +132,21 @@ export default function Product() {
           <a className="btn ghost block" href={wa} target="_blank" rel="noreferrer">Tirar dúvida no WhatsApp</a>
 
           <ul className="pdp-ship">
+            <li><b>Envio para todo o Brasil</b><span>{settings.freeShippingFrom > 0 ? `Frete grátis acima de ${brl(settings.freeShippingFrom)}. ` : ''}Prazo e valor confirmados no checkout.</span></li>
             <li><b>Retirada em Coxim</b><span>Sem custo de frete · {settings.pickupAddress}</span></li>
-            <li><b>Entrega</b><span>{settings.freeShippingFrom > 0 ? `Frete grátis acima de ${brl(settings.freeShippingFrom)}. ` : ''}Consulte a sua cidade pelo WhatsApp</span></li>
           </ul>
 
           <div className="pdp-acc">
-            {!!p.notes?.length && (
+            {pyramid && (
               <details open>
                 <summary>Notas olfativas</summary>
-                <ol className="pdp-notes-list">
-                  {p.notes.map((nt, i) => <li key={nt}><em>{String(i + 1).padStart(2, '0')}</em><i style={{ background: noteGradient(nt) }} />{nt}</li>)}
-                </ol>
+                <div className="pdp-pyr">
+                  {([['Topo', pyramid.topo], ['Coração', pyramid.coracao], ['Fundo', pyramid.fundo]] as [string, string[]][])
+                    .filter(([, notes]) => notes.length)
+                    .map(([label, notes]) => (
+                      <div key={label}><b>{label}</b><span>{notes.join(' · ')}</span></div>
+                    ))}
+                </div>
               </details>
             )}
             <details open>
@@ -132,13 +156,15 @@ export default function Product() {
                 <div><dt>Categoria</dt><dd>{CAT_LABEL[p.category]}</dd></div>
                 {p.category !== 'skincare' && <div><dt>Público</dt><dd>{GENDER[p.gender]}</dd></div>}
                 {volume && <div><dt>Volume</dt><dd>{volume} ml</dd></div>}
-                {!!family.length && <div><dt>Família olfativa</dt><dd>{family.map(cap).join(' · ')}</dd></div>}
+                {family && <div><dt>Família olfativa</dt><dd>{cap(family)}</dd></div>}
                 {!!when.length && <div><dt>Ocasião</dt><dd>{when.map(cap).join(' · ')}</dd></div>}
               </dl>
             </details>
           </div>
         </div>
       </div>
+
+      {ownReviews.length > 0 && <Reviews items={ownReviews} kicker="Avaliações" title="Quem já levou este frasco" />}
 
       {(!!related.length || !ready) && <>
         <div className="ax-sec-head pdp-rel"><div><p className="ax-eyebrow">Continue explorando</p><h2>Você também pode gostar</h2></div></div>

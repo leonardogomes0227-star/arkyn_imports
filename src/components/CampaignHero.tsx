@@ -3,16 +3,18 @@ import { Link } from 'react-router-dom'
 
 // Destaques editoriais da Home. As imagens são recortes dos frascos reais (public/hero); trocar por fotos de
 // campanha é só mudar o campo `img`. Os textos não afirmam preço, desconto nem estoque.
-type Slide = { id: string; img: string; eyebrow: string; title: string[]; sub: string; cta: [string, string]; cta2?: [string, string] }
+type Slide = { id: string; img: string; tone: string; eyebrow: string; title: string[]; sub: string; cta: [string, string]; cta2?: [string, string] }
 const SLIDES: Slide[] = [
-  { id: 'colecao', img: '/hero/lattafa-asad-elixir-100ml.webp', eyebrow: 'Perfumaria selecionada', title: ['Uma experiência', 'que marca.'],
-    sub: 'Descubra fragrâncias selecionadas para quem valoriza autenticidade, personalidade e sofisticação.', cta: ['Explorar coleção', '/catalogo'], cta2: ['Qual é o seu cheiro?', '/quiz'] },
-  { id: 'ele', img: '/hero/maison-alhambra-victorioso-nero-100ml.webp', eyebrow: 'Para ele', title: ['Noite longa,', 'presença forte.'],
-    sub: 'Amadeirados e especiados para quem chega marcando território.', cta: ['Ver masculinos', '/catalogo?cat=masculino'] },
-  { id: 'ela', img: '/hero/maison-alhambra-pink-eclipse-100ml.webp', eyebrow: 'Para ela', title: ['Doce, floral', 'e marcante.'],
-    sub: 'Fragrâncias femininas que enchem o ambiente de personalidade.', cta: ['Ver femininos', '/catalogo?cat=feminino'] },
-  { id: 'quiz', img: '/hero/armaf-club-de-nuit-maleka-105ml.webp', eyebrow: 'Compre pelo cheiro', title: ['Qual é o', 'seu cheiro?'],
-    sub: 'Responda o quiz e veja os perfumes do catálogo que combinam com você.', cta: ['Fazer o quiz', '/quiz'] },
+  { id: 'colecao', tone: 'night', img: '/hero/lattafa-asad-elixir-100ml.webp', eyebrow: 'Perfumaria árabe', title: ['O cheiro que', 'entra primeiro.'],
+    sub: 'Lattafa, Armaf, Maison Alhambra e outras casas. Originais, lacrados, para todo o Brasil.', cta: ['Ver a coleção', '/catalogo'], cta2: ['Árabes', '/catalogo?col=arabe'] },
+  { id: 'ela', tone: 'rose', img: '/hero/maison-alhambra-pink-eclipse-100ml.webp', eyebrow: 'Para ela', title: ['Doce, floral,', 'inesquecível.'],
+    sub: 'Yara, Eclaire, Maleka e outros femininos que ocupam o ambiente.', cta: ['Ver femininos', '/catalogo?cat=feminino'] },
+  { id: 'ele', tone: 'amber', img: '/hero/maison-alhambra-victorioso-nero-100ml.webp', eyebrow: 'Para ele', title: ['Noite longa.', 'Presença forte.'],
+    sub: 'Amadeirados e especiados para quem chega e fica.', cta: ['Ver masculinos', '/catalogo?cat=masculino'] },
+  { id: 'pix', tone: 'ink', img: '/hero/french-avenue-vulcan-feu-100ml.webp', eyebrow: 'Condições da casa', title: ['Pix com desconto.', 'Cartão em até 12x.'],
+    sub: 'O preço no Pix e as parcelas aparecem em cada frasco. Frete para todo o Brasil.', cta: ['Ver ofertas', '/catalogo?col=oferta'], cta2: ['Qual é o seu cheiro?', '/quiz'] },
+  { id: 'kits', tone: 'gold', img: '/hero/lattafa-afeef-100ml.webp', eyebrow: 'Para presentear', title: ['Um frasco.', 'O presente inteiro.'],
+    sub: 'Seleção para quem quer acertar sem enrolação.', cta: ['Kits e presentes', '/catalogo?col=presente'] },
 ]
 const MS = 7000
 
@@ -61,7 +63,7 @@ export default function CampaignHero() {
         const tab = on ? 0 : -1
         const want = k === 0 || k === i || (warm && k === (i + 1) % total)
         return (
-          <div key={s.id} className={on ? `ch-slide on${moved ? '' : ' init'}` : 'ch-slide'} role="group" aria-roledescription="slide" aria-label={`${k + 1} de ${total}`} aria-hidden={!on}>
+          <div key={s.id} className={on ? `ch-slide on${moved ? '' : ' init'}` : 'ch-slide'} data-tone={s.tone} role="group" aria-roledescription="slide" aria-label={`${k + 1} de ${total}`} aria-hidden={!on}>
             <div className="ch-info">
               <p className="ch-eyebrow" style={{ '--d': '.05s' } as CSSProperties}>{s.eyebrow}</p>
               <h2 className="ch-title" aria-label={s.title.join(' ')}>
