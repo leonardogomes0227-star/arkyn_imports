@@ -60,7 +60,7 @@ export default function ProductCard({ p }: { p: Product }) {
         <small>{p.brand}{ml ? ` · ${ml} ml` : ''}</small>
         <Link to={`/produto/${p.id}`}><h3>{p.name.replace(/\s?\d+\s?ml$/i, '')}</h3></Link>
         {!out && p.stock <= 3 && <span className="low">{p.stock === 1 ? 'Última unidade' : `Restam ${p.stock} unidades`}</span>}
-        {!out ? <PriceBlock price={p.price} oldPrice={p.old_price} installments={settings.installments} pixDiscount={settings.pixDiscount ?? 0} /> : <strong className="soldout">Indisponível no momento</strong>}
+        {!out ? <PriceBlock price={p.price} oldPrice={p.old_price} installments={settings.installments} pixDiscount={settings.pixDiscount ?? 0} /> : <strong className="soldout">Esgotado</strong>}
         {!out && <button type="button" className={done ? 'card-add done' : 'card-add'} onClick={quick}>{done ? 'Na sacola ✓' : 'Comprar'}</button>}
       </div>
     </article>

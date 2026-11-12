@@ -23,9 +23,9 @@ export default function Newsletter({ variant = 'band' }: { variant?: 'band' | 'c
     return (
       <form className="ak-news ak-news--compact" onSubmit={submit}>
         <h4>Novidades</h4>
-        {ok ? <p className="ak-news-ok">E-mail anotado. Você recebe os lançamentos primeiro.</p> : (
+        {ok ? <p className="ak-news-ok">Pronto. Vamos avisar neste e-mail.</p> : (
           <>
-            <p>Lançamentos e condições no Pix, sem spam.</p>
+            <p>Lançamentos e promoções no Pix.</p>
             <div>
               <input type="email" inputMode="email" autoComplete="email" placeholder="Seu e-mail" aria-label="E-mail para novidades" value={email} onChange={e => setEmail(e.target.value)} />
               <button type="submit" className="btn">OK</button>
@@ -40,13 +40,13 @@ export default function Newsletter({ variant = 'band' }: { variant?: 'band' | 'c
   return (
     <section className="ak-news">
       <div>
-        <p className="ax-eyebrow">Lista da casa</p>
-        <h2>Entre para saber dos lançamentos antes.</h2>
-        <p>Avisamos frasco novo, reposição e o desconto no Pix. Dá para sair quando quiser.</p>
+        <p className="ax-eyebrow">Novidades</p>
+        <h2>Quer saber quando chega perfume novo?</h2>
+        <p>Avisamos lançamento, reposição e promoção no Pix.</p>
       </div>
-      {ok ? <p className="ak-news-ok">Pronto. Este e-mail está na lista de novidades da Arkyn.</p> : (
+      {ok ? <p className="ak-news-ok">Pronto. Vamos avisar neste e-mail.</p> : (
         <form onSubmit={submit}>
-          <input type="email" inputMode="email" autoComplete="email" placeholder="Seu melhor e-mail" aria-label="E-mail para novidades" value={email} onChange={e => setEmail(e.target.value)} />
+          <input type="email" inputMode="email" autoComplete="email" placeholder="Seu e-mail" aria-label="E-mail para novidades" value={email} onChange={e => setEmail(e.target.value)} />
           <button type="submit" className="btn gold">Quero receber</button>
           {err && <span className="ak-news-err" role="alert">{err}</span>}
         </form>

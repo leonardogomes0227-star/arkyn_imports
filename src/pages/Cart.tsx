@@ -16,7 +16,7 @@ const maskPhone = (v: string) => {
 export default function Cart() {
   const { cart, products, settings, setQty, clear } = useStore()
   const { toast } = useToast()
-  usePageMeta({ title: 'Finalizar compra | Arkyn Imports', description: 'Finalize sua compra com Pix ou cartão de crédito.', noindex: true })
+  usePageMeta({ title: 'Finalizar compra | Arkyn Imports', description: 'Feche seu pedido com Pix ou cartão.', noindex: true })
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
   const [touched, setTouched] = useState({ name: false, phone: false })
@@ -40,14 +40,14 @@ export default function Cart() {
   const cardTotal = Math.max(0, subtotal - discount) + shipping
   const pixTotal = Math.max(0, subtotal - discount - Math.round(subtotal * ((settings.pixDiscount ?? 0) / 100) * 100) / 100) + shipping
 
-  const nameErr = name.trim().length < 2 ? 'Informe seu nome.' : ''
-  const phoneErr = phone.replace(/\D/g, '').length < 10 ? 'Informe um telefone com DDD.' : ''
+  const nameErr = name.trim().length < 2 ? 'Digite seu nome.' : ''
+  const phoneErr = phone.replace(/\D/g, '').length < 10 ? 'Digite um telefone com DDD.' : ''
 
   if (!lines.length) return (
     <section className="section ax-empty-page">
       <p className="ax-eyebrow">Sacola</p><h1>Sua sacola está vazia</h1>
-      <p className="muted">Explore o catálogo e escolha o perfume ideal.</p>
-      <Link to="/catalogo" className="btn">Ver o catálogo</Link>
+      <p className="muted">Escolha um perfume no catálogo para continuar.</p>
+      <Link to="/catalogo" className="btn">Ver perfumes</Link>
     </section>
   )
 
@@ -59,14 +59,14 @@ export default function Cart() {
     try {
       const r = await fetch('/api/coupon', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ code, subtotal }) })
       const d = await r.json()
-      if (d.ok) { setCp({ code: code.trim().toUpperCase(), discount: d.discount, label: d.label }); toast(`Cupom ${code.trim().toUpperCase()} aplicado`) } else { setCp(null); setCpErr(d.error || 'Cupom inválido') }
-    } catch { setCpErr('Não foi possível validar o cupom agora.') }
+      if (d.ok) { setCp({ code: code.trim().toUpperCase(), discount: d.discount, label: d.label }); toast(`Cupom ${code.trim().toUpperCase()} aplicado`) } else { setCp(null); setCpErr(d.error || 'Esse cupom não é válido.') }
+    } catch { setCpErr('Não conseguimos validar o cupom agora. Tente de novo.') }
     setCpBusy(false)
   }
 
   async function checkout() {
     setTouched({ name: true, phone: true })
-    if (nameErr || phoneErr) return setErr('Confira os dados destacados para continuar.')
+    if (nameErr || phoneErr) return setErr('Confira seu nome e telefone.')
     setErr(''); setBusy(true)
     try {
       const r = await fetch('/api/checkout', {
@@ -79,7 +79,7 @@ export default function Cart() {
     } catch (e) {
       const msg = (e as Error).message
       // erro de configuração do pagamento: não mostra texto técnico ao cliente
-      setErr(/MP_ACCESS_TOKEN|Mercado Pago|Unexpected token|Failed to fetch/i.test(msg) ? 'O pagamento online está indisponível no momento. Você pode finalizar pelo WhatsApp, é rápido.' : msg)
+      setErr(/MP_ACCESS_TOKEN|Mercado Pago|Unexpected token|Failed to fetch/i.test(msg) ? 'O pagamento online está fora do ar agora. Você pode fechar o pedido pelo WhatsApp.' : msg)
       setBusy(false)
     }
   }
@@ -94,7 +94,7 @@ export default function Cart() {
           <fieldset className="ck-card">
             <legend><i>1</i> Seus dados</legend>
             <label className="ck-f">Nome completo
-              <input value={name} autoComplete="name" onChange={e => setName(e.target.value)} onBlur={() => setTouched(t => ({ ...t, name: true }))} aria-invalid={touched.name && !!nameErr} aria-describedby="e-name" placeholder="Como devemos te chamar" />
+              <input value={name} autoComplete="name" onChange={e => setName(e.target.value)} onBlur={() => setTouched(t => ({ ...t, name: true }))} aria-invalid={touched.name && !!nameErr} aria-describedby="e-name" placeholder="Seu nome completo" />
               <span id="e-name" className="ck-err" role="alert">{touched.name ? nameErr : ''}</span>
             </label>
             <label className="ck-f">Telefone / WhatsApp
@@ -121,12 +121,12 @@ export default function Cart() {
             <legend><i>3</i> Pagamento</legend>
             <label className={pay === 'pix' ? 'ck-opt on' : 'ck-opt'}>
               <input type="radio" name="pay" checked={pay === 'pix'} onChange={() => setPay('pix')} />
-              <span><b>Pix</b><small>{(settings.pixDiscount ?? 0) > 0 ? `${settings.pixDiscount}% de desconto` : 'Aprovação na hora'}</small></span>
+              <span><b>Pix</b><small>{(settings.pixDiscount ?? 0) > 0 ? `${settings.pixDiscount}% de desconto` : 'Pagamento na hora'}</small></span>
               <em>{brl(pixTotal)}</em>
             </label>
             <label className={pay === 'card' ? 'ck-opt on' : 'ck-opt'}>
               <input type="radio" name="pay" checked={pay === 'card'} onChange={() => setPay('card')} />
-              <span><b>Cartão de crédito</b><small>{settings.installments > 1 ? `até ${settings.installments}x de ${brl(cardTotal / settings.installments)}` : 'Pelo Mercado Pago'}</small></span>
+              <span><b>Cartão</b><small>{settings.installments > 1 ? `até ${settings.installments}x de ${brl(cardTotal / settings.installments)}` : 'Pelo Mercado Pago'}</small></span>
               <em>{brl(cardTotal)}</em>
             </label>
           </fieldset>
@@ -137,7 +137,7 @@ export default function Cart() {
               <p className="ck-coupon-ok"><b>{cp.code}</b> · {cp.label} (−{brl(discount)}) <button type="button" className="link" onClick={() => { setCp(null); setCode('') }}>Remover</button></p>
             ) : (
               <div className="ck-coupon">
-                <input placeholder="Digite o código" value={code} onChange={e => setCode(e.target.value)} onKeyDown={e => { if (e.key === 'Enter' && code.trim()) { e.preventDefault(); applyCoupon() } }} aria-label="Código do cupom" autoCapitalize="characters" />
+                <input placeholder="Código do cupom" value={code} onChange={e => setCode(e.target.value)} onKeyDown={e => { if (e.key === 'Enter' && code.trim()) { e.preventDefault(); applyCoupon() } }} aria-label="Código do cupom" autoCapitalize="characters" />
                 <button type="button" className={cpBusy ? 'btn ghost is-busy' : 'btn ghost'} onClick={applyCoupon} disabled={!code.trim()}>{cpBusy ? 'Validando…' : 'Aplicar'}</button>
               </div>
             )}
@@ -177,7 +177,7 @@ export default function Cart() {
           {err && <p className="ck-err ck-err-box" role="alert">{err}</p>}
           <button type="button" className={busy ? 'btn block is-busy' : 'btn block'} disabled={busy} onClick={checkout}>{busy ? 'Aguarde…' : pay === 'pix' ? `Pagar ${brl(total)} no Pix` : `Pagar ${brl(total)} no cartão`}</button>
           <a className="btn ghost block" href={wa} target="_blank" rel="noreferrer">Finalizar pelo WhatsApp</a>
-          <p className="ck-secure">Pagamento seguro pelo Mercado Pago. Você será levado ao ambiente deles para concluir.</p>
+          <p className="ck-secure">O pagamento abre no Mercado Pago, em ambiente seguro.</p>
         </aside>
       </div>
     </section>

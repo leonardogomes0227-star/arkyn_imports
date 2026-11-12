@@ -5,7 +5,7 @@ import { useStore } from '../lib/store'
 
 export default function Favorites() {
   const { products, favs } = useStore()
-  usePageMeta({ title: 'Favoritos | Arkyn Imports', description: 'Os perfumes que você salvou na Arkyn Imports.', path: '/favoritos', noindex: true })
+  usePageMeta({ title: 'Favoritos | Arkyn Imports', description: 'Perfumes que você salvou na Arkyn Imports.', path: '/favoritos', noindex: true })
   const list = favs.flatMap(id => products.filter(p => p.id === id))
   return (
     <section className="section">
@@ -15,8 +15,8 @@ export default function Favorites() {
       ) : (
         <div className="ax-empty-page">
           <h1>Nenhum favorito ainda</h1>
-          <p className="muted">Toque no coração de um perfume para salvar aqui.</p>
-          <Link to="/catalogo" className="btn">Explorar o catálogo</Link>
+          <p className="muted">Toque no coração de um perfume para guardar aqui.</p>
+          <Link to="/catalogo" className="btn">Ver perfumes</Link>
         </div>
       )}
     </section>

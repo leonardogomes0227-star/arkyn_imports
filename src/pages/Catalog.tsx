@@ -77,7 +77,7 @@ export default function Catalog() {
   const any = cat || brand || tag || col || size || band || stockOnly || offersOnly
   usePageMeta({
     title: `${title} | Arkyn Imports`,
-    description: `${title} na Arkyn Imports. Perfumes árabes e importados, com Pix, parcelamento e envio para todo o Brasil.`,
+    description: `${title} na Arkyn Imports. Perfumes árabes originais, com Pix, parcelamento e envio para todo o Brasil.`,
     path: `/catalogo${bits.length ? '?' + [cat && `cat=${cat}`, col && `col=${col}`, brand && `brand=${encodeURIComponent(brand)}`, tag && `tag=${tag}`, size && `size=${size}`].filter(Boolean).join('&') : ''}`,
     noindex: !!q,
   })
@@ -143,12 +143,12 @@ export default function Catalog() {
             <div className="ax-empty-results">
               <p className="ax-eyebrow">Sem resultados</p>
               <h2>Nenhum perfume encontrado{q ? ` para “${q}”` : ''}</h2>
-              <p className="muted">Tente outra palavra ou remova algum filtro. Você também pode explorar por família olfativa.</p>
+              <p className="muted">Tente outra busca ou tire algum filtro. Dá para olhar também pelo tipo de cheiro.</p>
               <div className="ax-chips">
                 {any && <button type="button" className="btn" onClick={clear}>Limpar filtros</button>}
                 {PERFIS.map(f => <Link key={f} to={`/catalogo?tag=${f}`}>{cap(f)}</Link>)}
               </div>
-              <a className="textlink" href={`https://wa.me/${settings.whatsapp}?text=${encodeURIComponent(q ? `Olá! Procuro: ${q}` : 'Olá! Gostaria de ajuda para escolher um perfume.')}`} target="_blank" rel="noreferrer">Pedir ajuda no WhatsApp</a>
+              <a className="textlink" href={`https://wa.me/${settings.whatsapp}?text=${encodeURIComponent(q ? `Olá! Estou procurando: ${q}` : 'Olá! Pode me ajudar a escolher um perfume?')}`} target="_blank" rel="noreferrer">Pedir ajuda no WhatsApp</a>
             </div>
           )}
         </div>

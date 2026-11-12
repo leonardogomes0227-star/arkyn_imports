@@ -1,24 +1,32 @@
 import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent, type PointerEvent } from 'react'
 import { Link } from 'react-router-dom'
+import { useStore } from '../lib/store'
 
-// Destaques editoriais da Home. As imagens são recortes dos frascos reais (public/hero); trocar por fotos de
-// campanha é só mudar o campo `img`. Os textos não afirmam preço, desconto nem estoque.
+// Banners da home. As fotos são os frascos reais em public/hero.
 type Slide = { id: string; img: string; tone: string; eyebrow: string; title: string[]; sub: string; cta: [string, string]; cta2?: [string, string] }
-const SLIDES: Slide[] = [
-  { id: 'colecao', tone: 'night', img: '/hero/lattafa-asad-elixir-100ml.webp', eyebrow: 'Perfumaria árabe', title: ['O cheiro que', 'entra primeiro.'],
-    sub: 'Lattafa, Armaf, Maison Alhambra e outras casas. Originais, lacrados, para todo o Brasil.', cta: ['Ver a coleção', '/catalogo'], cta2: ['Árabes', '/catalogo?col=arabe'] },
-  { id: 'ela', tone: 'rose', img: '/hero/maison-alhambra-pink-eclipse-100ml.webp', eyebrow: 'Para ela', title: ['Doce, floral,', 'inesquecível.'],
-    sub: 'Yara, Eclaire, Maleka e outros femininos que ocupam o ambiente.', cta: ['Ver femininos', '/catalogo?cat=feminino'] },
-  { id: 'ele', tone: 'amber', img: '/hero/maison-alhambra-victorioso-nero-100ml.webp', eyebrow: 'Para ele', title: ['Noite longa.', 'Presença forte.'],
-    sub: 'Amadeirados e especiados para quem chega e fica.', cta: ['Ver masculinos', '/catalogo?cat=masculino'] },
-  { id: 'pix', tone: 'ink', img: '/hero/french-avenue-vulcan-feu-100ml.webp', eyebrow: 'Condições da casa', title: ['Pix com desconto.', 'Cartão em até 12x.'],
-    sub: 'O preço no Pix e as parcelas aparecem em cada frasco. Frete para todo o Brasil.', cta: ['Ver ofertas', '/catalogo?col=oferta'], cta2: ['Qual é o seu cheiro?', '/quiz'] },
-  { id: 'kits', tone: 'gold', img: '/hero/lattafa-afeef-100ml.webp', eyebrow: 'Para presentear', title: ['Um frasco.', 'O presente inteiro.'],
-    sub: 'Seleção para quem quer acertar sem enrolação.', cta: ['Kits e presentes', '/catalogo?col=presente'] },
-]
+
+function slidesFor(pix: number, installments: number): Slide[] {
+  const payTitle = pix > 0
+    ? [`${pix}% no Pix.`, installments > 1 ? `Até ${installments}x no cartão.` : 'Ou pague no cartão.']
+    : ['Pix ou cartão.', installments > 1 ? `Até ${installments}x.` : 'Pagamento na hora.']
+  return [
+    { id: 'colecao', tone: 'night', img: '/hero/lattafa-asad-elixir-100ml.webp', eyebrow: 'Perfumes árabes', title: ['Originais.', 'Lacrados.'],
+      sub: 'Lattafa, Armaf, Maison Alhambra e outras marcas. Enviamos para todo o Brasil.', cta: ['Ver perfumes', '/catalogo'], cta2: ['Ver árabes', '/catalogo?col=arabe'] },
+    { id: 'ela', tone: 'rose', img: '/hero/maison-alhambra-pink-eclipse-100ml.webp', eyebrow: 'Feminino', title: ['Doces e florais', 'para ela.'],
+      sub: 'Yara, Eclaire, Maleka e outros perfumes femininos, para o dia e para a noite.', cta: ['Ver femininos', '/catalogo?cat=feminino'] },
+    { id: 'ele', tone: 'amber', img: '/hero/maison-alhambra-victorioso-nero-100ml.webp', eyebrow: 'Masculino', title: ['Amadeirados', 'para ele.'],
+      sub: 'Asad, Club de Nuit, Liquid Brun e outros masculinos mais marcantes.', cta: ['Ver masculinos', '/catalogo?cat=masculino'] },
+    { id: 'pix', tone: 'ink', img: '/hero/french-avenue-vulcan-feu-100ml.webp', eyebrow: 'Pagamento', title: payTitle,
+      sub: 'O preço no Pix e as parcelas aparecem em cada perfume.', cta: ['Ver ofertas', '/catalogo?col=oferta'], cta2: ['Me ajuda a escolher', '/quiz'] },
+    { id: 'kits', tone: 'gold', img: '/hero/lattafa-afeef-100ml.webp', eyebrow: 'Presentes', title: ['Um perfume', 'para presentear.'],
+      sub: 'Uma seleção de frascos que costumam agradar.', cta: ['Ver presentes', '/catalogo?col=presente'] },
+  ]
+}
 const MS = 7000
 
 export default function CampaignHero() {
+  const { settings } = useStore()
+  const SLIDES = slidesFor(settings.pixDiscount ?? 0, settings.installments)
   const [i, setI] = useState(0)
   const [hover, setHover] = useState(false)
   const [userPaused, setUserPaused] = useState(false)

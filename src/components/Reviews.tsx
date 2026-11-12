@@ -11,7 +11,7 @@ export default function Reviews({ items, title, kicker = 'Quem compra na Arkyn' 
           <p className="ax-eyebrow">{kicker}</p>
           <h2>{title}</h2>
         </div>
-        <p className="ak-reviews-avg"><Stars value={avg} /><b>{avg.toFixed(1).replace('.', ',')}</b><small>média destas avaliações</small></p>
+        <p className="ak-reviews-avg"><Stars value={avg} /><b>{avg.toFixed(1).replace('.', ',')}</b><small>de média</small></p>
       </div>
       <div className="ak-reviews-grid">
         {items.map(r => (

@@ -39,8 +39,8 @@ export default function Home() {
   const { products, settings } = useStore()
   const origin = typeof window !== 'undefined' ? window.location.origin : ''
   usePageMeta({
-    title: 'Arkyn Imports | Perfumes árabes e importados para todo o Brasil',
-    description: 'Loja de perfumes árabes e importados. Originais e lacrados, com Pix, parcelamento no cartão e envio para todo o Brasil. Retirada em Coxim – MS.',
+    title: 'Arkyn Imports | Perfumes árabes originais',
+    description: 'Perfumes árabes e importados, originais e lacrados. Pix com desconto, parcelamento no cartão e envio para todo o Brasil. Retirada em Coxim – MS.',
     path: '/',
     jsonLd: [
       { '@context': 'https://schema.org', '@type': 'Organization', name: 'Arkyn Imports', url: origin, logo: `${origin}/logo-full.png`, sameAs: ['https://instagram.com/arkyn_imports'],
@@ -56,11 +56,11 @@ export default function Home() {
   const brands = [...new Set(products.map(p => p.brand))].sort()
   const n = settings.installments
   const pix = settings.pixDiscount ?? 0
-  const ship = settings.freeShippingFrom > 0 ? `Grátis acima de ${brl(settings.freeShippingFrom)}` : 'Consulte o prazo no WhatsApp'
+  const ship = settings.freeShippingFrom > 0 ? `Frete grátis acima de ${brl(settings.freeShippingFrom)}` : 'Combinamos o frete no WhatsApp'
 
   const cats: { label: string; to: string; img?: string; count: number; plain?: boolean }[] = [
     { label: 'Feminino', to: '/catalogo?cat=feminino', img: '/hero/maison-alhambra-pink-eclipse-100ml.webp', count: products.filter(p => p.category === 'feminino').length },
-    { label: 'Masculino', to: '/catalogo?cat=masculino', img: '/hero/lattafa-asad-elixir-100ml.webp', count: products.filter(p => p.category === 'masculino').length },
+    { label: 'Masculino', to: '/catalogo?cat=masculino', img: '/hero/maison-alhambra-victorioso-nero-100ml.webp', count: products.filter(p => p.category === 'masculino').length },
     { label: 'Unissex', to: '/catalogo?col=unissex', count: products.filter(p => p.gender === 'unissex').length, plain: true },
     { label: 'Árabes', to: '/catalogo?col=arabe', img: '/hero/armaf-club-de-nuit-maleka-105ml.webp', count: products.filter(isArab).length },
     { label: 'Kits e presentes', to: '/catalogo?col=presente', img: '/hero/lattafa-afeef-100ml.webp', count: products.filter(p => p.tags?.includes('presente')).length },
@@ -77,14 +77,14 @@ export default function Home() {
 
   const benefits: [JSX.Element, string, string][] = [
     [<IconTruck key="t" size={26} />, 'Todo o Brasil', ship],
-    [<IconStore key="s" size={26} />, 'Originais', 'Lacrados, direto da importação'],
-    [<IconCard key="c" size={26} />, n > 1 ? `Até ${n}x no cartão` : 'Cartão de crédito', 'Pagamento seguro, Mercado Pago'],
-    [<IconChat key="w" size={26} />, pix > 0 ? `${pix}% off no Pix` : 'Pix na hora', pix > 0 ? 'O desconto já aparece no preço' : 'Atendimento pelo WhatsApp'],
+    [<IconStore key="s" size={26} />, 'Originais', 'Lacrados, prontos para enviar'],
+    [<IconCard key="c" size={26} />, n > 1 ? `Até ${n}x no cartão` : 'Cartão de crédito', 'Pagamento pelo Mercado Pago'],
+    [<IconChat key="w" size={26} />, pix > 0 ? `${pix}% no Pix` : 'Pix', pix > 0 ? 'O desconto entra no checkout' : 'Pagamento na hora'],
   ]
 
   return (
     <>
-      <h1 className="sr-only">Arkyn Imports: perfumes árabes e importados para todo o Brasil</h1>
+      <h1 className="sr-only">Arkyn Imports, perfumes árabes originais</h1>
       <CampaignHero />
 
       <section className="ax-benefits" aria-label="Vantagens da loja">
@@ -92,35 +92,38 @@ export default function Home() {
       </section>
 
       <Reveal as="section" className="section ak-cat-sec">
-        <SecHead eyebrow="Compre por" title="Categorias" to="/catalogo" link="Ver tudo" />
-        <div className="ak-cats">
-          {cats.map(c => (
-            <Link key={c.label} to={c.to} className={c.plain ? 'ak-cat ak-cat--plain' : 'ak-cat'}>
-              {c.img && <img src={c.img} alt="" width={480} height={640} loading="lazy" decoding="async" />}
-              <span><small>{c.count} {c.count === 1 ? 'item' : 'itens'}</small><b>{c.label}</b></span>
+        <SecHead eyebrow="Navegue" title="Escolha por categoria" to="/catalogo" link="Ver tudo" />
+        <div className="ak-mosaic">
+          {cats.map((c, i) => (
+            <Link key={c.label} to={c.to} className={c.plain ? `ak-tile ak-tile--${i} is-plain` : `ak-tile ak-tile--${i}`}>
+              {c.img && <img src={c.img} alt="" width={640} height={800} loading="lazy" decoding="async" />}
+              <span><small>{c.count} {c.count === 1 ? 'perfume' : 'perfumes'}</small><b>{c.label}</b></span>
             </Link>
           ))}
         </div>
       </Reveal>
 
-      <Shelf eyebrow="Os que mais saem" title="Mais vendidos" to="/catalogo" items={best} />
+      <Shelf eyebrow="Preferidos" title="Mais vendidos" to="/catalogo" items={best} />
 
-      <section className="ak-mid">
+      <section className="ak-pay">
+        <p className="ak-pay-num" aria-hidden="true">{pix > 0 ? `${pix}%` : 'Pix'}</p>
         <div>
-          <p className="ax-eyebrow">Na hora de pagar</p>
-          <h2>{pix > 0 ? `${pix}% de desconto no Pix` : 'Pix ou cartão'}{n > 1 ? ` e até ${n}x` : ''}.</h2>
-          <p>O valor no Pix e as parcelas ficam visíveis em cada perfume. Envio para todo o Brasil{settings.freeShippingFrom > 0 ? `, com frete grátis acima de ${brl(settings.freeShippingFrom)}` : ''}.</p>
-          <Link to="/catalogo?col=oferta" className="btn light">Ver ofertas</Link>
+          <p className="ax-eyebrow">Pagamento</p>
+          <h2>{pix > 0 ? `${pix}% de desconto no Pix` : 'Pague no Pix ou no cartão'}{n > 1 ? `. Até ${n}x no cartão` : ''}.</h2>
+          <p>O valor no Pix aparece em cada perfume{settings.freeShippingFrom > 0 ? `. Frete grátis acima de ${brl(settings.freeShippingFrom)}` : ''}. Enviamos para todo o Brasil.</p>
+          <Link to="/catalogo?col=oferta" className="btn">Ver ofertas</Link>
         </div>
         <img src="/hero/french-avenue-vulcan-feu-100ml.webp" width={800} height={800} alt="" />
       </section>
 
-      <Shelf eyebrow="Acabaram de chegar" title="Lançamentos" to="/catalogo" items={launches} />
-      <Shelf eyebrow="Preço menor" title="Ofertas" to="/catalogo?col=oferta" items={offers} />
+      <Shelf eyebrow="Novidades" title="Lançamentos" to="/catalogo" items={launches} />
+      <div className="ak-offers">
+        <Shelf eyebrow="Com desconto" title="Ofertas" to="/catalogo?col=oferta" items={offers} />
+      </div>
 
       {brands.length > 0 && (
         <section className="ak-brands" aria-label="Marcas">
-          <p className="ax-eyebrow">Marcas em destaque</p>
+          <p className="ax-eyebrow">Marcas da loja</p>
           <div className="ak-brand-row">
             {[...brands, ...brands].map((b, i) => <Link key={`${b}-${i}`} to={`/catalogo?brand=${encodeURIComponent(b)}`} aria-hidden={i >= brands.length ? true : undefined} tabIndex={i >= brands.length ? -1 : undefined}>{b}</Link>)}
           </div>
@@ -130,9 +133,9 @@ export default function Home() {
       <section className="ax-band">
         <div className="ax-band-in">
           <Reveal className="ax-band-head">
-            <div><p className="ax-eyebrow">Famílias olfativas</p><h2>Escolha pelo cheiro</h2></div>
-            <p className="ax-band-p">Doce, amadeirado, fresco, floral ou especiado. Cada família reúne os frascos do catálogo com esse perfil.</p>
-            <Link to="/quiz" className="btn">Fazer o quiz</Link>
+            <div><p className="ax-eyebrow">Pelo cheiro</p><h2>Qual tipo você prefere?</h2></div>
+            <p className="ax-band-p">Doce, amadeirado, fresco, floral ou especiado. Cada grupo mostra os perfumes do catálogo com esse perfil.</p>
+            <Link to="/quiz" className="btn">Me ajuda a escolher</Link>
           </Reveal>
           <div className="scent-grid">
             {scents.map(([t, count, notes, thumbs], i) => (
@@ -151,14 +154,14 @@ export default function Home() {
 
       <Link to="/quiz" className="ak-quizband">
         <div>
-          <p className="ax-eyebrow">Um minuto</p>
-          <h2>Qual é o seu cheiro?</h2>
-          <span>O quiz cruza o catálogo com o que você gosta de sentir.</span>
+          <p className="ax-eyebrow">Quiz</p>
+          <h2>Não sabe qual escolher?</h2>
+          <span>Responda algumas perguntas e veja perfumes do nosso catálogo.</span>
         </div>
-        <span className="btn light">Começar o quiz</span>
+        <span className="btn">Começar</span>
       </Link>
 
-      <Reviews items={REVIEWS} title="O que dizem de quem já comprou" />
+      <Reviews items={REVIEWS} title="Quem já comprou" />
       <Newsletter />
     </>
   )

@@ -92,7 +92,7 @@ export default function Layout({ children }: { children: ReactNode }) {
             <input value={q} onChange={e => setQ(e.target.value)} placeholder="Buscar perfume, marca ou nota" aria-label="Buscar perfumes" />
           </form>
           <div className="ax-actions">
-            <Link to="/quiz" className="ax-quiz" aria-current={loc.pathname === '/quiz' ? 'page' : undefined}>Qual é o seu cheiro?</Link>
+            <Link to="/quiz" className="ax-quiz" aria-current={loc.pathname === '/quiz' ? 'page' : undefined}>Me ajuda a escolher</Link>
             <Link to="/favoritos" className="ax-icon ax-fav" aria-label={favs.length ? `Favoritos, ${favs.length}` : 'Favoritos'}><IconHeart size={21} />{favs.length > 0 && <em>{favs.length}</em>}</Link>
             <button type="button" className="ax-icon ax-bag" aria-label={count ? `Abrir sacola, ${count} ${count === 1 ? 'item' : 'itens'}` : 'Abrir sacola'} onClick={() => setOpen(true)}>
               <IconBag size={21} />{count > 0 && <em key={count}>{count}</em>}
@@ -114,7 +114,7 @@ export default function Layout({ children }: { children: ReactNode }) {
         <button type="button" className="ax-menu-search" tabIndex={menu ? 0 : -1} onClick={() => { setMenu(false); setSearch(true) }}><IconSearch size={19} /> Buscar perfume, marca ou nota</button>
         <nav className="ax-menu-nav" aria-label="Categorias">
           {NAV.map(([label, to]) => <Link key={to} to={to} tabIndex={menu ? 0 : -1} aria-current={active(to) ? 'page' : undefined}>{label}</Link>)}
-          <Link to="/quiz" className="hl" tabIndex={menu ? 0 : -1}>Qual é o seu cheiro?</Link>
+          <Link to="/quiz" className="hl" tabIndex={menu ? 0 : -1}>Me ajuda a escolher</Link>
           <Link to="/catalogo" tabIndex={menu ? 0 : -1}>Todos os perfumes</Link>
         </nav>
         <a className="btn ax-menu-wa" href={wa} target="_blank" rel="noreferrer" tabIndex={menu ? 0 : -1}>Falar no WhatsApp</a>
@@ -135,7 +135,7 @@ export default function Layout({ children }: { children: ReactNode }) {
             {NAV.map(([label, to]) => <Link key={to} to={to}>{label}</Link>)}
             <Link to="/catalogo">Todos os perfumes</Link>
             <Link to="/catalogo?cat=skincare">Skincare</Link>
-            <Link to="/quiz">Qual é o seu cheiro?</Link>
+            <Link to="/quiz">Me ajuda a escolher</Link>
             <Link to="/favoritos">Favoritos</Link>
           </div>
           <div>
@@ -143,7 +143,7 @@ export default function Layout({ children }: { children: ReactNode }) {
             <a href={wa} target="_blank" rel="noreferrer">WhatsApp {phone(settings.whatsapp)}</a>
             <span>Retirada: {settings.pickupAddress}</span>
             <span>{settings.freeShippingFrom > 0 ? `Frete grátis acima de ${brl(settings.freeShippingFrom)}` : 'Envio para todo o Brasil'}</span>
-            <Link to="/carrinho">Minha sacola</Link>
+            <Link to="/carrinho">Ver sacola</Link>
           </div>
           <div>
             <h4>Pagamento</h4>
