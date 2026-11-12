@@ -1,12 +1,6 @@
 /* Arkyn — vitrine comercial. Carrega por último.
    Noite de âmbar: cabeçalho e hero escuros, miolo claro, cobre e açafrão.
-   Fontes locais (Outfit + Syne), sem depender de CDN. */
-@font-face { font-family:'Outfit'; font-style:normal; font-weight:400; font-display:swap; src:url('/fonts/outfit-latin-400-normal.woff2') format('woff2') }
-@font-face { font-family:'Outfit'; font-style:normal; font-weight:500; font-display:swap; src:url('/fonts/outfit-latin-500-normal.woff2') format('woff2') }
-@font-face { font-family:'Outfit'; font-style:normal; font-weight:600; font-display:swap; src:url('/fonts/outfit-latin-600-normal.woff2') format('woff2') }
-@font-face { font-family:'Outfit'; font-style:normal; font-weight:700; font-display:swap; src:url('/fonts/outfit-latin-700-normal.woff2') format('woff2') }
-@font-face { font-family:'Syne'; font-style:normal; font-weight:700; font-display:swap; src:url('/fonts/syne-latin-700-normal.woff2') format('woff2') }
-@font-face { font-family:'Syne'; font-style:normal; font-weight:800; font-display:swap; src:url('/fonts/syne-latin-800-normal.woff2') format('woff2') }
+   Títulos em Cormorant Garamond; texto e botões em Manrope. */
 
 :root {
   --bg:#f4efe8; --surface:#fffdfb; --sand:#f3e6d4; --blush:#f7efe6; --blush-2:#f3e6d4; --line:#e6d9c8; --plate:#f7f1ea;
@@ -14,19 +8,20 @@
   --gold:#c56a1a; --gold-l:#e3a23a; --champagne:#e3a23a; --dark:#120e0c;
   --rose:#c56a1a; --rose-d:#8a3e10; --rose-l:#e3a23a; --plum:#120e0c; --plum-2:#1c1410;
   --btn:#1c1410; --btn-h:#3a2418;
-  --display:'Syne','Arial Black',sans-serif;
-  --sans:'Outfit',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --display:'Cormorant Garamond',Georgia,'Times New Roman',serif;
+  --sans:'Manrope',system-ui,-apple-system,'Segoe UI',sans-serif;
   --r-sm:10px; --r-md:16px; --r-lg:22px;
 }
-body { background:var(--bg); color:var(--ink); font-family:var(--sans) }
-h1,h2,h3 { font-family:var(--display); font-weight:800; letter-spacing:-.03em }
+body { background:var(--bg); color:var(--ink); font-family:var(--sans); font-weight:500; font-size:16px; line-height:1.55 }
+h1,h2,h3 { font-family:var(--display); font-weight:600; letter-spacing:-.015em; line-height:1.02 }
 ::selection { background:#e3a23a; color:#1c1410 }
 
 /* ---------- topo ---------- */
 .ax-header, .ax-header.is-scrolled { background:#120e0c; color:#f6efe6; border-bottom:0; box-shadow:none }
 .ax-header.is-scrolled { background:rgba(18,14,12,.94); box-shadow:0 12px 30px -18px rgba(0,0,0,.7) }
 .ax-topbar { background:#e3a23a; color:#1c1410; font-weight:700; letter-spacing:.12em }
-.ax-header .ax-logo img, .ax-header.is-scrolled .ax-logo img { mix-blend-mode:screen; filter:none; height:78px }
+.ax-header .ax-logo img { mix-blend-mode:screen; filter:none; height:112px }
+.ax-header.is-scrolled .ax-logo img { height:76px }
 .ax-icon, .ax-burger, .ax-quiz, .ax-nav a { color:#f6efe6 }
 .ax-burger span { background:#f6efe6 }
 .ax-find { border-color:rgba(255,255,255,.18); color:#f6efe6; background:rgba(255,255,255,.04) }
@@ -44,16 +39,16 @@ h1,h2,h3 { font-family:var(--display); font-weight:800; letter-spacing:-.03em }
   .ax-head { display:flex; align-items:center; gap:22px }
   .ax-left { order:0 }
   .ax-logo { order:0; margin-right:8px }
-  .ax-q { order:0; display:flex; flex:1; align-items:center; gap:10px; max-width:560px; min-height:46px; padding:0 16px; border-radius:999px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.14) }
+  .ax-q { order:0; display:flex; flex:1; align-items:center; gap:10px; min-width:280px; max-width:560px; min-height:46px; padding:0 16px; border-radius:999px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.14) }
   .ax-actions { margin-left:auto }
   .ax-find { display:none }
 }
 @media (max-width:1020px) {
-  .ax-header .ax-logo img { height:54px }
+  .ax-header .ax-logo img, .ax-header.is-scrolled .ax-logo img { height:76px }
 }
 
 /* menu */
-.ax-menu-nav a { font-size:1.35rem; font-weight:800 }
+.ax-menu-nav a { font-size:1.85rem; font-weight:600; line-height:1; letter-spacing:-.01em }
 .ax-menu-nav a.hl { color:var(--rose-d) }
 
 /* ---------- hero editorial ---------- */
@@ -63,8 +58,8 @@ h1,h2,h3 { font-family:var(--display); font-weight:800; letter-spacing:-.03em }
   radial-gradient(ellipse at 12% 90%, rgba(197,106,26,.18), transparent 32%),
   #0c0908 }
 .ch-info, .ch-prod { position:relative; z-index:1 }
-.ch-slide::after { content:'ARKYN'; position:absolute; z-index:0; right:-1vw; bottom:6%; font-family:var(--display); font-weight:800; font-size:clamp(7rem,18vw,15rem); line-height:.75; letter-spacing:-.07em; color:transparent; -webkit-text-stroke:1px rgba(227,162,58,.32); pointer-events:none }
-.ch-title { font-weight:800; letter-spacing:-.045em; line-height:.9; font-size:clamp(3.2rem,5.8vw,5.8rem) }
+.ch-slide::after { content:'ARKYN'; position:absolute; z-index:0; right:-1vw; bottom:4%; font-family:var(--display); font-weight:600; font-size:clamp(8rem,20vw,16rem); line-height:.72; letter-spacing:-.03em; color:transparent; -webkit-text-stroke:1px rgba(227,162,58,.32); pointer-events:none }
+.ch-title { font-weight:600; letter-spacing:-.02em; line-height:.92; font-size:clamp(4rem,7vw,7rem) }
 .ch-eyebrow { color:#e3a23a }
 .ch-sub { color:#eadfce; max-width:26em }
 .ch-btn { border:0; border-radius:999px; color:#1c1410; background:linear-gradient(110deg,#c9842a 0%,#f3d48a 42%,#e3a23a 58%,#b86a1c 100%); background-size:220% 100%; transition:background-position .6s var(--ease), transform .2s ease }
@@ -84,7 +79,7 @@ h1,h2,h3 { font-family:var(--display); font-weight:800; letter-spacing:-.03em }
 .ch-bar::before { background:rgba(255,255,255,.22) }
 .ch-bar span { background:#e3a23a }
 .ch-count, .ch-count b { color:#f6efe6 }
-@media (max-width:860px) { .ch-slide::after { display:none } .ch { height:clamp(640px,92svh,780px) } .ch-title { font-size:clamp(2.4rem,10vw,3.2rem) } }
+@media (max-width:860px) { .ch-slide::after { display:none } .ch { height:clamp(640px,92svh,780px) } .ch-title { font-size:clamp(3.1rem,12vw,3.8rem); line-height:.94 } }
 
 /* ---------- benefícios: faixa escura, não um card branco ---------- */
 .ax-benefits { position:relative; z-index:2; margin:0; max-width:none; background:#16110e; color:#f6efe6; border:0; border-radius:0; box-shadow:inset 0 1px 0 rgba(227,162,58,.35); overflow:hidden; padding:0 var(--gutter) }
@@ -107,7 +102,7 @@ h1,h2,h3 { font-family:var(--display); font-weight:800; letter-spacing:-.03em }
 .ak-tile--0 img { width:82%; height:68%; top:40% }
 .ak-tile span { position:relative; z-index:2; display:flex; flex-direction:column; gap:2px; width:100%; padding:28px 16px 14px; background:linear-gradient(transparent, rgba(8,6,4,.92) 72%) }
 .ak-tile small { font-size:.72rem; letter-spacing:.14em; text-transform:uppercase; color:#e3a23a }
-.ak-tile b { font-family:var(--display); font-weight:800; font-size:clamp(1.35rem,2vw,2rem); letter-spacing:-.03em; line-height:1 }
+.ak-tile b { font-family:var(--display); font-weight:600; font-size:clamp(2rem,2.6vw,2.8rem); letter-spacing:-.02em; line-height:.95 }
 .ak-tile.is-plain { background:radial-gradient(circle at 30% 18%, #f0c36a, #c56a1a 38%, #1c1410 78%) }
 .ak-tile.is-plain span { background:linear-gradient(transparent, rgba(12,8,6,.28)) }
 @media (hover:hover) { .ak-tile:hover img { transform:translate(-50%,-58%) scale(1.04) } .ak-tile:hover { box-shadow:0 18px 40px -24px rgba(197,106,26,.7) } }
@@ -120,7 +115,7 @@ h1,h2,h3 { font-family:var(--display); font-weight:800; letter-spacing:-.03em }
 /* ---------- preço no card e na página ---------- */
 .card { border-radius:16px; overflow:hidden; background:#fff; border:1px solid var(--line) }
 .card .info { padding:12px 14px 4px; gap:3px }
-.card .info h3 { font-family:var(--display); font-weight:750; font-size:1.05rem; letter-spacing:-.03em; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; min-height:2.3em }
+.card .info h3 { font-family:var(--display); font-weight:600; font-size:1.45rem; letter-spacing:-.01em; line-height:1.05; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; min-height:2.15em }
 .card .info small { letter-spacing:.08em }
 .card { transition:transform .35s var(--ease), box-shadow .35s var(--ease) }
 @media (hover:hover) { .card:hover { transform:translateY(-4px); box-shadow:0 18px 36px -28px rgba(28,20,16,.55) } }
@@ -130,15 +125,15 @@ h1,h2,h3 { font-family:var(--display); font-weight:800; letter-spacing:-.03em }
 .ak-from { display:flex; align-items:center; gap:8px; color:var(--mute); font-size:.78rem; margin:0 }
 .ak-from s { text-decoration:line-through }
 .ak-from span { background:#9d1c2a; color:#fff; font-weight:700; font-size:.68rem; letter-spacing:.04em; border-radius:999px; padding:2px 7px }
-.ak-now { margin:0; font-weight:750; font-size:1.12rem; letter-spacing:-.02em; font-family:var(--sans) }
+.ak-now { margin:0; font-weight:700; font-size:1.05rem; letter-spacing:-.01em; font-family:var(--sans) }
 .ak-pix { margin:0; color:#0c7a43; font-size:.86rem }
 .ak-pix b { font-weight:750 }
 .ak-inst { margin:0; color:var(--mute); font-size:.78rem }
-.ak-price.is-lg .ak-now { font-family:var(--display); font-weight:800; font-size:clamp(2.1rem,3.2vw,3rem); letter-spacing:-.04em }
+.ak-price.is-lg .ak-now { font-family:var(--display); font-weight:600; font-size:clamp(2.6rem,4vw,3.6rem); letter-spacing:-.02em; line-height:.95 }
 .ak-price.is-lg .ak-pix { font-size:1.05rem }
 .ak-price.is-lg .ak-inst { font-size:.95rem }
 .pdp-price { display:block }
-.pdp-info h1 { font-weight:800; letter-spacing:-.04em }
+.pdp-info h1 { font-weight:600; letter-spacing:-.02em; line-height:.96; font-size:clamp(3rem,5.2vw,4.8rem) }
 
 .pdp-sizes { margin:8px 0 4px }
 .pdp-sizes > span { display:block; font-size:.72rem; font-weight:700; letter-spacing:.16em; text-transform:uppercase; margin-bottom:8px }
@@ -156,7 +151,7 @@ h1,h2,h3 { font-family:var(--display); font-weight:800; letter-spacing:-.03em }
   color:#f6efe6; overflow:hidden; position:relative }
 .ak-pay::before { content:''; position:absolute; inset:0; background:linear-gradient(115deg, transparent 30%, rgba(243,212,138,.16) 48%, transparent 62%); background-size:220% 100%; animation:ak-sheen 7s ease-in-out infinite; pointer-events:none }
 @keyframes ak-sheen { 0%,100% { background-position:0 0 } 50% { background-position:100% 0 } }
-.ak-pay-num { position:relative; margin:0; padding:28px 0 28px 4px; font-family:var(--display); font-weight:800; font-size:clamp(4.5rem,9vw,8rem); line-height:.8; letter-spacing:-.06em; color:transparent; -webkit-text-stroke:1.5px #e3a23a }
+.ak-pay-num { position:relative; margin:0; padding:28px 0 28px 4px; font-family:var(--display); font-weight:600; font-size:clamp(5.5rem,10vw,9rem); line-height:.8; letter-spacing:-.03em; color:transparent; -webkit-text-stroke:1px #e3a23a }
 .ak-pay > div, .ak-pay img { position:relative }
 .ak-pay h2 { font-size:clamp(1.8rem,3vw,2.8rem); line-height:1.05; margin:8px 0 12px; max-width:16ch }
 .ak-pay p { color:#eadfce; max-width:36em; margin-bottom:18px }
@@ -171,7 +166,7 @@ h1,h2,h3 { font-family:var(--display); font-weight:800; letter-spacing:-.03em }
 .ak-brands .ax-eyebrow { text-align:center; margin-bottom:8px }
 .ak-brand-row { display:flex; width:max-content; animation:mq 42s linear infinite }
 .ak-brands:hover .ak-brand-row { animation-play-state:paused }
-.ak-brand-row a { font-family:var(--display); font-weight:800; font-size:clamp(1.8rem,3vw,2.7rem); letter-spacing:-.04em; padding:8px 0 8px 22px; background:none; border:0; white-space:nowrap; color:#1c1410 }
+.ak-brand-row a { font-family:var(--display); font-weight:600; font-size:clamp(2.2rem,3.4vw,3.2rem); letter-spacing:-.02em; line-height:1; padding:10px 0 10px 22px; background:none; border:0; white-space:nowrap; color:#1c1410 }
 .ak-brand-row a::before { content:'·'; color:#c56a1a; margin-right:22px; font-weight:400 }
 .ak-brand-row a:hover { color:#8a3e10 }
 .ak-quizband { display:flex; align-items:center; justify-content:space-between; gap:18px; margin:var(--space) var(--gutter) 0; padding:32px 0; border-radius:0; background:transparent; color:#1c1410; border-top:1px solid var(--line) }
@@ -213,7 +208,7 @@ h1,h2,h3 { font-family:var(--display); font-weight:800; letter-spacing:-.03em }
 
 /* ---------- rodapé e WhatsApp ---------- */
 .ax-footer { background:#0e0b0a }
-.ax-foot-logo img { filter:none; mix-blend-mode:screen; opacity:1; height:84px }
+.ax-foot-logo img { filter:none; mix-blend-mode:screen; opacity:1; height:108px }
 .ax-footer h4 { font-family:var(--sans); letter-spacing:.16em }
 .wa-float { width:auto; height:54px; padding:0 16px 0 12px; border-radius:999px; display:flex; align-items:center; gap:8px; background:#1faa59; color:#fff; font-weight:700; box-shadow:0 10px 24px -10px rgba(0,0,0,.5) }
 .wa-float span { font-size:.92rem; letter-spacing:.01em }
@@ -221,12 +216,12 @@ h1,h2,h3 { font-family:var(--display); font-weight:800; letter-spacing:-.03em }
   .wa-float { width:54px; height:54px; padding:0; justify-content:center }
   .wa-float span { display:none }
   .pdp-img { aspect-ratio:5/4; max-height:250px }
-  .pdp-info h1 { font-size:2.15rem; margin:6px 0 12px }
+  .pdp-info h1 { font-size:2.6rem; line-height:1; margin:6px 0 12px }
   .card .info small { letter-spacing:.04em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
 }
 
 /* ---------- catálogo ---------- */
-.catalog .page-title { font-weight:800; letter-spacing:-.03em }
+.catalog .page-title { font-weight:600; letter-spacing:-.02em; line-height:.98; font-size:clamp(2.8rem,5vw,4.4rem) }
 .fopt.on { background:#1c1410; color:#fff; border-color:#1c1410 }
 .side { border-radius:16px }
 
