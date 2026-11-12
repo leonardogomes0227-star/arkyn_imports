@@ -66,6 +66,7 @@ export default function CampaignHero() {
       onPointerDown={e => { drag.current = e.clientX }} onPointerUp={onUp} onPointerCancel={() => { drag.current = null }}
       onPointerEnter={e => { if (e.pointerType === 'mouse') setHover(true) }} onPointerLeave={e => { if (e.pointerType === 'mouse') setHover(false) }}
       onFocus={e => { if (e.target.matches(':focus-visible')) setHover(true) }} onBlur={() => setHover(false)}>
+      <span className="ch-mark ak-mark" aria-hidden="true"><img src="/logo-xs.webp" alt="" width="260" height="211" /></span>
       {SLIDES.map((s, k) => {
         const on = k === i
         const tab = on ? 0 : -1

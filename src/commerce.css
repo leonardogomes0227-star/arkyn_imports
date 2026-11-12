@@ -20,10 +20,11 @@ h1,h2,h3 { font-family:var(--display); font-weight:600; letter-spacing:-.015em; 
 .ax-header, .ax-header.is-scrolled { background:#120e0c; color:#f6efe6; border-bottom:0; box-shadow:none }
 .ax-header.is-scrolled { background:rgba(18,14,12,.94); box-shadow:0 12px 30px -18px rgba(0,0,0,.7) }
 .ax-topbar { background:#e3a23a; color:#1c1410; font-weight:700; letter-spacing:.12em }
-.ax-header .ax-logo { position:relative }
-.ax-header .ax-logo::before { content:''; position:absolute; z-index:0; left:50%; top:54%; width:78%; height:62%; transform:translate(-50%,-50%); border-radius:50%; background:radial-gradient(circle, rgba(255,244,220,.8) 0%, rgba(227,162,58,.32) 46%, transparent 72%); filter:blur(6px); pointer-events:none }
-.ax-header .ax-logo img { position:relative; z-index:1; mix-blend-mode:screen; height:112px; filter:contrast(1.25) brightness(1.45) saturate(1.25) drop-shadow(0 0 10px rgba(255,236,196,.85)) drop-shadow(0 0 2px rgba(255,248,230,1)) }
-.ax-header.is-scrolled .ax-logo img { height:78px }
+.ak-mark { position:relative; display:inline-block; line-height:0 }
+.ak-mark::before { content:''; position:absolute; z-index:0; left:50%; top:50%; width:94%; height:82%; transform:translate(-50%,-48%); border-radius:42%; background:radial-gradient(ellipse at center, rgba(255,214,120,.98) 0%, rgba(232,164,40,.62) 34%, rgba(180,100,16,.2) 58%, transparent 74%); filter:blur(9px); pointer-events:none }
+.ak-mark img { position:relative; z-index:1; mix-blend-mode:screen; filter:contrast(1.45) brightness(1.8) saturate(1.7) drop-shadow(0 0 4px rgba(255,232,170,1)) drop-shadow(0 0 16px rgba(255,186,50,.95)) drop-shadow(0 0 34px rgba(227,140,24,.8)) }
+.ax-header .ax-logo img { height:156px }
+.ax-header.is-scrolled .ax-logo img { height:112px }
 .ax-icon, .ax-burger, .ax-quiz, .ax-nav a { color:#f6efe6 }
 .ax-burger span { background:#f6efe6 }
 .ax-find { border-color:rgba(255,255,255,.18); color:#f6efe6; background:rgba(255,255,255,.04) }
@@ -46,7 +47,7 @@ h1,h2,h3 { font-family:var(--display); font-weight:600; letter-spacing:-.015em; 
   .ax-find { display:none }
 }
 @media (max-width:1020px) {
-  .ax-header .ax-logo img, .ax-header.is-scrolled .ax-logo img { height:76px }
+  .ax-header .ax-logo img, .ax-header.is-scrolled .ax-logo img { height:108px }
 }
 
 /* menu */
@@ -60,6 +61,9 @@ h1,h2,h3 { font-family:var(--display); font-weight:600; letter-spacing:-.015em; 
   radial-gradient(ellipse at 12% 90%, rgba(197,106,26,.18), transparent 32%),
   #0c0908 }
 .ch-info, .ch-prod { position:relative; z-index:1 }
+.ch-mark { position:absolute; z-index:6; left:clamp(24px,6vw,110px); top:22px; pointer-events:none }
+.ch-mark img { height:92px; width:auto }
+@media (max-width:860px) { .ch-mark { display:none } }
 .ch-slide::after { content:'ARKYN'; position:absolute; z-index:0; right:-1vw; bottom:4%; font-family:var(--display); font-weight:600; font-size:clamp(8rem,20vw,16rem); line-height:.72; letter-spacing:-.03em; color:transparent; -webkit-text-stroke:1px rgba(227,162,58,.32); pointer-events:none }
 .ch-title { font-weight:600; letter-spacing:-.02em; line-height:.92; font-size:clamp(4rem,7vw,7rem) }
 .ch-eyebrow { color:#e3a23a }
@@ -210,7 +214,7 @@ h1,h2,h3 { font-family:var(--display); font-weight:600; letter-spacing:-.015em; 
 
 /* ---------- rodapé e WhatsApp ---------- */
 .ax-footer { background:#0e0b0a }
-.ax-foot-logo img { filter:none; mix-blend-mode:screen; opacity:1; height:108px }
+.ax-foot-logo.ak-mark img { height:148px; width:auto; opacity:1 }
 .ax-footer h4 { font-family:var(--sans); letter-spacing:.16em }
 .wa-float { width:auto; height:54px; padding:0 16px 0 12px; border-radius:999px; display:flex; align-items:center; gap:8px; background:#1faa59; color:#fff; font-weight:700; box-shadow:0 10px 24px -10px rgba(0,0,0,.5) }
 .wa-float span { font-size:.92rem; letter-spacing:.01em }

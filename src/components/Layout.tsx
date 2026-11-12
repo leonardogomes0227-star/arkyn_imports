@@ -86,7 +86,7 @@ export default function Layout({ children }: { children: ReactNode }) {
             <button type="button" className="ax-burger" aria-label="Abrir menu" aria-expanded={menu} aria-controls="ax-menu" onClick={() => setMenu(true)}><span /><span /><span /></button>
             <button type="button" className="ax-icon ax-find" aria-label="Buscar perfumes" onClick={() => setSearch(true)}><IconSearch size={21} /><span>Buscar</span></button>
           </div>
-          <Logo />
+          <Logo className="ax-logo ak-mark" />
           <form className="ax-q" role="search" onSubmit={e => { e.preventDefault(); const term = q.trim(); if (!term) { setSearch(true); return } setSearch(false); go(`/catalogo?q=${encodeURIComponent(term)}`); setQ('') }}>
             <IconSearch size={18} />
             <input value={q} onChange={e => setQ(e.target.value)} placeholder="Buscar perfume" aria-label="Buscar perfumes" />
@@ -126,7 +126,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       <footer className="ax-footer">
         <div className="ax-footer-in">
           <div className="ax-foot-brand">
-            <Logo className="ax-foot-logo" />
+            <Logo className="ax-foot-logo ak-mark" />
             <p>Perfumes árabes e importados, originais e lacrados. Enviamos para todo o Brasil e também retiramos em Coxim – MS.</p>
             <a className="ax-foot-ig" href="https://instagram.com/arkyn_imports" target="_blank" rel="noreferrer">@arkyn_imports no Instagram</a>
           </div>
