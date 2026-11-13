@@ -1,6 +1,7 @@
 import { useEffect, useState, type ReactNode } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import CartDrawer from './CartDrawer'
+import { ScrollBar } from './Festive'
 import SearchOverlay from './SearchOverlay'
 import { IconBag, IconHeart, IconSearch, IconTruck } from './Icons'
 import { brl, useStore } from '../lib/store'
@@ -84,6 +85,7 @@ export default function Layout({ children }: { children: ReactNode }) {
     <>
       <a className="ax-skip" href="#conteudo">Pular para o conteúdo</a>
       <Snow />
+      <ScrollBar />
       <header className={scrolled ? 'ax-header is-scrolled' : 'ax-header'}>
         <div className="ax-topbar sc-top" aria-label="Avisos da loja">
           <div className="sc-top-in">

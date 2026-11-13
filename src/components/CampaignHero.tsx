@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent, type PointerEvent } from 'react'
 import { Link } from 'react-router-dom'
+import { Baubles, PlaneTrail, Sparkles } from './Festive'
 import { IconCard, IconChat, IconHeart, IconStore } from './Icons'
 
 // Destaques editoriais da Home. As imagens são as fotos dos produtos (public/produtos-net); trocar por fotos de
@@ -60,9 +61,11 @@ export default function CampaignHero() {
 
   return (
     <section ref={root} className="ch" aria-roledescription="carrossel" aria-label="Destaques da loja" tabIndex={0} onKeyDown={onKey}
+      onPointerMove={e => { if (e.pointerType !== 'mouse' || !root.current) return; const r = root.current.getBoundingClientRect(); root.current.style.setProperty('--mx', String(((e.clientX - r.left) / r.width - 0.5) * 2)); root.current.style.setProperty('--my', String(((e.clientY - r.top) / r.height - 0.5) * 2)) }}
       onPointerDown={e => { drag.current = e.clientX }} onPointerUp={onUp} onPointerCancel={() => { drag.current = null }}
       onPointerEnter={e => { if (e.pointerType === 'mouse') setHover(true) }} onPointerLeave={e => { if (e.pointerType === 'mouse') setHover(false) }}
       onFocus={e => { if (e.target.matches(':focus-visible')) setHover(true) }} onBlur={() => setHover(false)}>
+      <Sparkles /><PlaneTrail /><Baubles />
       {SLIDES.map((s, k) => {
         const on = k === i
         const tab = on ? 0 : -1
