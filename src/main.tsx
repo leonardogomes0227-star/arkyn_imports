@@ -10,6 +10,7 @@ import './design.css'
 import './campaign.css'
 import './boutique.css'
 import './scente.css'
+import './natal.css'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode><BrowserRouter><StoreProvider><ToastProvider><App /></ToastProvider></StoreProvider></BrowserRouter></StrictMode>,

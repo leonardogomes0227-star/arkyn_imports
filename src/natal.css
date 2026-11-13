@@ -1,0 +1,88 @@
+/* =====================================================================
+   ARKYN — TEMA DE NATAL
+   Carrega por último: troca preto/dourado por verde pinheiro, vermelho e dourado.
+   Para voltar ao visual normal, tire o import './natal.css' de main.tsx.
+   ===================================================================== */
+:root {
+  --night:#0b2d20; --night-2:#103a29; --night-3:#14452f; --dark:#0b2d20;
+  --red:#b3122a; --red-h:#d01a36; --red-d:#7d0d1f;
+  --gold:#e3bf6e; --gold-l:#f3dc9f; --gold-d:#8a6420; --gold-ink:#7a5a1c; --champagne:#f0d9a0;
+  --bg:#fbf6ee; --blush:#f6ece0; --plate:#f6ece0;
+}
+::selection { background:var(--red); color:#fff }
+
+/* ---------- botões em vermelho ---------- */
+.btn, .btn-gold, .ch-btn, .pdp-cta, .card-add, .ax-suggest button, .ax-menu-wa { background:var(--red); border-color:var(--red); color:#fff }
+.btn:hover, .btn-gold:hover, .ch-btn:hover, .pdp-cta:hover, .card-add:hover, .ax-suggest button:hover { background:var(--red-h); border-color:var(--red-h); color:#fff }
+.card-add.done { background:var(--night); color:var(--gold-l) }
+.ax-bag em, .ax-fav em { background:var(--red); color:#fff }
+.sc-five .card-add { background:transparent; border:1px solid var(--red); color:var(--red) } .sc-five .card-add:hover { background:var(--red); color:#fff }
+.ch-pause:hover, .ch-arrows button:hover { background:var(--red); border-color:var(--red); color:#fff }
+.card .off, .pdp-img .off, .pdp-off { background:var(--red); color:#fff }
+.textlink, .ax-sec-link:hover { color:var(--red) }
+.ax-sec-link { border-color:var(--red) }
+.ax-eyebrow, .ax-sec-head .ax-eyebrow { color:var(--red) }
+
+/* ---------- faixa superior vermelha + cabeçalho verde ---------- */
+.ax-topbar.sc-top { background:linear-gradient(90deg,var(--red-d),var(--red),var(--red-d)); border-bottom:0; color:#fff }
+.sc-top-in, .sc-top-r a { color:#fff } .sc-top-c, .sc-top-l svg, .sc-top-c i { color:var(--gold-l) }
+.sc-top-r a:hover { color:var(--gold-l) }
+.ax-head { background:linear-gradient(180deg,#0f3a29,var(--night)) }
+.ax-header { box-shadow:0 10px 24px -16px rgba(0,0,0,.6) }
+.ax-nav a { color:#fff } .ax-nav a:hover, .ax-nav a[aria-current="page"] { color:var(--gold-l) }
+.ax-nav a::after { background:var(--red-h) }
+
+/* ---------- logo de Natal (selo redondo enviado pelo cliente) ---------- */
+.ax-logo, .ax-menu-logo, .ax-foot-logo { display:block; line-height:0 }
+.ax-logo img, .ax-logo.ax-foot-logo img, .ax-foot-logo img, .ax-menu-logo img { width:auto; mix-blend-mode:normal; opacity:1; filter:drop-shadow(0 0 12px rgba(255,214,120,.45)) }
+.ax-logo img { height:98px; margin:6px 0 -22px; position:relative; z-index:3 }
+.ax-header.is-scrolled .ax-logo img { height:66px; margin:2px 0 -8px }
+.ax-menu-logo img { height:68px }
+.ax-foot-logo img { height:120px }
+@media (max-width:900px) { .ax-logo img { height:64px; margin:4px 0 -10px } .ax-header.is-scrolled .ax-logo img { height:50px } }
+
+/* ---------- luzinhas de Natal ---------- */
+.lights { position:absolute; left:0; right:0; top:100%; height:26px; margin:0; padding:0 6px; list-style:none; display:flex; justify-content:space-between; pointer-events:none; overflow:hidden; z-index:2 }
+.lights::before { content:''; position:absolute; left:0; right:0; top:2px; height:8px; border-radius:0 0 50% 50% / 0 0 100% 100%; border-bottom:2px solid #1b1b1b; opacity:.7 }
+.lights li { position:relative; width:10px; height:15px; margin-top:6px; border-radius:50% 50% 50% 50% / 35% 35% 65% 65%; background:var(--c); box-shadow:0 0 10px 2px var(--c); animation:twinkle 1.8s ease-in-out infinite; animation-delay:var(--d) }
+.lights li::before { content:''; position:absolute; left:2px; top:-4px; width:6px; height:5px; background:#2b2b2b; border-radius:1px }
+.lights li:nth-child(4n+1) { --c:#ff3b4d } .lights li:nth-child(4n+2) { --c:#3ddc84 } .lights li:nth-child(4n+3) { --c:#ffd45a } .lights li:nth-child(4n) { --c:#ffffff }
+.lights li:nth-child(odd) { --d:.0s } .lights li:nth-child(even) { --d:.9s } .lights li:nth-child(3n) { --d:.45s }
+@keyframes twinkle { 0%,100% { opacity:1 } 50% { opacity:.35 } }
+
+/* ---------- neve ---------- */
+.snow { position:fixed; inset:0; z-index:60; pointer-events:none; overflow:hidden }
+.snow i { position:absolute; top:-12px; left:var(--x); width:var(--s); height:var(--s); border-radius:50%; background:#fff; opacity:var(--o); box-shadow:0 0 6px rgba(255,255,255,.8); animation:snowfall var(--t) linear var(--dl) infinite }
+@keyframes snowfall { from { transform:translate3d(0,-12px,0) } 50% { transform:translate3d(var(--dx),55vh,0) } to { transform:translate3d(0,108vh,0) } }
+
+/* ---------- banner principal ---------- */
+.ch { background:radial-gradient(90% 120% at 70% 40%,#14503a,#0b2d20 70%) }
+.ch-slide::before { background:radial-gradient(52% 78% at 68% 46%,rgba(255,226,160,.22),transparent 70%),radial-gradient(40% 60% at 8% 100%,rgba(179,18,42,.35),transparent 70%) }
+.ch-eyebrow { color:var(--gold-l) }
+.ch-line em { color:var(--gold-l) }
+.ch-plate::before { background:linear-gradient(90deg,transparent,rgba(227,191,110,.8),transparent) }
+.ch-sub::before { background:var(--red-h) }
+.ch-link:hover { border-color:var(--gold-l); color:var(--gold-l) }
+.ch-bar span { background:var(--red-h) }
+.ch-perks, .ch-ctrl { background:transparent }
+
+/* ---------- blocos escuros viram verde / vermelho ---------- */
+.pm--dark { --tone:linear-gradient(120deg,#0b2d20,#14503a); --glow:rgba(255,226,160,.3) }
+.pm--bronze { --tone:linear-gradient(120deg,#6e0c1c,#b3122a); --glow:rgba(255,200,150,.4) }
+.pm--sand { --tone:linear-gradient(120deg,#fbf0dc,#efd9b0); --glow:rgba(255,255,255,.6) }
+.ax-footer { background:linear-gradient(180deg,#0b2d20,#071d15); color:#e8e2d3 }
+.ax-foot-cta { border-color:rgba(255,255,255,.18) }
+.ax-footer h4 { color:var(--gold-l) }
+.ax-band, .ax-bband { background:var(--night) }
+.ax-topbar .sc-top-in { color:#fff }
+.pdp-bar { background:var(--night) } .pdp-bar small { color:var(--gold-l) }
+.ax-toast { background:var(--night) }
+.cat-c:hover .cat-c-txt b { color:var(--red) }
+
+/* faixa de benefícios e cards: toque de Natal */
+.sc-why { border-top:3px double var(--red) }
+.card { border-radius:var(--r-md) }
+.card::after { content:''; position:absolute; inset:0 0 auto 0; height:3px; background:repeating-linear-gradient(90deg,var(--red) 0 14px,#fff 14px 20px,#1f7a4f 20px 34px,#fff 34px 40px); opacity:0; transition:opacity .3s; border-radius:var(--r-md) var(--r-md) 0 0 }
+@media (hover:hover) { .card:hover::after { opacity:1 } }
+
+@media (prefers-reduced-motion:reduce) { .snow { display:none } .lights li { animation:none } }

@@ -11,10 +11,11 @@ import type { Category, Product } from '../lib/types'
 
 const SCENTS = ['doce', 'amadeirado', 'fresco', 'floral', 'especiado']
 // cor de cada família olfativa (campo de cor da seção "Escolha pelo cheiro")
-const FAM: Record<string, string> = { doce: '#b5623f', amadeirado: '#4b3423', fresco: '#2e5a60', floral: '#9c4a64', especiado: '#8a3a1c' }
+const FAM: Record<string, string> = { doce: '#a3162c', amadeirado: '#145a3a', fresco: '#1f6f66', floral: '#8c1d4a', especiado: '#9b5a14' }
 const cap = (t: string) => t[0].toUpperCase() + t.slice(1)
 
-const CUTOUTS = new Set<string>()
+// Recortes sem fundo (public/hero). Para os demais, usa a foto do produto.
+const CUTOUTS = new Set(['french-avenue-vulcan-feu-100ml', 'lattafa-afeef-100ml', 'armaf-club-de-nuit-maleka-105ml', 'lattafa-asad-elixir-100ml', 'maison-alhambra-pink-eclipse-100ml', 'maison-alhambra-victorioso-nero-100ml'])
 // Categorias editoriais: produto de capa preferido. Só aparecem as que têm produto com foto.
 const CATS: { label: string; to: string; match: (p: Product) => boolean; prefer: string }[] = [
   { label: 'Masculinos', to: '/catalogo?cat=masculino', match: p => p.category === 'masculino', prefer: 'lattafa-asad-elixir-100ml' },
@@ -27,9 +28,9 @@ const CATS: { label: string; to: string; match: (p: Product) => boolean; prefer:
 
 // Banners de coleção: só conteúdo que existe na loja (sem preço, desconto ou promoção).
 const PROMOS = [
-  { k: 'Masculinos', title: 'Presença e personalidade', sub: 'Amadeirados e especiados para o dia a dia e para a noite.', btn: 'Ver masculinos', to: '/catalogo?cat=masculino', img: '/produtos-net/lattafa-asad-elixir-100ml.webp', w: 800, h: 800, tone: 'dark' },
-  { k: 'Femininos', title: 'Doces, florais e marcantes', sub: 'Fragrâncias que enchem o ambiente de personalidade.', btn: 'Ver femininos', to: '/catalogo?cat=feminino', img: '/produtos-net/maison-alhambra-pink-eclipse-100ml.webp', w: 800, h: 800, tone: 'sand' },
-  { k: 'Compre pelo cheiro', title: 'Qual é o seu cheiro?', sub: 'Responda o quiz e veja os perfumes que combinam com você.', btn: 'Fazer o quiz', to: '/quiz', img: '/produtos-net/armaf-club-de-nuit-maleka-105ml.webp', w: 800, h: 800, tone: 'bronze' },
+  { k: 'Masculinos', title: 'Presença e personalidade', sub: 'Amadeirados e especiados para o dia a dia e para a noite.', btn: 'Ver masculinos', to: '/catalogo?cat=masculino', img: '/hero/lattafa-asad-elixir-100ml.webp', w: 1190, h: 1170, tone: 'dark' },
+  { k: 'Femininos', title: 'Doces, florais e marcantes', sub: 'Fragrâncias que enchem o ambiente de personalidade.', btn: 'Ver femininos', to: '/catalogo?cat=feminino', img: '/hero/maison-alhambra-pink-eclipse-100ml.webp', w: 1180, h: 1081, tone: 'sand' },
+  { k: 'Compre pelo cheiro', title: 'Qual é o seu cheiro?', sub: 'Responda o quiz e veja os perfumes que combinam com você.', btn: 'Fazer o quiz', to: '/quiz', img: '/hero/armaf-club-de-nuit-maleka-105ml.webp', w: 1155, h: 1147, tone: 'bronze' },
 ] as const
 
 function SecHead({ eyebrow, title, to, link = 'Ver todos' }: { eyebrow?: string; title: string; to?: string; link?: string }) {
@@ -91,7 +92,7 @@ export default function Home() {
   const cats = CATS.map(c => {
     const inCat = products.filter(c.match)
     const pick = inCat.find(p => p.id === c.prefer && p.image) ?? inCat.find(p => p.image)
-    const src = pick ? (pick.image!) : ''
+    const src = pick ? (CUTOUTS.has(pick.id) ? `/hero/${pick.id}.webp` : pick.image!) : ''
     return { ...c, count: inCat.length, src, cut: !!pick && CUTOUTS.has(pick.id) }
   }).filter(c => c.count > 0 && !!c.src)
 
