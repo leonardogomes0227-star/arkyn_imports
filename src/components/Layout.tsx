@@ -16,7 +16,7 @@ export function Logo({ className = 'ax-logo' }: { className?: string }) {
 const NAV: [string, string][] = [
   ['Masculinos', '/catalogo?cat=masculino'],
   ['Femininos', '/catalogo?cat=feminino'],
-  ['Splash e miniaturas', '/catalogo?cat=splash'],
+  ['Body Splash', '/catalogo?cat=splash'],
   ['Skincare', '/catalogo?cat=skincare'],
   ['Todos os perfumes', '/catalogo'],
 ]
