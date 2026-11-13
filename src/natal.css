@@ -169,3 +169,96 @@ body { background:var(--bg) }
   .ax-logo::after, .ch-line em, .ch-prod::before, .nt-mq-track, .ch-slide.on .ch-plate img, .ch-slide.init.on .ch-plate img, .rv.in .shelf .card, .nt-tile b { animation:none !important }
   .nt-jn li { opacity:1; transform:none; transition:none } .nt-jn-line path { stroke-dashoffset:0 }
 }
+
+/* =====================================================================
+   INTRO: aro dourado, logo de Natal, nome letra a letra e cortina abrindo
+   ===================================================================== */
+.lx-intro { position:fixed; inset:0; z-index:200; display:grid; place-items:center; cursor:pointer; background:transparent }
+.lx-intro-half { position:absolute; left:0; right:0; height:50.5%; background:radial-gradient(120% 100% at 50% 100%,#2a0b12,#0b0908 70%); transition:transform 1s cubic-bezier(.77,0,.18,1) }
+.lx-intro-half.top { top:0; border-bottom:1px solid rgba(201,163,92,.35) }
+.lx-intro-half.bottom { bottom:0; background:radial-gradient(120% 100% at 50% 0,#2a0b12,#0b0908 70%) }
+.lx-intro.out .lx-intro-half.top { transform:translateY(-101%) }
+.lx-intro.out .lx-intro-half.bottom { transform:translateY(101%) }
+.lx-intro-in { position:relative; z-index:1; display:flex; flex-direction:column; align-items:center; gap:clamp(14px,2.4vh,24px); transition:opacity .45s ease,transform .7s var(--ease) }
+.lx-intro.out .lx-intro-in { opacity:0; transform:scale(1.08) }
+.lx-intro-badge { position:relative; width:clamp(170px,30vmin,260px); aspect-ratio:1 }
+.lx-intro-badge svg { position:absolute; inset:-14px; width:calc(100% + 28px); height:calc(100% + 28px); transform:rotate(-90deg) }
+.lx-intro-badge circle { fill:none; stroke:var(--gold-l); stroke-width:1.2; stroke-dasharray:1; stroke-dashoffset:1; filter:drop-shadow(0 0 6px rgba(230,204,143,.8)); animation:lx-ring 1.3s cubic-bezier(.65,0,.35,1) .15s forwards }
+@keyframes lx-ring { to { stroke-dashoffset:0 } }
+.lx-intro-badge img { position:absolute; inset:0; width:100%; height:100%; border-radius:50%; opacity:0; transform:scale(.82); animation:lx-badge 1s var(--ease) .55s forwards; box-shadow:0 0 60px rgba(230,204,143,.25) }
+@keyframes lx-badge { to { opacity:1; transform:none } }
+.lx-intro-name { margin:0; display:flex; font-family:var(--display); font-weight:600; font-size:clamp(1.3rem,3.6vw,2rem); letter-spacing:.38em; color:#f6f1e9; padding-left:.38em }
+.lx-intro-name span { display:inline-block; opacity:0; transform:translateY(60%); animation:lx-letter .7s var(--ease) calc(1.05s + var(--i) * .05s) forwards }
+@keyframes lx-letter { to { opacity:1; transform:none } }
+.lx-intro-sub { margin:0; display:flex; align-items:center; gap:14px; font-size:.6875rem; font-weight:700; letter-spacing:.34em; text-transform:uppercase; color:var(--gold); opacity:0; animation:lx-badge .8s var(--ease) 1.75s forwards }
+.lx-intro-sub i { display:block; width:0; height:1px; background:var(--gold); animation:lx-rule .8s var(--ease) 1.8s forwards }
+@keyframes lx-rule { to { width:clamp(28px,6vw,56px) } }
+.lx-intro-skip { position:absolute; z-index:2; right:clamp(16px,3vw,36px); bottom:clamp(20px,4vh,40px); padding:10px 16px; border:1px solid rgba(230,204,143,.35); border-radius:2px; background:transparent; color:#d8c7a4; font-size:.6875rem; font-weight:700; letter-spacing:.2em; text-transform:uppercase; cursor:pointer; transition:opacity .3s }
+.lx-intro.out .lx-intro-skip { opacity:0 }
+
+/* =====================================================================
+   MOVIMENTO EM TODA A PÁGINA (nada parado, mas sempre lento e discreto)
+   ===================================================================== */
+@keyframes lx-bob { 0%,100% { translate:0 0 } 50% { translate:0 -7px } }
+@keyframes lx-autosheen { 0%,72% { left:-70% } 100% { left:130% } }
+@keyframes lx-in { from { opacity:0; transform:translateY(22px) } to { opacity:1; transform:none } }
+@keyframes lx-ringpulse { 0% { transform:scale(1); opacity:.6 } 100% { transform:scale(1.55); opacity:0 } }
+
+/* troca de página suave */
+.ax-page { animation:lx-page .7s var(--ease) both }
+@keyframes lx-page { from { opacity:0 } to { opacity:1 } }
+
+/* brilho que passa sozinho nos botões principais */
+.ch-btn::after, .nt-btn:not(.nt-btn--ghost)::after { animation:lx-autosheen 5.5s ease-in-out 2.5s infinite }
+
+/* categorias: entrada em sequência e frascos flutuando */
+.cat-card.rv.in .cat-c { animation:lx-in .8s var(--ease) both }
+.cat-card .cat-c:nth-child(2) { animation-delay:.07s } .cat-card .cat-c:nth-child(3) { animation-delay:.14s } .cat-card .cat-c:nth-child(4) { animation-delay:.21s } .cat-card .cat-c:nth-child(5) { animation-delay:.28s } .cat-card .cat-c:nth-child(6) { animation-delay:.35s }
+.cat-c-img img { animation:lx-bob 5s ease-in-out infinite }
+.cat-c:nth-child(2n) .cat-c-img img { animation-duration:6s; animation-delay:-2s } .cat-c:nth-child(3n) .cat-c-img img { animation-duration:5.5s; animation-delay:-3.5s }
+.cat-c-img { transition:box-shadow .4s var(--ease) }
+@media (hover:hover) { .cat-c:hover .cat-c-img { box-shadow:0 0 0 2px var(--gold) } }
+
+/* banners de presente: frasco flutuando */
+.pm img { animation:lx-bob 6.5s ease-in-out infinite }
+.pm:nth-child(2) img { animation-delay:-2.2s } .pm:nth-child(3) img { animation-delay:-4.4s }
+
+/* famílias olfativas: miniaturas flutuando e entrada em cascata */
+.sc-fam-th i { animation:lx-bob 5s ease-in-out infinite }
+.sc-fam-th i:nth-child(2) { animation-delay:-1.6s } .sc-fam-th i:nth-child(3) { animation-delay:-3.2s }
+@media (hover:hover) { .sc-fam-c:hover { transform:translateY(-6px); box-shadow:0 26px 40px -24px rgba(22,17,14,.6) } }
+
+/* jornada: anel pulsando em volta de cada passo */
+.nt-jn-node::after { content:''; position:absolute; inset:-1px; border-radius:50%; border:1px solid var(--gold); opacity:0 }
+.nt-jn.in .nt-jn-node::after { animation:lx-ringpulse 2.8s ease-out infinite; animation-delay:calc(var(--i) * .5s + 1.2s) }
+.nt-jn li:nth-child(1) { --i:0 } .nt-jn li:nth-child(2) { --i:1 } .nt-jn li:nth-child(3) { --i:2 } .nt-jn li:nth-child(4) { --i:3 }
+
+/* vantagens no banner: ícones com anel pulsando */
+.ch-perk-ic { position:relative }
+.ch-perk-ic::after { content:''; position:absolute; inset:-1px; border-radius:50%; border:1px solid var(--gold); opacity:0; animation:lx-ringpulse 3.2s ease-out infinite }
+.ch-perks li:nth-child(2) .ch-perk-ic::after { animation-delay:.8s } .ch-perks li:nth-child(3) .ch-perk-ic::after { animation-delay:1.6s } .ch-perks li:nth-child(4) .ch-perk-ic::after { animation-delay:2.4s }
+
+/* cards no celular (sem mouse): o brilho passa sozinho, um de cada vez */
+@media (hover:none) {
+  .card .thumb::after { animation:lx-autosheen 7s ease-in-out infinite }
+  .card:nth-child(2) .thumb::after { animation-delay:1.4s } .card:nth-child(3) .thumb::after { animation-delay:2.8s } .card:nth-child(4) .thumb::after { animation-delay:4.2s } .card:nth-child(5) .thumb::after { animation-delay:5.6s }
+}
+
+/* catálogo e outras páginas: cards entram em sequência */
+.catalog .grid .card, .pdp-page .grid .card, .ax-favs .grid .card { animation:lx-in .7s var(--ease) both }
+.catalog .grid .card:nth-child(3n+2) { animation-delay:.07s } .catalog .grid .card:nth-child(3n) { animation-delay:.14s }
+
+/* marcas no fim da página */
+.ar-brands a { transition:color .3s }
+.ar-brands a:hover { color:var(--gold-ink) }
+
+/* WhatsApp: anel pulsando */
+.wa-float::before { content:''; position:absolute; inset:0; border-radius:50%; border:2px solid #25d366; animation:lx-ringpulse 2.6s ease-out infinite; pointer-events:none }
+
+/* rodapé: logo flutuando */
+.ax-foot-logo img { animation:lx-bob 7s ease-in-out infinite }
+
+@media (prefers-reduced-motion:reduce) {
+  .lx-intro-badge circle, .lx-intro-badge img, .lx-intro-name span, .lx-intro-sub, .lx-intro-sub i { animation-duration:.01s !important; animation-delay:0s !important }
+  .ax-page, .cat-c-img img, .pm img, .sc-fam-th i, .nt-jn-node::after, .ch-perk-ic::after, .card .thumb::after, .wa-float::before, .ax-foot-logo img, .ch-btn::after, .nt-btn::after, .cat-card.rv.in .cat-c, .catalog .grid .card { animation:none !important }
+}

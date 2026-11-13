@@ -11,6 +11,7 @@ import './campaign.css'
 import './boutique.css'
 import './scente.css'
 import './natal.css'
+import './banner.css'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode><BrowserRouter><StoreProvider><ToastProvider><App /></ToastProvider></StoreProvider></BrowserRouter></StrictMode>,

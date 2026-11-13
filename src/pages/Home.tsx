@@ -1,6 +1,6 @@
 import type { CSSProperties } from 'react'
 import { Link } from 'react-router-dom'
-import CampaignHero from '../components/CampaignHero'
+import BannerHero from '../components/BannerHero'
 import { ChristmasBand, Journey, Marquee, TiltLink } from '../components/Festive'
 import ProductCard from '../components/ProductCard'
 import Reveal from '../components/Reveal'
@@ -117,7 +117,7 @@ export default function Home() {
   return (
     <>
       <h1 className="sr-only">Arkyn Imports: perfumes árabes e importados em Coxim – MS</h1>
-      <CampaignHero />
+      <BannerHero />
 
       {cats.length > 0 && (
         <Reveal as="section" className="cat-card" aria-label="Compre por categoria">

@@ -1,0 +1,99 @@
+/* =====================================================================
+   BANNER PRINCIPAL — estilo grande perfumaria
+   Faixa inteira, composição de três frascos, cor de campanha por slide, preço real.
+   ===================================================================== */
+.bn { position:relative; isolation:isolate; overflow:hidden; overflow:clip; height:clamp(580px,46vw,780px); color:#f6f1e9; background:#0b0908; outline:none; touch-action:pan-y; --cx:71%; --cy:50% }
+.bn-slide { position:absolute; inset:0; display:grid; grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr); grid-template-rows:minmax(0,1fr); align-items:center; padding:0 clamp(28px,6.4vw,128px); opacity:0; visibility:hidden; transition:opacity 1s var(--ease),visibility 0s 1s }
+.bn-slide.on { opacity:1; visibility:visible; transition:opacity 1s var(--ease) }
+
+/* cores de campanha */
+.bn--wine { --b1:#6a1628; --b2:#160a0b; --glow:rgba(240,206,140,.42); --acc:#e6cc8f; --acc2:#c9a35c }
+.bn--emerald { --b1:#11513c; --b2:#07130f; --glow:rgba(230,204,143,.36); --acc:#e6cc8f; --acc2:#c9a35c }
+.bn--plum { --b1:#64214a; --b2:#150913; --glow:rgba(255,205,215,.34); --acc:#f1cfa0; --acc2:#d7aa6a }
+.bn--champagne { --b1:#fbf2df; --b2:#d8bb86; --glow:rgba(255,255,255,.85); --acc:#7a5a1e; --acc2:#9b7630; color:#1d140d }
+
+/* fundo vivo */
+.bn-bg { position:absolute; inset:-5%; z-index:-1; background:radial-gradient(58% 82% at var(--cx) var(--cy),var(--b1),var(--b2) 76%) }
+.bn-slide.on .bn-bg { animation:bn-zoom 16s ease-out both }
+@keyframes bn-zoom { from { transform:scale(1.1) } to { transform:scale(1) } }
+.bn-bg::after { content:''; position:absolute; inset:0; background-image:radial-gradient(rgba(240,214,160,.5) 1px,transparent 1.6px),radial-gradient(rgba(240,214,160,.3) 1px,transparent 1.6px); background-size:90px 90px,140px 140px; background-position:0 0,40px 70px; opacity:.35; animation:bn-glitter 40s linear infinite; -webkit-mask-image:radial-gradient(60% 70% at var(--cx) var(--cy),#000,transparent 75%); mask-image:radial-gradient(60% 70% at var(--cx) var(--cy),#000,transparent 75%) }
+.bn--champagne .bn-bg::after { background-image:radial-gradient(rgba(255,255,255,.9) 1px,transparent 1.6px),radial-gradient(rgba(155,118,48,.35) 1px,transparent 1.6px); opacity:.6 }
+@keyframes bn-glitter { to { background-position:0 -900px,40px -1330px } }
+.bn-glow { position:absolute; left:var(--cx); top:var(--cy); width:min(52vw,820px); aspect-ratio:1; transform:translate(-50%,-50%); border-radius:50%; background:radial-gradient(circle,var(--glow),transparent 64%); animation:bn-breathe 7s ease-in-out infinite }
+@keyframes bn-breathe { 0%,100% { opacity:.75; transform:translate(-50%,-50%) scale(.95) } 50% { opacity:1; transform:translate(-50%,-50%) scale(1.05) } }
+.bn-ring { position:absolute; left:var(--cx); top:var(--cy); width:min(38vw,64vh,600px); aspect-ratio:1; transform:translate(-50%,-50%); border-radius:50%; border:1px solid color-mix(in srgb,var(--acc) 55%,transparent) }
+.bn-ring--2 { width:min(50vw,84vh,790px); border:1px dashed color-mix(in srgb,var(--acc) 30%,transparent); animation:bn-spin 80s linear infinite }
+@keyframes bn-spin { to { transform:translate(-50%,-50%) rotate(360deg) } }
+.bn-floor { position:absolute; left:0; right:0; bottom:0; height:24%; background:linear-gradient(180deg,transparent,rgba(0,0,0,.38)) }
+.bn-floor::before { content:''; position:absolute; left:calc(var(--cx) - 30%); width:60%; top:0; height:1px; background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--acc) 80%,transparent),transparent) }
+.bn--champagne .bn-floor { background:linear-gradient(180deg,transparent,rgba(122,90,30,.18)) }
+
+/* texto */
+.bn-txt { position:relative; z-index:2; max-width:580px }
+.bn-eyebrow { display:flex; align-items:center; gap:14px; margin:0; font-size:.75rem; font-weight:700; letter-spacing:.32em; text-transform:uppercase; color:var(--acc2) }
+.bn-eyebrow::before { content:''; width:32px; height:1px; background:currentColor }
+.bn-title { margin:18px 0 0; font-family:var(--display); font-weight:600; font-size:clamp(2.9rem,5.3vw,5.6rem); line-height:.98; letter-spacing:-.01em }
+.bn-title span, .bn-title em { display:block }
+.bn-title em { font-style:italic; background:linear-gradient(100deg,var(--acc2),#f8e7bd 45%,var(--acc2) 62%,var(--acc)); background-size:240% 100%; -webkit-background-clip:text; background-clip:text; color:transparent; -webkit-text-fill-color:transparent; animation:lx-shimmer 9s ease-in-out infinite }
+.bn--champagne .bn-title em { background:none; -webkit-text-fill-color:currentColor; color:var(--acc) }
+.bn-sub { margin:20px 0 0; max-width:30em; font-size:clamp(.95rem,1.15vw,1.1rem); line-height:1.6; opacity:.82 }
+.bn-price { margin:18px 0 0; font-size:.8125rem; font-weight:800; letter-spacing:.16em; text-transform:uppercase; color:var(--acc) }
+.bn-btn { position:relative; overflow:hidden; display:inline-flex; align-items:center; gap:14px; margin-top:28px; min-height:56px; padding:0 32px; border-radius:2px; background:var(--acc2); color:#16110e; font-weight:800; font-size:.75rem; letter-spacing:.2em; text-transform:uppercase; transition:background .3s,transform .3s var(--ease) }
+.bn-btn svg { transition:transform .3s var(--ease) }
+.bn-btn:hover { background:var(--acc); transform:translateY(-2px) } .bn-btn:hover svg { transform:translateX(4px) }
+.bn-btn::after { content:''; position:absolute; top:0; bottom:0; left:-70%; width:45%; background:linear-gradient(100deg,transparent,rgba(255,255,255,.45),transparent); transform:skewX(-20deg); animation:lx-autosheen 5.5s ease-in-out 2.5s infinite }
+.bn--champagne .bn-btn { background:#16110e; color:#f6f1e9 } .bn--champagne .bn-btn:hover { background:#2d241c }
+
+/* entrada do texto */
+.bn-txt > * { opacity:0 }
+.bn-slide.on .bn-txt > * { animation:bn-up .9s var(--ease) both }
+.bn-slide.on .bn-eyebrow { animation-delay:.15s } .bn-slide.on .bn-title { animation-delay:.25s } .bn-slide.on .bn-sub { animation-delay:.4s } .bn-slide.on .bn-price { animation-delay:.5s } .bn-slide.on .bn-btn { animation-delay:.6s }
+@keyframes bn-up { from { opacity:0; transform:translateY(28px) } to { opacity:1; transform:none } }
+
+/* composição dos frascos */
+.bn-group { position:relative; z-index:1; height:100%; min-height:0; align-self:stretch; display:flex; align-items:flex-end; justify-content:center; padding-bottom:calc(56px + 7%) }
+.bn--champagne .bn-p { height:44% } .bn--champagne .bn-p--1 { height:60%; margin:0 -2% }
+.bn-p { position:relative; z-index:1; height:50%; width:auto; max-width:36%; object-fit:contain; opacity:0; filter:drop-shadow(0 28px 26px rgba(0,0,0,.5)); -webkit-box-reflect:below 1px linear-gradient(transparent 74%,rgba(255,255,255,.14)) }
+.bn-p--1 { z-index:2; height:72%; max-width:46%; margin:0 -6% }
+.bn--champagne .bn-p { filter:drop-shadow(0 24px 22px rgba(90,60,20,.35)) }
+.bn-slide.on .bn-p { animation:bn-in 1.15s var(--ease) calc(.25s + var(--j) * .13s) both,bn-float 7s ease-in-out calc(1.4s + var(--j) * .9s) infinite }
+.bn-slide.on .bn-p--1 { animation-delay:.18s,1.3s }
+@keyframes bn-in { from { opacity:0; transform:translate3d(70px,36px,0) scale(.92) } to { opacity:1; transform:none } }
+@keyframes bn-float { 0%,100% { translate:0 0 } 50% { translate:0 -12px } }
+
+/* controles */
+.bn-ctrl { position:absolute; z-index:5; left:clamp(28px,6.4vw,128px); bottom:calc(56px + clamp(16px,2vw,26px)); display:flex; align-items:center; gap:14px; color:#f6f1e9 }
+.bn-on--champagne .bn-ctrl { color:#1d140d }
+.bn-arrow, .bn-pause { display:grid; place-items:center; width:42px; height:42px; padding:0; border-radius:50%; border:1px solid color-mix(in srgb,currentColor 38%,transparent); background:transparent; color:inherit; cursor:pointer; transition:background .3s,color .3s,border-color .3s }
+.bn-pause { width:34px; height:34px }
+.bn-arrow:hover, .bn-pause:hover { background:var(--gold); border-color:var(--gold); color:#16110e }
+.bn-dots { display:flex; gap:8px }
+.bn-dot { position:relative; width:42px; height:30px; padding:0; border:0; background:none; cursor:pointer }
+.bn-dot::before { content:''; position:absolute; left:0; right:0; top:50%; height:2px; transform:translateY(-50%); background:color-mix(in srgb,currentColor 28%,transparent) }
+.bn-dot span { position:absolute; left:0; top:50%; height:2px; width:0; transform:translateY(-50%); background:var(--gold) }
+.bn-dot.on span { animation:bn-fill linear forwards }
+@keyframes bn-fill { to { width:100% } }
+
+/* celular: texto centralizado em cima, frascos embaixo */
+@media (max-width:860px) {
+  .bn { height:clamp(640px,calc(100svh - 88px),780px); --cx:50%; --cy:70% }
+  .bn-slide { grid-template-columns:1fr; grid-template-rows:auto minmax(0,1fr); align-items:stretch; padding:clamp(58px,9vh,80px) 22px 40px; text-align:center }
+  .bn-txt { max-width:none; justify-self:center }
+  .bn-eyebrow { justify-content:center; font-size:.6875rem; letter-spacing:.26em } .bn-eyebrow::after { content:''; width:32px; height:1px; background:currentColor }
+  .bn-title { margin-top:12px; font-size:clamp(2.3rem,10.4vw,3.3rem) }
+  .bn-sub { margin:12px auto 0; font-size:.9375rem; max-width:24em }
+  .bn-price { margin-top:10px; font-size:.75rem }
+  .bn-btn { margin-top:16px; min-height:50px; padding:0 26px }
+  .bn-group { padding-bottom:64px; min-height:0 }
+  .bn--champagne .bn-p { height:58% } .bn--champagne .bn-p--1 { height:80% }
+  .bn-p { height:62% } .bn-p--1 { height:90%; margin:0 -7% }
+  .bn-ring { width:min(78vw,46vh) } .bn-ring--2 { width:min(100vw,60vh) } .bn-glow { width:110vw }
+  .bn-ctrl { left:50%; transform:translateX(-50%); bottom:calc(40px + 14px); gap:10px } .bn-arrow { display:none } .bn-dot { width:30px }
+}
+@media (max-width:380px) { .bn-sub { display:none } }
+
+@media (prefers-reduced-motion:reduce) {
+  .bn-slide, .bn-slide.on { transition:none }
+  .bn-slide.on .bn-bg, .bn-bg::after, .bn-glow, .bn-ring--2, .bn-title em, .bn-btn::after, .bn-slide.on .bn-p, .bn-slide.on .bn-txt > * { animation:none !important }
+  .bn-txt > *, .bn-p { opacity:1 }
+}
