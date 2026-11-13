@@ -12,7 +12,7 @@ import type { Category, Product } from '../lib/types'
 
 const SCENTS = ['doce', 'amadeirado', 'fresco', 'floral', 'especiado']
 // cor de cada família olfativa (campo de cor da seção "Escolha pelo cheiro")
-const FAM: Record<string, string> = { doce: '#a3162c', amadeirado: '#145a3a', fresco: '#1f6f66', floral: '#8c1d4a', especiado: '#9b5a14' }
+const FAM: Record<string, string> = { doce: '#5a1322', amadeirado: '#3b2a1c', fresco: '#1f3b3a', floral: '#4a2238', especiado: '#6b3a14' }
 const cap = (t: string) => t[0].toUpperCase() + t.slice(1)
 
 // Recortes sem fundo (public/hero). Para os demais, usa a foto do produto.
@@ -87,7 +87,7 @@ export default function Home() {
   const featured = flagged.length >= 5 ? flagged.slice(0, 5) : [...flagged, ...live.filter(p => !!p.image && !flagged.includes(p))].slice(0, 5)
   const offers = live.filter(p => !!p.old_price && p.old_price > p.price).slice(0, 8)
   const shown = new Set([...featured, ...offers].map(p => p.id))
-  const by = (list: Product[]) => list.filter(p => !shown.has(p.id)).slice(0, 4)
+  const by = (list: Product[]) => [...list.filter(p => !shown.has(p.id)), ...list.filter(p => shown.has(p.id))].slice(0, 4)
   const brands = [...new Set(products.filter(p => p.category === 'masculino' || p.category === 'feminino').map(p => p.brand))].sort()
 
   const cats = CATS.map(c => {

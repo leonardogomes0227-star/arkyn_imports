@@ -81,43 +81,17 @@ export function Marquee({ items }: { items: string[] }) {
   )
 }
 
-/* ---------- brilhos, bolas de Natal e avião no banner ---------- */
-const STARS = Array.from({ length: 26 }, (_, i) => ({
-  x: `${(i * 37 + 11) % 100}%`, y: `${(i * 53 + 7) % 100}%`, s: `${6 + (i * 5) % 12}px`,
-  d: `${(i * 0.37) % 4}s`, t: `${2.6 + (i * 0.23) % 2.4}s`,
-}))
-export function Sparkles() {
-  return (
-    <div className="nt-sparks" aria-hidden="true">
-      {STARS.map((p, i) => <i key={i} style={{ '--x': p.x, '--y': p.y, '--s': p.s, '--d': p.d, '--t': p.t } as CSSProperties} />)}
-    </div>
-  )
-}
-const BALLS: { x: string; len: number; size: number; c: string; d: string; t: string }[] = [
-  { x: '41%', len: 52, size: 38, c: 'red', d: '0s', t: '4.6s' },
-  { x: '54%', len: 98, size: 46, c: 'gold', d: '.6s', t: '5.4s' },
-  { x: '66%', len: 40, size: 32, c: 'green', d: '1.1s', t: '4.1s' },
-  { x: '91%', len: 76, size: 42, c: 'red', d: '.3s', t: '5s' },
+/* ---------- luz dourada desfocada, flutuando devagar no banner ---------- */
+const ORBS = [
+  { x: '62%', y: '30%', s: 220, d: '0s', t: '16s' }, { x: '84%', y: '62%', s: 160, d: '-5s', t: '19s' },
+  { x: '48%', y: '74%', s: 120, d: '-9s', t: '14s' }, { x: '92%', y: '18%', s: 90, d: '-3s', t: '12s' },
+  { x: '12%', y: '86%', s: 140, d: '-7s', t: '18s' }, { x: '30%', y: '14%', s: 70, d: '-11s', t: '13s' },
 ]
-export function Baubles() {
+export function Bokeh() {
   return (
-    <div className="nt-baubles" aria-hidden="true">
-      {BALLS.map((b, i) => (
-        <span key={i} className={`nt-ball nt-ball--${b.c}`} style={{ '--x': b.x, '--len': `${b.len}px`, '--sz': `${b.size}px`, '--d': b.d, '--t': b.t } as CSSProperties}><em /></span>
-      ))}
+    <div className="lx-bokeh" aria-hidden="true">
+      {ORBS.map((o, i) => <i key={i} style={{ '--x': o.x, '--y': o.y, '--s': `${o.s}px`, '--d': o.d, '--t': o.t } as CSSProperties} />)}
     </div>
-  )
-}
-export function PlaneTrail() {
-  const path = 'M -60 610 C 260 470, 520 640, 800 380 S 1240 120, 1520 70'
-  return (
-    <svg className="nt-plane" viewBox="0 0 1440 700" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-      <path d={path} className="nt-plane-line" fill="none" />
-      <g>
-        <path d="M18 0 L4 -3 L-2 -14 L-6 -14 L-3 -3 L-12 -3 L-15 -8 L-18 -8 L-15 0 L-18 8 L-15 8 L-12 3 L-3 3 L-6 14 L-2 14 L4 3 Z" transform="scale(1.7)" fill="#f3dc9f" />
-        <animateMotion dur="11s" repeatCount="indefinite" rotate="auto" path={path} keyPoints="0;1" keyTimes="0;1" calcMode="linear" />
-      </g>
-    </svg>
   )
 }
 

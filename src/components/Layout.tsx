@@ -6,23 +6,6 @@ import SearchOverlay from './SearchOverlay'
 import { IconBag, IconHeart, IconSearch, IconTruck } from './Icons'
 import { brl, useStore } from '../lib/store'
 
-/** Fio de luzes piscando na borda do cabeçalho. */
-const BULBS = Array.from({ length: 56 }, (_, i) => i)
-function Lights() { return <ul className="lights" aria-hidden="true">{BULBS.map(i => <li key={i} />)}</ul> }
-
-/** Neve caindo por cima do site (some para quem prefere menos movimento). */
-const FLAKES = Array.from({ length: 34 }, (_, i) => ({
-  x: `${(i * 97) % 100}%`, s: `${3 + (i * 7) % 5}px`, o: (0.45 + ((i * 13) % 5) / 10).toFixed(2),
-  t: `${9 + (i * 5) % 9}s`, dl: `-${(i * 3) % 14}s`, dx: `${((i % 2) ? 1 : -1) * (14 + (i * 11) % 36)}px`,
-}))
-function Snow() {
-  return (
-    <div className="snow" aria-hidden="true">
-      {FLAKES.map((f, i) => <i key={i} style={{ '--x': f.x, '--s': f.s, '--o': f.o, '--t': f.t, '--dl': f.dl, '--dx': f.dx } as React.CSSProperties} />)}
-    </div>
-  )
-}
-
 export function Logo({ className = 'ax-logo' }: { className?: string }) {
   return (
     <Link to="/" className={className} aria-label="Arkyn Imports, página inicial">
@@ -84,13 +67,12 @@ export default function Layout({ children }: { children: ReactNode }) {
   return (
     <>
       <a className="ax-skip" href="#conteudo">Pular para o conteúdo</a>
-      <Snow />
       <ScrollBar />
       <header className={scrolled ? 'ax-header is-scrolled' : 'ax-header'}>
         <div className="ax-topbar sc-top" aria-label="Avisos da loja">
           <div className="sc-top-in">
             <span className="sc-top-l"><IconTruck size={16} />{ship}</span>
-            <span className="sc-top-c"><i aria-hidden="true">❄</i> Natal Arkyn: presentes que perfumam <i aria-hidden="true">❄</i></span>
+            <span className="sc-top-c">Natal Arkyn <i aria-hidden="true">·</i> presentes que ficam na memória</span>
             <span className="sc-top-r"><a href={wa} target="_blank" rel="noreferrer">Ajuda e suporte</a><Link to="/quiz">Qual é o seu cheiro?</Link></span>
           </div>
         </div>
@@ -110,7 +92,6 @@ export default function Layout({ children }: { children: ReactNode }) {
           </div>
         </div>
         <SearchOverlay open={search} onClose={() => setSearch(false)} />
-        <Lights />
       </header>
 
       <div className={menu ? 'ax-menu-scrim on' : 'ax-menu-scrim'} onClick={() => setMenu(false)} />
