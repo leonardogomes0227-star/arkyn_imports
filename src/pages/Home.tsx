@@ -14,23 +14,22 @@ const SCENTS = ['doce', 'amadeirado', 'fresco', 'floral', 'especiado']
 const FAM: Record<string, string> = { doce: '#b5623f', amadeirado: '#4b3423', fresco: '#2e5a60', floral: '#9c4a64', especiado: '#8a3a1c' }
 const cap = (t: string) => t[0].toUpperCase() + t.slice(1)
 
-// Recortes sem fundo disponíveis (public/hero). Para os demais, usa a foto do produto.
-const CUTOUTS = new Set(['french-avenue-vulcan-feu-100ml', 'lattafa-afeef-100ml', 'armaf-club-de-nuit-maleka-105ml', 'lattafa-asad-elixir-100ml', 'maison-alhambra-pink-eclipse-100ml', 'maison-alhambra-victorioso-nero-100ml'])
+const CUTOUTS = new Set<string>()
 // Categorias editoriais: produto de capa preferido. Só aparecem as que têm produto com foto.
 const CATS: { label: string; to: string; match: (p: Product) => boolean; prefer: string }[] = [
   { label: 'Masculinos', to: '/catalogo?cat=masculino', match: p => p.category === 'masculino', prefer: 'lattafa-asad-elixir-100ml' },
   { label: 'Femininos', to: '/catalogo?cat=feminino', match: p => p.category === 'feminino', prefer: 'maison-alhambra-pink-eclipse-100ml' },
   { label: 'Doces', to: '/catalogo?tag=doce', match: p => !!p.tags?.includes('doce'), prefer: 'lattafa-afeef-100ml' },
   { label: 'Amadeirados', to: '/catalogo?tag=amadeirado', match: p => !!p.tags?.includes('amadeirado'), prefer: 'maison-alhambra-victorioso-nero-100ml' },
-  { label: 'Splash e miniaturas', to: '/catalogo?cat=splash', match: p => p.category === 'splash', prefer: '' },
+  { label: 'Body Splash', to: '/catalogo?cat=splash', match: p => p.category === 'splash', prefer: '' },
   { label: 'Skincare', to: '/catalogo?cat=skincare', match: p => p.category === 'skincare', prefer: 'celimax-the-vita-a-retinal-shot-15ml' },
 ]
 
 // Banners de coleção: só conteúdo que existe na loja (sem preço, desconto ou promoção).
 const PROMOS = [
-  { k: 'Masculinos', title: 'Presença e personalidade', sub: 'Amadeirados e especiados para o dia a dia e para a noite.', btn: 'Ver masculinos', to: '/catalogo?cat=masculino', img: '/hero/lattafa-asad-elixir-100ml.webp', w: 436, h: 1000, tone: 'dark' },
-  { k: 'Femininos', title: 'Doces, florais e marcantes', sub: 'Fragrâncias que enchem o ambiente de personalidade.', btn: 'Ver femininos', to: '/catalogo?cat=feminino', img: '/hero/maison-alhambra-pink-eclipse-100ml.webp', w: 1000, h: 749, tone: 'sand' },
-  { k: 'Compre pelo cheiro', title: 'Qual é o seu cheiro?', sub: 'Responda o quiz e veja os perfumes que combinam com você.', btn: 'Fazer o quiz', to: '/quiz', img: '/hero/armaf-club-de-nuit-maleka-105ml.webp', w: 1000, h: 881, tone: 'bronze' },
+  { k: 'Masculinos', title: 'Presença e personalidade', sub: 'Amadeirados e especiados para o dia a dia e para a noite.', btn: 'Ver masculinos', to: '/catalogo?cat=masculino', img: '/produtos-net/lattafa-asad-elixir-100ml.webp', w: 800, h: 800, tone: 'dark' },
+  { k: 'Femininos', title: 'Doces, florais e marcantes', sub: 'Fragrâncias que enchem o ambiente de personalidade.', btn: 'Ver femininos', to: '/catalogo?cat=feminino', img: '/produtos-net/maison-alhambra-pink-eclipse-100ml.webp', w: 800, h: 800, tone: 'sand' },
+  { k: 'Compre pelo cheiro', title: 'Qual é o seu cheiro?', sub: 'Responda o quiz e veja os perfumes que combinam com você.', btn: 'Fazer o quiz', to: '/quiz', img: '/produtos-net/armaf-club-de-nuit-maleka-105ml.webp', w: 800, h: 800, tone: 'bronze' },
 ] as const
 
 function SecHead({ eyebrow, title, to, link = 'Ver todos' }: { eyebrow?: string; title: string; to?: string; link?: string }) {
@@ -92,7 +91,7 @@ export default function Home() {
   const cats = CATS.map(c => {
     const inCat = products.filter(c.match)
     const pick = inCat.find(p => p.id === c.prefer && p.image) ?? inCat.find(p => p.image)
-    const src = pick ? (CUTOUTS.has(pick.id) ? `/hero/${pick.id}.webp` : pick.image!) : ''
+    const src = pick ? (pick.image!) : ''
     return { ...c, count: inCat.length, src, cut: !!pick && CUTOUTS.has(pick.id) }
   }).filter(c => c.count > 0 && !!c.src)
 

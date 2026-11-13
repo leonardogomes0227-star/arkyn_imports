@@ -1,7 +1,7 @@
 import type { Category, Product } from './types'
 
 export const CAT_LABEL: Record<Category, string> = {
-  masculino: 'Perfumes masculinos', feminino: 'Perfumes femininos', splash: 'Splash e miniaturas', skincare: 'Skincare',
+  masculino: 'Perfumes masculinos', feminino: 'Perfumes femininos', splash: 'Body Splash', skincare: 'Skincare',
 }
 export const norm = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim()
 const text = (p: Product) => norm([p.brand, p.name, p.family, CAT_LABEL[p.category], ...(p.notes ?? []), ...(p.tags ?? [])].filter(Boolean).join(' '))
