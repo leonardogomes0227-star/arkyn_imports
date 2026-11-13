@@ -11,7 +11,7 @@
   ],
   "headers": [
     {
-      "source": "/(hero|produtos-net|produtos)/(.*)",
+      "source": "/(produtos-net)/(.*)",
       "headers": [
         {
           "key": "Cache-Control",
