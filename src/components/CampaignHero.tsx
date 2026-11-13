@@ -6,14 +6,14 @@ import { IconCard, IconChat, IconHeart, IconStore } from './Icons'
 // campanha é só mudar o campo `img`. Os textos não afirmam preço, desconto nem estoque.
 type Slide = { id: string; img: string; eyebrow: string; title: string[]; sub: string; cta: [string, string]; cta2?: [string, string] }
 const SLIDES: Slide[] = [
-  { id: 'colecao', img: '/produtos-net/lattafa-asad-elixir-100ml.webp', eyebrow: 'Perfumaria selecionada', title: ['Uma experiência', 'que marca.'],
-    sub: 'Descubra fragrâncias selecionadas para quem valoriza autenticidade, personalidade e sofisticação.', cta: ['Explorar coleção', '/catalogo'], cta2: ['Qual é o seu cheiro?', '/quiz'] },
-  { id: 'ele', img: '/produtos-net/maison-alhambra-victorioso-nero-100ml.webp', eyebrow: 'Para ele', title: ['Noite longa,', 'presença forte.'],
-    sub: 'Amadeirados e especiados para quem chega marcando território.', cta: ['Ver masculinos', '/catalogo?cat=masculino'] },
-  { id: 'ela', img: '/produtos-net/maison-alhambra-pink-eclipse-100ml.webp', eyebrow: 'Para ela', title: ['Doce, floral', 'e marcante.'],
-    sub: 'Fragrâncias femininas que enchem o ambiente de personalidade.', cta: ['Ver femininos', '/catalogo?cat=feminino'] },
-  { id: 'quiz', img: '/produtos-net/armaf-club-de-nuit-maleka-105ml.webp', eyebrow: 'Compre pelo cheiro', title: ['Qual é o', 'seu cheiro?'],
-    sub: 'Responda o quiz e veja os perfumes do catálogo que combinam com você.', cta: ['Fazer o quiz', '/quiz'] },
+  { id: 'colecao', img: '/hero/lattafa-asad-elixir-100ml.webp', eyebrow: 'Natal Arkyn', title: ['Um Natal', 'perfumado.'],
+    sub: 'Perfumes árabes e importados para presentear quem você ama, ou para se dar de presente.', cta: ['Ver presentes', '/catalogo'], cta2: ['Qual é o seu cheiro?', '/quiz'] },
+  { id: 'ele', img: '/hero/maison-alhambra-victorioso-nero-100ml.webp', eyebrow: 'Presente para ele', title: ['Presença', 'na ceia de Natal.'],
+    sub: 'Amadeirados e especiados para quem chega marcando presença.', cta: ['Ver masculinos', '/catalogo?cat=masculino'] },
+  { id: 'ela', img: '/hero/maison-alhambra-pink-eclipse-100ml.webp', eyebrow: 'Presente para ela', title: ['Doce, floral', 'e inesquecível.'],
+    sub: 'Fragrâncias femininas para encantar na noite de Natal.', cta: ['Ver femininos', '/catalogo?cat=feminino'] },
+  { id: 'quiz', img: '/hero/armaf-club-de-nuit-maleka-105ml.webp', eyebrow: 'Achando o presente ideal', title: ['Qual é o', 'cheiro certo?'],
+    sub: 'Responda o quiz e veja os perfumes que combinam com quem vai ganhar o presente.', cta: ['Fazer o quiz', '/quiz'] },
 ]
 const MS = 7000
 const PERKS: [JSX.Element, string, string][] = [
