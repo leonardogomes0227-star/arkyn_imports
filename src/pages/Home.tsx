@@ -1,6 +1,7 @@
 import type { CSSProperties } from 'react'
 import { Link } from 'react-router-dom'
 import CampaignHero from '../components/CampaignHero'
+import { ChristmasBand, Journey, Marquee, TiltLink } from '../components/Festive'
 import ProductCard from '../components/ProductCard'
 import Reveal from '../components/Reveal'
 import SizedImg from '../components/SizedImg'
@@ -129,6 +130,9 @@ export default function Home() {
         </Reveal>
       )}
 
+      <ChristmasBand whatsapp={settings.whatsapp} />
+      <Marquee items={brands} />
+
       <Reveal as="section" className="section sc-feat">
         <CenterHead eyebrow="Seleção da loja" title="Os mais queridos" to="/catalogo" />
         <div className="grid shelf sc-five">{featured.map(p => <ProductCard key={p.id} p={p} />)}</div>
@@ -136,19 +140,14 @@ export default function Home() {
 
       <Reveal as="section" className="pm-row">
         {PROMOS.map(b => (
-          <Link key={b.to} to={b.to} className={`pm pm--${b.tone}`}>
+          <TiltLink key={b.to} to={b.to} className={`pm pm--${b.tone}`}>
             <span className="pm-txt"><small>{b.k}</small><b>{b.title}</b><em>{b.sub}</em><i className="pm-btn">{b.btn}</i></span>
             <img src={b.img} width={b.w} height={b.h} alt="" loading="lazy" decoding="async" />
-          </Link>
+          </TiltLink>
         ))}
       </Reveal>
 
-      <Reveal as="section" className="sc-why" aria-label="Por que comprar na Arkyn">
-        <p className="sc-eyebrow">Por que comprar na Arkyn</p>
-        <div className="sc-why-row">
-          {benefits.map(([ic, t, d]) => <div key={t}>{ic}<span><b>{t}</b><small>{d}</small></span></div>)}
-        </div>
-      </Reveal>
+      <Journey steps={benefits} />
 
       <section className="sc-fam" aria-labelledby="fam-t">
         <Reveal className="sc-fam-head">
