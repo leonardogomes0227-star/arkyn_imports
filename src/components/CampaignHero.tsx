@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent, type PointerEvent } from 'react'
 import { Link } from 'react-router-dom'
-import { Baubles, PlaneTrail, Sparkles } from './Festive'
+import { Bokeh } from './Festive'
 import { IconCard, IconChat, IconHeart, IconStore } from './Icons'
 
 // Destaques editoriais da Home. As imagens são as fotos dos produtos (public/produtos-net); trocar por fotos de
@@ -65,7 +65,7 @@ export default function CampaignHero() {
       onPointerDown={e => { drag.current = e.clientX }} onPointerUp={onUp} onPointerCancel={() => { drag.current = null }}
       onPointerEnter={e => { if (e.pointerType === 'mouse') setHover(true) }} onPointerLeave={e => { if (e.pointerType === 'mouse') setHover(false) }}
       onFocus={e => { if (e.target.matches(':focus-visible')) setHover(true) }} onBlur={() => setHover(false)}>
-      <Sparkles /><PlaneTrail /><Baubles />
+      <Bokeh />
       {SLIDES.map((s, k) => {
         const on = k === i
         const tab = on ? 0 : -1
