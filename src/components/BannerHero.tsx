@@ -1,28 +1,18 @@
-import { useEffect, useRef, useState, type CSSProperties } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { brl, useStore } from '../lib/store'
-import { sized } from '../lib/img'
 
-// Banner principal no estilo das grandes perfumarias: faixa inteira, composição de três frascos,
-// cor própria por campanha e preço real tirado do catálogo.
+// Banner principal no padrão das grandes perfumarias: imagem de campanha de ponta a ponta
+// (versão para computador e para celular), nome do perfume em destaque, preço real do catálogo e botão de compra.
 type Banner = {
-  id: string; tone: 'wine' | 'emerald' | 'plum' | 'champagne'
-  eyebrow: string; title: [string, string]; sub: string; cta: [string, string]
-  items: [string, string, string] // esquerda, centro (maior), direita
+  id: string; tone: 'dark' | 'light'
+  eyebrow: string; title: string; product?: string; note?: string; cta: [string, string]
 }
 const BANNERS: Banner[] = [
-  { id: 'natal', tone: 'wine', eyebrow: 'Natal Arkyn', title: ['Presentes que', 'ficam na memória.'],
-    sub: 'Perfumes árabes originais para presentear quem você ama.', cta: ['Ver presentes', '/catalogo'],
-    items: ['maison-alhambra-pink-eclipse-100ml', 'lattafa-fakhar-extrait-gold-100ml', 'lattafa-asad-elixir-100ml'] },
-  { id: 'ele', tone: 'emerald', eyebrow: 'Presente para ele', title: ['Marcante,', 'do jantar à ceia.'],
-    sub: 'Amadeirados e especiados que deixam presença por onde passam.', cta: ['Ver masculinos', '/catalogo?cat=masculino'],
-    items: ['maison-alhambra-salvo-elixir-60ml', 'maison-alhambra-victorioso-nero-100ml', 'french-avenue-vulcan-feu-100ml'] },
-  { id: 'ela', tone: 'plum', eyebrow: 'Presente para ela', title: ['Doce, floral', 'e inesquecível.'],
-    sub: 'Fragrâncias femininas para encantar na noite de Natal.', cta: ['Ver femininos', '/catalogo?cat=feminino'],
-    items: ['lattafa-yara-rose-100ml', 'armaf-club-de-nuit-maleka-105ml', 'lattafa-afeef-100ml'] },
-  { id: 'splash', tone: 'champagne', eyebrow: 'Body Splash Lattafa', title: ['Perfume no corpo', 'o dia inteiro.'],
-    sub: 'Leves, cremosos e perfeitos para dar junto com o perfume.', cta: ['Ver body splash', '/catalogo?cat=splash'],
-    items: ['lattafa-body-splash-noble-blush', 'lattafa-body-splash-mayar', 'lattafa-body-splash-yara-tous'] },
+  { id: 'natal', tone: 'dark', eyebrow: 'Coleção de Natal Arkyn', title: 'O Natal mais perfumado', product: 'lattafa-fakhar-extrait-gold-100ml', cta: ['Ver presentes', '/catalogo'] },
+  { id: 'ele', tone: 'dark', eyebrow: 'Presente para ele', title: 'Victorioso Nero', product: 'maison-alhambra-victorioso-nero-100ml', cta: ['Comprar agora', '/produto/maison-alhambra-victorioso-nero-100ml'] },
+  { id: 'ela', tone: 'dark', eyebrow: 'Presente para ela', title: 'Club de Nuit Maleka', product: 'armaf-club-de-nuit-maleka-105ml', cta: ['Comprar agora', '/produto/armaf-club-de-nuit-maleka-105ml'] },
+  { id: 'splash', tone: 'light', eyebrow: 'Body Splash Lattafa', title: 'Perfume o dia todo', product: 'lattafa-body-splash-mayar', note: 'Mayar, Noble Blush e Yara Tous', cta: ['Ver body splash', '/catalogo?cat=splash'] },
 ]
 const MS = 6500
 
@@ -51,11 +41,12 @@ export default function BannerHero() {
   }, [])
   const stop = hover || paused || offscreen || reduced
 
-  const priceLine = (b: Banner) => {
-    const list = b.items.map(id => products.find(p => p.id === id)).filter(Boolean) as { price: number }[]
-    if (!list.length) return ''
-    const min = Math.min(...list.map(p => p.price)), max = Math.max(...list.map(p => p.price))
-    return min === max ? `${brl(min)} cada` : `A partir de ${brl(min)}`
+  const line = (b: Banner) => {
+    const p = b.product ? products.find(x => x.id === b.product) : undefined
+    if (!p) return b.note ?? ''
+    if (b.id === 'splash') return `${b.note} · ${brl(p.price)} cada`
+    if (b.id === 'natal') return `Destaque: ${p.name.replace(/ \d+ml$/i, '')} · ${brl(p.price)}`
+    return `${p.brand} · ${brl(p.price)}`
   }
 
   return (
@@ -66,25 +57,21 @@ export default function BannerHero() {
       onPointerUp={e => { if (drag.current === null) return; const dx = e.clientX - drag.current; drag.current = null; if (Math.abs(dx) > 50) go(dx < 0 ? i + 1 : i - 1) }}>
       {BANNERS.map((b, k) => {
         const on = k === i
-        const price = priceLine(b)
+        const load = k === 0 || k === i || k === (i + 1) % n
+        const info = line(b)
         return (
           <div key={b.id} className={`bn-slide bn--${b.tone}${on ? ' on' : ''}`} role="group" aria-roledescription="slide" aria-label={`${k + 1} de ${n}`} aria-hidden={!on}>
-            <div className="bn-bg" aria-hidden="true"><i className="bn-glow" /><i className="bn-ring" /><i className="bn-ring bn-ring--2" /><i className="bn-floor" /></div>
+            <picture className="bn-pic" aria-hidden="true">
+              {load && <source media="(max-width: 860px)" srcSet={`/banners/${b.id}-mobile-720.webp 720w, /banners/${b.id}-mobile.webp 1080w`} sizes="100vw" />}
+              {load && <source srcSet={`/banners/${b.id}-desktop-1440.webp 1440w, /banners/${b.id}-desktop.webp 2400w`} sizes="100vw" />}
+              <img src={load ? `/banners/${b.id}-desktop-1440.webp` : undefined} alt="" width="2400" height="900" decoding="async"
+                loading={k === 0 ? 'eager' : 'lazy'} {...(k === 0 ? { fetchpriority: 'high' } : {})} />
+            </picture>
             <div className="bn-txt">
               <p className="bn-eyebrow">{b.eyebrow}</p>
-              <h2 className="bn-title"><span>{b.title[0]}</span> <em>{b.title[1]}</em></h2>
-              <p className="bn-sub">{b.sub}</p>
-              {price && <p className="bn-price">{price}</p>}
+              <h2 className="bn-title">{b.title}</h2>
+              {info && <p className="bn-info">{info}</p>}
               <Link to={b.cta[1]} className="bn-btn" tabIndex={on ? 0 : -1}>{b.cta[0]}<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg></Link>
-            </div>
-            <div className="bn-group" aria-hidden="true">
-              {b.items.map((id, j) => {
-                const src = `/hero/${id}.webp`
-                const near = k === i || k === (i + 1) % n || k === 0
-                return <img key={id} className={`bn-p bn-p--${j}`} src={near ? src : undefined} srcSet={near ? `${sized(src, 480)} 480w, ${src} 1100w` : undefined}
-                  sizes={j === 1 ? '(max-width:860px) 46vw, 24vw' : '(max-width:860px) 32vw, 17vw'} alt="" loading={k === 0 ? 'eager' : 'lazy'} decoding="async"
-                  {...(k === 0 && j === 1 ? { fetchpriority: 'high' } : {})} style={{ '--j': j } as CSSProperties} />
-              })}
             </div>
           </div>
         )
