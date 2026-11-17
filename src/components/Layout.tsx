@@ -121,22 +121,16 @@ export default function Layout({ children }: { children: ReactNode }) {
           <div><b>Não sabe qual escolher?</b><span>Diga as notas que você gosta e indicamos pelo WhatsApp.</span></div>
           <a className="btn-gold" href={wa} target="_blank" rel="noreferrer">Chamar no WhatsApp</a>
         </div>
-        <div className="ax-footer-in">
-          <div className="ax-foot-brand">
-            <Logo className="ax-foot-logo" />
-            <p>Perfumes árabes e importados, com retirada na loja em Coxim – MS.</p>
-            <a className="ax-foot-ig" href="https://instagram.com/arkyn_imports" target="_blank" rel="noreferrer">@arkyn_imports no Instagram</a>
-          </div>
-          <div>
-            <h2 className="ax-foot-h">Comprar</h2>
+        <div className="ft">
+          <Logo className="ax-foot-logo" />
+          <nav className="ft-nav" aria-label="Rodapé">
             {NAV.map(([label, to]) => <Link key={to} to={to}>{label}</Link>)}
-            <Link to="/quiz">Qual é o seu cheiro?</Link>
-          </div>
-          <div>
-            <h2 className="ax-foot-h">Atendimento</h2>
+            <Link to="/quiz">Quiz</Link>
+          </nav>
+          <div className="ft-contact">
             <a href={wa} target="_blank" rel="noreferrer">WhatsApp {phone(settings.whatsapp)}</a>
-            <span>Retirada: {settings.pickupAddress}</span>
-            <span>Pix e cartão, pelo Mercado Pago</span>
+            <a href="https://instagram.com/arkyn_imports" target="_blank" rel="noreferrer">@arkyn_imports</a>
+            <span>Retirada na loja em Coxim – MS</span>
           </div>
         </div>
         <p className="ax-copy"><span>© {new Date().getFullYear()} Arkyn Imports · Coxim – MS</span><Link to="/admin">Área do lojista</Link></p>
