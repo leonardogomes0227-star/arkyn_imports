@@ -547,3 +547,32 @@ body.ax .ax-foot-logo { z-index:auto }
 .ft-contact a, .ft-contact span { color:#d4d4d7; font-size:.9375rem; padding:0 } .ft-contact a:hover { color:var(--lime) }
 @media (max-width:900px) { .ft { grid-template-columns:1fr; justify-items:center; text-align:center; gap:22px } .ft-contact { text-align:center; align-items:center } .ft .ax-foot-logo img { height:48px } }
 @media (max-width:640px) { .hm-fam-grid { grid-template-columns:1fr 1fr; gap:10px } .hm-fam-c { min-height:210px; padding:16px } .hm-fam-c b { font-size:1.6rem } .hm-fam-th i { width:40px; height:40px } }
+
+/* marcas deslizando sozinhas (param ao passar o mouse ou tocar) */
+.hm-br-row { display:block; overflow:hidden; padding:6px 0 10px; -webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent); mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent) }
+.hm-br-track { display:flex; gap:12px; width:max-content; animation:br-loop 48s linear infinite }
+.hm-br-row:hover .hm-br-track, .hm-br-row:focus-within .hm-br-track, .hm-br-row:active .hm-br-track { animation-play-state:paused }
+@keyframes br-loop { to { transform:translateX(calc(-50% - 6px)) } }
+.hm-br-c { flex:none; width:220px; position:relative; overflow:hidden }
+.hm-br-pics::before { content:''; position:absolute; left:50%; bottom:-6px; width:150px; height:46px; transform:translateX(-50%); background:radial-gradient(ellipse,rgba(199,244,1,.22),transparent 70%); pointer-events:none }
+@media (max-width:640px) { .hm-br-c { width:176px } .hm-br-track { animation-duration:36s } }
+
+/* como comprar: entra em cascata, ícones se mexem um de cada vez e um brilho passa pelos blocos */
+.hm-info > * { position:relative; overflow:hidden; transition:border-color .3s,transform .35s cubic-bezier(.2,.7,.2,1) }
+.hm-info svg { width:44px; height:44px; padding:10px; border-radius:50%; background:rgba(199,244,1,.08); box-shadow:0 0 0 1px rgba(199,244,1,.3); transition:background .3s }
+.hm-info > *:hover { border-color:var(--lime); transform:translateY(-3px) } .hm-info > *:hover svg { background:rgba(199,244,1,.18) }
+.hm-info.rv > * { opacity:0; transform:translateY(22px) }
+.hm-info.rv.in > * { opacity:1; transform:none; transition:opacity .7s ease,transform .8s cubic-bezier(.2,.7,.2,1),border-color .3s }
+.hm-info.rv.in > :nth-child(2) { transition-delay:.1s } .hm-info.rv.in > :nth-child(3) { transition-delay:.2s } .hm-info.rv.in > :nth-child(4) { transition-delay:.3s }
+.hm-info > *::after { content:''; position:absolute; inset:0; pointer-events:none; background:linear-gradient(100deg,transparent 30%,rgba(199,244,1,.12) 50%,transparent 70%); transform:translateX(-110%); animation:i-sweep 7s ease-in-out infinite }
+.hm-info > :nth-child(1) svg { animation:i-card 7s ease-in-out infinite }
+.hm-info > :nth-child(2) svg, .hm-info > :nth-child(2)::after { animation-delay:1.75s } .hm-info > :nth-child(2) svg { animation:i-store 7s ease-in-out 1.75s infinite }
+.hm-info > :nth-child(3) svg, .hm-info > :nth-child(3)::after { animation-delay:3.5s } .hm-info > :nth-child(3) svg { animation:i-truck 7s ease-in-out 3.5s infinite }
+.hm-info > :nth-child(4) svg, .hm-info > :nth-child(4)::after { animation-delay:5.25s } .hm-info > :nth-child(4) svg { animation:i-chat 7s ease-in-out 5.25s infinite }
+@keyframes i-sweep { 0% { transform:translateX(-110%) } 20%,100% { transform:translateX(110%) } }
+@keyframes i-card { 0%,22%,100% { transform:none } 8% { transform:rotateY(180deg) } 16% { transform:rotateY(360deg) } }
+@keyframes i-store { 0%,20%,100% { transform:none } 5% { transform:translateY(-7px) } 10% { transform:none } 14% { transform:translateY(-3px) } }
+@keyframes i-truck { 0%,22%,100% { transform:none } 7% { transform:translateX(9px) } 12% { transform:translateX(-4px) } 16% { transform:none } }
+@keyframes i-chat { 0%,20%,100% { transform:none } 4% { transform:rotate(-14deg) scale(1.08) } 8% { transform:rotate(11deg) } 12% { transform:rotate(-5deg) } }
+@media (max-width:900px) { .hm-info svg { width:38px; height:38px; padding:8px } }
+@media (prefers-reduced-motion:reduce) { .hm-br-track { animation:none } .hm-br-row { overflow-x:auto } .hm-info > *::after, .hm-info svg { animation:none } .hm-info.rv > * { opacity:1; transform:none } }
