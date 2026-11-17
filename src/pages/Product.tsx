@@ -8,7 +8,7 @@ import { noteGradient, noteIcon } from '../lib/noteColors'
 import { CAT_LABEL } from '../lib/search'
 import { usePageMeta } from '../lib/seo'
 import { brl, useStore } from '../lib/store'
-import { cutoutOf } from '../lib/cutouts'
+import { cutoutFor } from '../lib/cutouts'
 
 const FAMILIES = ['doce', 'amadeirado', 'fresco', 'floral', 'especiado']
 const GENDER = { masculino: 'Masculino', feminino: 'Feminino', unissex: 'Unissex' }
@@ -49,7 +49,8 @@ export default function Product() {
   const out = p.stock <= 0
   const sale = !!p.old_price && p.old_price > p.price
   const n = settings.installments
-  const images = [cutoutOf(p.id), p.image, ...(p.images ?? [])].filter((x, i, a): x is string => !!x && a.indexOf(x) === i)
+  const images = [cutoutFor(p), p.image, ...(p.images ?? [])].filter((x, i, a): x is string => !!x && a.indexOf(x) === i)
+  const word = (p.name.replace(/\s?\d+\s?ml$/i, '').split(' ').sort((a, b) => b.length - a.length)[0] ?? '').toUpperCase()
   const family = (p.tags ?? []).filter(t => FAMILIES.includes(t))
   const when = (p.tags ?? []).filter(t => t === 'dia' || t === 'noite')
   const volume = p.name.match(/(\d+)\s?ml/i)?.[1]
@@ -79,6 +80,7 @@ export default function Product() {
             </div>
           )}
           <div className={`pdp-img${images[pic]?.includes('-net/') ? ' clean' : ''}${images[pic]?.startsWith('/hero/') ? ' cut' : ''}`} onMouseMove={zoom}>
+            <span className="pdp-word" aria-hidden="true" style={{ '--len': Math.max(5, word.length) } as React.CSSProperties}>{word}</span>
             {sale && <span className="off">-{Math.round((1 - p.price / p.old_price!) * 100)}%</span>}
             {images[pic] ? <img key={images[pic]} src={images[pic]} width={800} height={800} alt={`${p.brand} ${p.name}`} decoding="async" /> : <Placeholder brand={p.brand} />}
           </div>

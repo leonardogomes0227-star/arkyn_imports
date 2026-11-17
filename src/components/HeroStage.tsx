@@ -53,7 +53,9 @@ export default function HeroStage() {
   return (
     <section ref={root} className="hx" aria-roledescription="carrossel" aria-label="Perfumes em destaque" tabIndex={0}
       onKeyDown={e => { if (e.key === 'ArrowRight') go(i + 1); if (e.key === 'ArrowLeft') go(i - 1) }}
-      onPointerEnter={e => { if (e.pointerType === 'mouse') setHover(true) }} onPointerLeave={() => setHover(false)}
+      onPointerEnter={e => { if (e.pointerType === 'mouse') setHover(true) }}
+      onPointerLeave={() => { setHover(false); const el = root.current; if (el) { el.style.setProperty('--mx', '0'); el.style.setProperty('--my', '0') } }}
+      onPointerMove={e => { if (e.pointerType !== 'mouse' || reduced) return; const el = root.current; if (!el) return; const r = el.getBoundingClientRect(); el.style.setProperty('--mx', String(((e.clientX - r.left) / r.width - 0.5) * 2)); el.style.setProperty('--my', String(((e.clientY - r.top) / r.height - 0.5) * 2)); el.style.setProperty('--sx', `${((e.clientX - r.left) / r.width) * 100}%`); el.style.setProperty('--sy', `${((e.clientY - r.top) / r.height) * 100}%`) }}
       onPointerDown={e => { drag.current = e.clientX }} onPointerCancel={() => { drag.current = null }}
       onPointerUp={e => { if (drag.current === null) return; const dx = e.clientX - drag.current; drag.current = null; if (Math.abs(dx) > 50) go(dx < 0 ? i + 1 : i - 1) }}>
       <svg className="hx-route" viewBox="0 0 1440 900" preserveAspectRatio="none" aria-hidden="true">

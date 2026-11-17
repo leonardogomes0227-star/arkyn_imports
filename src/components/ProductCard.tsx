@@ -6,7 +6,7 @@ import { useToast } from './Toast'
 import { brl, useStore } from '../lib/store'
 import { IconHeart } from './Icons'
 import { noteGradient, noteIcon } from '../lib/noteColors'
-import { cutoutOf } from '../lib/cutouts'
+import { cutoutFor } from '../lib/cutouts'
 import type { Product } from '../lib/types'
 
 export function ProductSkeleton({ n = 4 }: { n?: number }) {
@@ -27,11 +27,21 @@ export default function ProductCard({ p }: { p: Product }) {
   const out = p.stock <= 0
   const sale = !!p.old_price && p.old_price > p.price && !out
   const n = settings.installments
-  const cut = cutoutOf(p.id)
+  const cut = cutoutFor(p)
   const shot = cut ?? p.image
   const clean = !cut && !!p.image?.includes('-net/')
   const second = p.images?.find(x => x && x !== p.image) // segunda foto real do cadastro, se existir
   const hint = p.notes?.length ? p.notes : [p.family, ...(p.tags ?? [])].filter(Boolean) as string[]
+  const tilt = (e: React.PointerEvent<HTMLElement>) => {
+    if (e.pointerType !== 'mouse') return
+    const t = e.currentTarget.querySelector('.thumb') as HTMLElement | null
+    if (!t) return
+    const r = t.getBoundingClientRect(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height
+    const st = e.currentTarget.style
+    st.setProperty('--rx', String((x - 0.5) * 2)); st.setProperty('--ry', String((y - 0.5) * 2))
+    st.setProperty('--px', `${x * 100}%`); st.setProperty('--py', `${y * 100}%`)
+  }
+  const untilt = (e: React.PointerEvent<HTMLElement>) => { const st = e.currentTarget.style; st.setProperty('--rx', '0'); st.setProperty('--ry', '0') }
   const quick = (e: React.MouseEvent) => {
     e.preventDefault()
     add(p.id, false)
@@ -40,7 +50,7 @@ export default function ProductCard({ p }: { p: Product }) {
   }
 
   return (
-    <article className={out ? 'card is-out' : 'card'}>
+    <article className={out ? 'card is-out' : 'card'} onPointerMove={tilt} onPointerLeave={untilt}>
       <Link to={`/produto/${p.id}`} className={`thumb${clean ? ' clean' : ''}${cut ? ' cut' : ''}${loaded || !shot ? ' ready' : ''}`} aria-label={`${p.brand} ${p.name}`}>
         {!loaded && shot && <span className="ax-skel thumb-skel" />}
         {sale && <span className="off">-{Math.round((1 - p.price / p.old_price!) * 100)}%</span>}

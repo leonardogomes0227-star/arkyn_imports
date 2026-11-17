@@ -1,7 +1,8 @@
 import type { CSSProperties } from 'react'
 import { Link } from 'react-router-dom'
 import HeroStage from '../components/HeroStage'
-import { ChristmasBand, Marquee } from '../components/Festive'
+import RouteSpine from '../components/RouteSpine'
+import { ChristmasBand } from '../components/Festive'
 import ProductCard from '../components/ProductCard'
 import Reveal from '../components/Reveal'
 import SizedImg from '../components/SizedImg'
@@ -94,6 +95,19 @@ export default function Home() {
       <HeroStage />
       {SEASON === 'natal' && <ChristmasBand whatsapp={settings.whatsapp} />}
 
+      {brands.length > 0 && (
+        <section className="hm-mq" aria-label="Marcas da loja">
+          <div className="hm-mq-track">
+            {[0, 1].map(k => (
+              <ul key={k} aria-hidden={k === 1 || undefined}>
+                {brands.map(b => <li key={b}><Link to={`/catalogo?brand=${encodeURIComponent(b)}`} tabIndex={k === 1 ? -1 : 0}>{b}</Link><i aria-hidden="true" /></li>)}
+              </ul>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <RouteSpine>
       <Reveal as="section" className="hm-sec hm-feat">
         <SecHead eyebrow="Seleção da loja" title="Os destaques da Arkyn" to="/catalogo" />
         <div className="grid shelf hm-four">{featured.map(p => <ProductCard key={p.id} p={p} />)}</div>
@@ -162,7 +176,6 @@ export default function Home() {
         {perks.map(([t, d]) => <div key={t}><b>{t}</b><span>{d}</span></div>)}
       </Reveal>
 
-      {SEASON === 'natal' && <Marquee items={brands} />}
       {brands.length > 0 && (
         <Reveal as="section" className="hm-brands">
           <nav aria-label="Marcas">
@@ -171,6 +184,7 @@ export default function Home() {
           </nav>
         </Reveal>
       )}
+      </RouteSpine>
     </>
   )
 }
