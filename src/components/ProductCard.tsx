@@ -6,6 +6,7 @@ import { useToast } from './Toast'
 import { brl, useStore } from '../lib/store'
 import { IconHeart } from './Icons'
 import { noteGradient, noteIcon } from '../lib/noteColors'
+import { cutoutOf } from '../lib/cutouts'
 import type { Product } from '../lib/types'
 
 export function ProductSkeleton({ n = 4 }: { n?: number }) {
@@ -26,7 +27,9 @@ export default function ProductCard({ p }: { p: Product }) {
   const out = p.stock <= 0
   const sale = !!p.old_price && p.old_price > p.price && !out
   const n = settings.installments
-  const clean = !!p.image?.includes('-net/')
+  const cut = cutoutOf(p.id)
+  const shot = cut ?? p.image
+  const clean = !cut && !!p.image?.includes('-net/')
   const second = p.images?.find(x => x && x !== p.image) // segunda foto real do cadastro, se existir
   const hint = p.notes?.length ? p.notes : [p.family, ...(p.tags ?? [])].filter(Boolean) as string[]
   const quick = (e: React.MouseEvent) => {
@@ -38,10 +41,10 @@ export default function ProductCard({ p }: { p: Product }) {
 
   return (
     <article className={out ? 'card is-out' : 'card'}>
-      <Link to={`/produto/${p.id}`} className={`thumb${clean ? ' clean' : ''}${loaded || !p.image ? ' ready' : ''}`} aria-label={`${p.brand} ${p.name}`}>
-        {!loaded && p.image && <span className="ax-skel thumb-skel" />}
+      <Link to={`/produto/${p.id}`} className={`thumb${clean ? ' clean' : ''}${cut ? ' cut' : ''}${loaded || !shot ? ' ready' : ''}`} aria-label={`${p.brand} ${p.name}`}>
+        {!loaded && shot && <span className="ax-skel thumb-skel" />}
         {sale && <span className="off">-{Math.round((1 - p.price / p.old_price!) * 100)}%</span>}
-        {p.image ? <SizedImg ref={img} className="m" src={p.image} size={480} responsive sizes="(max-width:560px) 45vw, (max-width:1100px) 30vw, 300px" width={800} height={800} alt={`${p.brand} ${p.name}`} loading="lazy" decoding="async" onLoad={() => setLoaded(true)} /> : <Placeholder brand={p.brand} />}
+        {shot ? <SizedImg ref={img} className="m" src={shot} size={480} responsive sizes="(max-width:560px) 45vw, (max-width:1100px) 30vw, 300px" width={800} height={800} alt={`${p.brand} ${p.name}`} loading="lazy" decoding="async" onLoad={() => setLoaded(true)} /> : <Placeholder brand={p.brand} />}
         {second && <SizedImg className="alt" src={second} size={480} width={800} height={800} alt="" loading="lazy" decoding="async" />}
         {out && <span className="sold">Esgotado</span>}
         <button type="button" className={fav ? 'fav on' : 'fav'} aria-pressed={fav} aria-label={fav ? `Remover ${p.name} dos favoritos` : `Favoritar ${p.name}`} onClick={e => { e.preventDefault(); toggleFav(p.id) }}><IconHeart size={18} filled={fav} /></button>

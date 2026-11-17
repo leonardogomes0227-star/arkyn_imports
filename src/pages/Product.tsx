@@ -8,6 +8,7 @@ import { noteGradient, noteIcon } from '../lib/noteColors'
 import { CAT_LABEL } from '../lib/search'
 import { usePageMeta } from '../lib/seo'
 import { brl, useStore } from '../lib/store'
+import { cutoutOf } from '../lib/cutouts'
 
 const FAMILIES = ['doce', 'amadeirado', 'fresco', 'floral', 'especiado']
 const GENDER = { masculino: 'Masculino', feminino: 'Feminino', unissex: 'Unissex' }
@@ -48,7 +49,7 @@ export default function Product() {
   const out = p.stock <= 0
   const sale = !!p.old_price && p.old_price > p.price
   const n = settings.installments
-  const images = [p.image, ...(p.images ?? [])].filter((x, i, a): x is string => !!x && a.indexOf(x) === i)
+  const images = [cutoutOf(p.id), p.image, ...(p.images ?? [])].filter((x, i, a): x is string => !!x && a.indexOf(x) === i)
   const family = (p.tags ?? []).filter(t => FAMILIES.includes(t))
   const when = (p.tags ?? []).filter(t => t === 'dia' || t === 'noite')
   const volume = p.name.match(/(\d+)\s?ml/i)?.[1]
@@ -77,7 +78,7 @@ export default function Product() {
               {images.map((src, i) => <button key={src} type="button" role="tab" aria-selected={i === pic} className={i === pic ? 'on' : ''} onClick={() => setPic(i)} aria-label={`Foto ${i + 1}`}><SizedImg src={src} size={160} alt="" width={120} height={120} loading="lazy" /></button>)}
             </div>
           )}
-          <div className={`pdp-img${images[pic]?.includes('-net/') ? ' clean' : ''}`} onMouseMove={zoom}>
+          <div className={`pdp-img${images[pic]?.includes('-net/') ? ' clean' : ''}${images[pic]?.startsWith('/hero/') ? ' cut' : ''}`} onMouseMove={zoom}>
             {sale && <span className="off">-{Math.round((1 - p.price / p.old_price!) * 100)}%</span>}
             {images[pic] ? <img key={images[pic]} src={images[pic]} width={800} height={800} alt={`${p.brand} ${p.name}`} decoding="async" /> : <Placeholder brand={p.brand} />}
           </div>

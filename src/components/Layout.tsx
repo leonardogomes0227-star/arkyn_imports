@@ -10,7 +10,7 @@ import { brl, useStore } from '../lib/store'
 export function Logo({ className = 'ax-logo' }: { className?: string }) {
   return (
     <Link to="/" className={className} aria-label="Arkyn Imports, página inicial">
-      <img src="/logo-natal-xs.webp" width="256" height="256" alt="Arkyn Imports" />
+      <img src="/brand/logo-xs.webp" width="360" height="212" alt="Arkyn Imports" />
     </Link>
   )
 }
@@ -44,6 +44,7 @@ export default function Layout({ children }: { children: ReactNode }) {
   }, [])
   // ao trocar de página: volta ao topo e fecha menu/busca
   useEffect(() => { window.scrollTo(0, 0); setMenu(false); setSearch(false) }, [loc.pathname, loc.search])
+  useEffect(() => { document.body.classList.add('ax'); return () => document.body.classList.remove('ax') }, [])
   useEffect(() => {
     document.body.classList.toggle('page-checkout', loc.pathname === '/carrinho')
     document.body.classList.toggle('page-product', loc.pathname.startsWith('/produto/'))
@@ -74,7 +75,7 @@ export default function Layout({ children }: { children: ReactNode }) {
         <div className="ax-topbar sc-top" aria-label="Avisos da loja">
           <div className="sc-top-in">
             <span className="sc-top-l"><IconTruck size={16} />{ship}</span>
-            <span className="sc-top-c">Natal Arkyn <i aria-hidden="true">·</i> presentes que ficam na memória</span>
+            <span className="sc-top-c">{settings.installments > 1 ? `Pix ou cartão em até ${settings.installments}x` : 'Pix ou cartão de crédito'} <i aria-hidden="true">·</i> Retirada grátis em Coxim</span>
             <span className="sc-top-r"><a href={wa} target="_blank" rel="noreferrer">Ajuda e suporte</a><Link to="/quiz">Qual é o seu cheiro?</Link></span>
           </div>
         </div>
