@@ -1,7 +1,6 @@
 import type { CSSProperties } from 'react'
 import { Link } from 'react-router-dom'
 import GlobeHero from '../components/GlobeHero'
-import RouteSpine from '../components/RouteSpine'
 import { ChristmasBand } from '../components/Festive'
 import ProductCard from '../components/ProductCard'
 import Reveal from '../components/Reveal'
@@ -90,7 +89,6 @@ export default function Home() {
         </section>
       )}
 
-      <RouteSpine>
       <Reveal as="section" className="hm-sec hm-feat">
         <SecHead title="Os destaques da Arkyn" to="/catalogo" />
         <div className="grid shelf hm-four">{featured.map(p => <ProductCard key={p.id} p={p} />)}</div>
@@ -146,7 +144,6 @@ export default function Home() {
 
       <Shelf title="Ofertas" to="/catalogo" items={offers} />
 
-      </RouteSpine>
     </>
   )
 }
