@@ -54,3 +54,17 @@ body.ax .card.mv.mv-in .pr { opacity:1; transform:none }
   .mv, .mv.mv-in, .hm-head.mv h2, .sx-h.mv, body.ax .card.mv .thumb img.m, body.ax .card.mv .pr, .hm-info > .mv svg { opacity:1 !important; transform:none !important; clip-path:none !important; transition:none !important }
   body.ax .card.mv-in .thumb-wrap::after, .gh-cta::before, .ax-page { animation:none }
 }
+
+/* =====================================================================
+   NADA SE MEXE PARA O LADO NO CELULAR
+   A página só rola para cima e para baixo; carrosséis continuam deslizando dentro deles.
+   ===================================================================== */
+html, body { overflow-x:clip; max-width:100% }
+@supports not (overflow:clip) { html, body { overflow-x:hidden } }
+#root, main#conteudo, .ax-header, .ax-footer, .gh, .rs, .sx, .hm-br { max-width:100%; overflow-x:clip }
+body.ax .sc-top-in { overflow:hidden; white-space:nowrap }
+body.ax .sc-top-c { overflow:hidden; text-overflow:ellipsis; max-width:100% }
+/* coleções no celular entram de baixo (não de lado), para não empurrar a tela */
+@media (max-width:900px) { .hm-col.mv:nth-child(odd), .hm-col.mv:nth-child(even) { transform:translate3d(0,30px,0) } .hm-col.mv.mv-in { transform:none } }
+/* zoom duplo-toque e arrasto de texto não "puxam" a página */
+@media (hover:none) { html { touch-action:manipulation } img { -webkit-user-drag:none; user-select:none } }
