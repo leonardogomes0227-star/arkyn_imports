@@ -1,6 +1,7 @@
 import type { CSSProperties } from 'react'
 import { Link } from 'react-router-dom'
 import GlobeHero from '../components/GlobeHero'
+import RouteSpine from '../components/RouteSpine'
 import ScentExplorer from '../components/ScentExplorer'
 import { ChristmasBand } from '../components/Festive'
 import ProductCard from '../components/ProductCard'
@@ -66,6 +67,7 @@ export default function Home() {
     <>
       <GlobeHero />
       {SEASON === 'natal' && <ChristmasBand whatsapp={settings.whatsapp} />}
+      <RouteSpine>
 
       {brandCards.length > 0 && (
         <section className="hm-br" aria-labelledby="br-t">
@@ -112,6 +114,7 @@ export default function Home() {
         <a href={`https://wa.me/${settings.whatsapp}`} target="_blank" rel="noreferrer"><IconChat size={24} /><b>WhatsApp</b><span>Tire dúvidas antes de comprar</span></a>
       </Reveal>
 
+      </RouteSpine>
     </>
   )
 }
