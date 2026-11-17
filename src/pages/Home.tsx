@@ -41,8 +41,8 @@ export default function Home() {
   const { products, settings } = useStore()
   const origin = typeof window !== 'undefined' ? window.location.origin : ''
   usePageMeta({
-    title: 'Arkyn Imports | Perfumes árabes e importados em Coxim – MS',
-    description: 'Perfumes árabes e importados em Coxim – MS. Compre online com Pix ou cartão de crédito, ou retire na loja.',
+    title: 'Arkyn Imports | Perfumes árabes e importados para todo o Brasil',
+    description: 'Perfumes árabes e importados com envio para todo o Brasil. Pix ou cartão de crédito, e retirada na loja em Coxim – MS.',
     path: '/',
     jsonLd: [
       { '@context': 'https://schema.org', '@type': 'Organization', name: 'Arkyn Imports', url: origin, logo: `${origin}/brand/logo-sm.webp`, sameAs: ['https://instagram.com/arkyn_imports'],
@@ -137,7 +137,7 @@ export default function Home() {
       <Reveal as="section" className="hm-info" aria-label="Como comprar">
         <div><IconCard size={24} /><b>{settings.installments > 1 ? `Pix ou até ${settings.installments}x` : 'Pix ou cartão'}</b><span>Pelo Mercado Pago</span></div>
         <div><IconStore size={24} /><b>Retirada grátis</b><span>Na loja em Coxim – MS</span></div>
-        <div><IconTruck size={24} /><b>Entrega</b><span>{settings.freeShippingFrom > 0 ? `Frete grátis acima de ${brl(settings.freeShippingFrom)}` : 'Consulte a sua cidade'}</span></div>
+        <div><IconTruck size={24} /><b>Todo o Brasil</b><span>{settings.freeShippingFrom > 0 ? `Frete grátis acima de ${brl(settings.freeShippingFrom)}` : 'Enviamos para a sua cidade'}</span></div>
         <a href={`https://wa.me/${settings.whatsapp}`} target="_blank" rel="noreferrer"><IconChat size={24} /><b>WhatsApp</b><span>Tire dúvidas antes de comprar</span></a>
       </Reveal>
 

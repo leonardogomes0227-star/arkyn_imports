@@ -2,12 +2,13 @@ import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { useStore } from '../lib/store'
 
-// Abertura da home: o globo da logo, girando devagar, com a rota verde e o avião indo até Coxim.
+// Abertura da home: o globo da logo girando, a rota verde chega ao Brasil e se espalha pelas capitais.
 // Canvas 2D, sem biblioteca. Pontos de terra vêm de src/lib/globeDots (carregado sob demanda).
 const D2R = Math.PI / 180
 const BASE_HEADING = -38 * D2R            // direção do avião no arquivo de imagem
 const ORIGIN = { lat: 25.2, lon: 55.3 }   // Oriente (sem rótulo)
-const COXIM = { lat: -18.5, lon: -54.74 } // Coxim – MS
+const COXIM = { lat: -18.5, lon: -54.74 } // Coxim – MS: ponto de partida no Brasil
+const CITIES: [number, number][] = [[-23.55, -46.63], [-22.91, -43.17], [-15.79, -47.88], [-19.92, -43.94], [-12.97, -38.5], [-8.05, -34.88], [-3.73, -38.52], [-3.12, -60.02], [-30.03, -51.23], [-25.43, -49.27], [-1.46, -48.5], [-20.32, -40.34]]
 
 type V3 = [number, number, number]
 const vec = (lat: number, lon: number): V3 => [Math.cos(lat * D2R) * Math.sin(lon * D2R), Math.sin(lat * D2R), Math.cos(lat * D2R) * Math.cos(lon * D2R)]
@@ -40,6 +41,13 @@ export default function GlobeHero() {
       return [(k1 * A[0] + k2 * B[0]) * s, (k1 * A[1] + k2 * B[1]) * s, (k1 * A[2] + k2 * B[2]) * s]
     }
 
+    const slerp = (P0: V3, P1: V3, t: number, lift: number): V3 => {
+      const om = Math.acos(clamp(dot(P0, P1), -1, 1)), si = Math.sin(om) || 1
+      const k1 = Math.sin((1 - t) * om) / si, k2 = Math.sin(t * om) / si, h = 1 + lift * Math.sin(Math.PI * t)
+      return [(k1 * P0[0] + k2 * P1[0]) * h, (k1 * P0[1] + k2 * P1[1]) * h, (k1 * P0[2] + k2 * P1[2]) * h]
+    }
+    const cityV = CITIES.map(([la, lo]) => vec(la, lo))
+
     import('../lib/globeDots').then(m => {
       const n = m.LAND.length / 2, f = new Float32Array(n * 3)
       for (let i = 0; i < n; i++) { const v = vec(m.LAND[2 * i] / 10, m.LAND[2 * i + 1] / 10); f[3 * i] = v[0]; f[3 * i + 1] = v[1]; f[3 * i + 2] = v[2] }
@@ -51,14 +59,14 @@ export default function GlobeHero() {
       dpr = Math.min(window.devicePixelRatio || 1, 2); W = r.width; H = r.height
       canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr)
       if (W > 1000) { R = Math.min(H * 0.39, W * 0.27); cx = W * 0.7; cy = H * 0.5 }
-      else { R = Math.min(W * 0.43, H * 0.28); cx = W * 0.5; cy = H * 0.3 }
+      else { R = Math.min(W * 0.36, H * 0.22); cx = W * 0.5; cy = H * 0.24 }
       if (reduced) frame(performance.now())
     }
 
     // gira em torno do ponto de vista: lon0 oscila para a rota ficar sempre à vista
     const view = (time: number) => {
       const sway = reduced ? 0 : Math.sin(time * 0.00011) * 24
-      return { lon0: (-6 + sway + drag.lon) * D2R, lat0: clamp(16 + drag.lat, -40, 55) * D2R }
+      return { lon0: (-24 + sway * 0.6 + drag.lon) * D2R, lat0: clamp(16 + drag.lat, -40, 55) * D2R }
     }
     const rot = (v: V3, lon0: number, lat0: number): V3 => {
       const c = Math.cos(lon0), s = Math.sin(lon0)
@@ -134,7 +142,24 @@ export default function GlobeHero() {
       }
       ctx.shadowBlur = 0
 
-      // marcadores: origem (sem rótulo) e Coxim
+      // ao pousar, a rota se espalha do centro-oeste para as capitais do país
+      const spread = reduced ? 1 : ease(clamp((c - 4100) / 1300))
+      if (spread > 0) {
+        ctx.lineWidth = 1.4 * Math.max(1, R / 300); ctx.shadowColor = 'rgba(199,244,1,.8)'; ctx.shadowBlur = 8
+        cityV.forEach((v, ci) => {
+          const g = clamp(spread * 1.25 - ci * 0.025), M = 22, up = Math.round(M * g)
+          let prev: [number, number] | null = null
+          for (let i = 0; i <= up; i++) {
+            const r = rot(slerp(B, v, i / M, 0.035), lon0, lat0); const pt = hidden(r) || r[2] < 0 ? null : P(r)
+            if (prev && pt) { ctx.strokeStyle = `rgba(199,244,1,${0.75 * fade})`; ctx.beginPath(); ctx.moveTo(prev[0], prev[1]); ctx.lineTo(pt[0], pt[1]); ctx.stroke() }
+            prev = pt
+          }
+          if (g >= 1) { const r = rot(v, lon0, lat0); if (r[2] > 0.05) { const [x, y] = P(r); ctx.fillStyle = `rgba(222,255,120,${fade})`; ctx.beginPath(); ctx.arc(x, y, Math.max(2, R / 150), 0, 7); ctx.fill() } }
+        })
+        ctx.shadowBlur = 0
+      }
+
+      // marcadores: origem (sem rótulo) e Brasil
       const mark = (v: V3, label: string | null, pulse: number) => {
         const r = rot(v, lon0, lat0); if (r[2] <= 0.05) return
         const [x, y] = P(r)
@@ -149,7 +174,7 @@ export default function GlobeHero() {
         }
       }
       mark(A, null, reduced ? 0 : (time % 2600) / 2600)
-      mark(B, 'COXIM – MS', head >= 1 && !reduced ? ((c - 4300) % 1800) / 1800 : 0)
+      mark(B, 'BRASIL', head >= 1 && !reduced ? ((c - 4300) % 1800) / 1800 : 0)
 
       // avião na ponta da rota
       if (plane.complete && plane.naturalWidth && head > 0 && head < 1) {
@@ -186,9 +211,9 @@ export default function GlobeHero() {
     <section ref={box} className="gh" aria-label="Arkyn Imports">
       <canvas ref={cv} className="gh-cv" aria-hidden="true" />
       <div className="gh-copy">
-        <p className="gh-eyebrow">Arkyn Imports · Coxim – MS</p>
-        <h1 className="gh-title"><span>Perfumaria árabe,</span><span>direto até <em>Coxim.</em></span></h1>
-        {top.length > 0 && <p className="gh-sub">{top.join(', ')} e outras marcas. Retire na loja sem frete ou receba em casa.</p>}
+        <p className="gh-eyebrow">Arkyn Imports · Envio para todo o Brasil</p>
+        <h1 className="gh-title"><span>Perfumaria árabe,</span><span>direto para todo o <em>Brasil.</em></span></h1>
+        {top.length > 0 && <p className="gh-sub">{top.join(', ')} e outras marcas. Enviamos para todo o país, e em Coxim – MS você retira na loja sem frete.</p>}
         <div className="gh-cta">
           <Link to="/catalogo" className="hx-btn">Ver os perfumes<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg></Link>
           <Link to="/quiz" className="hx-btn hx-btn--ghost">Qual é o seu cheiro?</Link>
