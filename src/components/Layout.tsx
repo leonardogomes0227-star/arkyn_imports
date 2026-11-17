@@ -12,7 +12,7 @@ import { useStore } from '../lib/store'
 export function Logo({ className = 'ax-logo' }: { className?: string }) {
   return (
     <Link to="/" className={className} aria-label="Arkyn Imports, página inicial">
-      <img src="/brand/logo-xs.webp" width="360" height="212" alt="Arkyn Imports" />
+      <img src="/brand/logo-xxs.webp" srcSet="/brand/logo-xxs.webp 200w, /brand/logo-xs.webp 360w" sizes="100px" width="360" height="212" alt="Arkyn Imports" {...{ fetchpriority: 'high' }} />
     </Link>
   )
 }
@@ -118,22 +118,22 @@ export default function Layout({ children }: { children: ReactNode }) {
 
       <footer className="ax-footer">
         <div className="ax-foot-cta">
-          <div><b>Dúvidas para escolher o seu perfume?</b><span>Fale com a gente direto pelo WhatsApp.</span></div>
+          <div><b>Não sabe qual escolher?</b><span>Diga as notas que você gosta e indicamos pelo WhatsApp.</span></div>
           <a className="btn-gold" href={wa} target="_blank" rel="noreferrer">Chamar no WhatsApp</a>
         </div>
         <div className="ax-footer-in">
           <div className="ax-foot-brand">
             <Logo className="ax-foot-logo" />
-            <p>Perfumaria árabe e importada em Coxim – MS. Atendimento próximo, do pedido à retirada.</p>
+            <p>Perfumes árabes e importados, com retirada na loja em Coxim – MS.</p>
             <a className="ax-foot-ig" href="https://instagram.com/arkyn_imports" target="_blank" rel="noreferrer">@arkyn_imports no Instagram</a>
           </div>
           <div>
-            <h4>Comprar</h4>
+            <h2 className="ax-foot-h">Comprar</h2>
             {NAV.map(([label, to]) => <Link key={to} to={to}>{label}</Link>)}
             <Link to="/quiz">Qual é o seu cheiro?</Link>
           </div>
           <div>
-            <h4>Atendimento</h4>
+            <h2 className="ax-foot-h">Atendimento</h2>
             <a href={wa} target="_blank" rel="noreferrer">WhatsApp {phone(settings.whatsapp)}</a>
             <span>Retirada: {settings.pickupAddress}</span>
             <span>Pix e cartão, pelo Mercado Pago</span>

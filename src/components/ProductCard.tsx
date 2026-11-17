@@ -17,7 +17,7 @@ export function ProductSkeleton({ n = 4 }: { n?: number }) {
   ))}</>
 }
 
-export default function ProductCard({ p }: { p: Product }) {
+export default function ProductCard({ p, priority = false }: { p: Product; priority?: boolean }) {
   const { add, settings, setOpen, favs, toggleFav } = useStore()
   const fav = favs.includes(p.id)
   const { toast } = useToast()
@@ -55,14 +55,13 @@ export default function ProductCard({ p }: { p: Product }) {
 
   return (
     <article className={out ? 'card is-out' : 'card'} onPointerMove={tilt} onPointerLeave={untilt}>
-      <Link to={`/produto/${p.id}`} className={`thumb${clean ? ' clean' : ''}${cut ? ' cut' : ''}${loaded || !shot ? ' ready' : ''}`} aria-label={`${p.brand} ${p.name}`}>
+      <div className="thumb-wrap">
+      <Link to={`/produto/${p.id}`} className={`thumb${clean ? ' clean' : ''}${cut ? ' cut' : ''}${loaded || !shot ? ' ready' : ''}`} tabIndex={-1} aria-hidden="true">
         {!loaded && shot && <span className="ax-skel thumb-skel" />}
         {sale && <span className="off">-{Math.round((1 - p.price / p.old_price!) * 100)}%</span>}
-        {shot ? <SizedImg ref={img} className="m" src={shot} size={480} responsive sizes="(max-width:560px) 45vw, (max-width:1100px) 30vw, 300px" width={800} height={800} alt={`${p.brand} ${p.name}`} loading="lazy" decoding="async" onLoad={() => setLoaded(true)} /> : <Placeholder brand={p.brand} />}
+        {shot ? <SizedImg ref={img} className="m" src={shot} size={480} responsive sizes="(max-width:560px) 45vw, (max-width:1100px) 30vw, 300px" width={800} height={800} alt={`${p.brand} ${p.name}`} loading={priority ? 'eager' : 'lazy'} {...(priority ? { fetchpriority: 'high' } : {})} decoding="async" onLoad={() => setLoaded(true)} /> : <Placeholder brand={p.brand} />}
         {second && <SizedImg className="alt" src={second} size={480} width={800} height={800} alt="" loading="lazy" decoding="async" />}
         {out && <span className="sold">Esgotado</span>}
-        <button type="button" className={comparing ? 'cmp on' : 'cmp'} aria-pressed={comparing} aria-label={`${comparing ? 'Remover da comparação:' : 'Comparar:'} ${p.name}`} onClick={e => { e.preventDefault(); if (!toggleCompare(p.id)) toast('Compare até 3 perfumes por vez') }}>{comparing ? 'Comparando ✓' : 'Comparar'}</button>
-        <button type="button" className={fav ? 'fav on' : 'fav'} aria-pressed={fav} aria-label={fav ? `Remover ${p.name} dos favoritos` : `Favoritar ${p.name}`} onClick={e => { e.preventDefault(); toggleFav(p.id) }}><IconHeart size={18} filled={fav} /></button>
         {!!hint.length && !out && (
           <span className="notes" aria-hidden="true">
             <b>{p.notes?.length ? 'Notas' : 'Perfil'}</b>
@@ -70,6 +69,9 @@ export default function ProductCard({ p }: { p: Product }) {
           </span>
         )}
       </Link>
+      <button type="button" className={comparing ? 'cmp on' : 'cmp'} aria-pressed={comparing}  onClick={e => { e.preventDefault(); if (!toggleCompare(p.id)) toast('Compare até 3 perfumes por vez') }}>{comparing ? 'Comparando ✓' : 'Comparar'}<span className="sr-only"> {p.name}</span></button>
+      <button type="button" className={fav ? 'fav on' : 'fav'} aria-pressed={fav} aria-label={fav ? `Remover ${p.name} dos favoritos` : `Favoritar ${p.name}`} onClick={e => { e.preventDefault(); toggleFav(p.id) }}><IconHeart size={18} filled={fav} /></button>
+      </div>
       <div className="info">
         <small>{p.brand}</small>
         <Link to={`/produto/${p.id}`}><h3>{p.name}</h3></Link>

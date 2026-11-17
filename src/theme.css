@@ -501,3 +501,7 @@ body.ax .btn-gold, body.ax .ch-btn { white-space:nowrap; padding:0 28px }
   .cmp-table tbody th, .cmp-table thead th:first-child { width:88px; min-width:88px; padding:16px 12px; font-size:.5625rem }
   .cmp-table thead th { min-width:190px }
 }
+/* revisão: foto e botões do cartão separados (acessibilidade), rodapé com títulos h2, sem pulo do rodapé */
+body.ax .card .thumb-wrap { position:relative }
+body.ax .ax-footer h2.ax-foot-h { color:var(--lime); font:700 .6875rem/1 var(--sans); letter-spacing:.26em; text-transform:uppercase; margin:0 0 16px }
+body.ax .route-fallback { min-height:100vh }
