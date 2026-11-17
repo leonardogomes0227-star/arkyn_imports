@@ -1,6 +1,6 @@
 import type { CSSProperties } from 'react'
 import { Link } from 'react-router-dom'
-import HeroStage from '../components/HeroStage'
+import GlobeHero from '../components/GlobeHero'
 import RouteSpine from '../components/RouteSpine'
 import { ChristmasBand } from '../components/Festive'
 import ProductCard from '../components/ProductCard'
@@ -91,8 +91,7 @@ export default function Home() {
 
   return (
     <>
-      <h1 className="sr-only">Arkyn Imports: perfumes árabes e importados em Coxim – MS</h1>
-      <HeroStage />
+      <GlobeHero />
       {SEASON === 'natal' && <ChristmasBand whatsapp={settings.whatsapp} />}
 
       {brands.length > 0 && (
