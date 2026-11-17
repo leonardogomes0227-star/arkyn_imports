@@ -5,6 +5,7 @@ import CompareBar from './CompareBar'
 import MobileBar from './MobileBar'
 import { ScrollBar } from './Festive'
 import Feel from './Feel'
+import Motion from './Motion'
 import FlightPath from './FlightPath'
 import Intro from './Intro'
 import SearchOverlay from './SearchOverlay'
@@ -74,6 +75,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       <a className="ax-skip" href="#conteudo">Pular para o conteúdo</a>
       <Intro />
       <Feel />
+      <Motion />
       <FlightPath />
       <ScrollBar />
       <header className={scrolled ? 'ax-header is-scrolled' : 'ax-header'}>
