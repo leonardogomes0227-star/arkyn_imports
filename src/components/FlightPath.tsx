@@ -18,8 +18,8 @@ export default function FlightPath() {
       const p = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0
       const dy = window.scrollY - last; last = window.scrollY
       tilt += (Math.max(-14, Math.min(14, dy * 0.6)) - tilt) * 0.25
-      const track = window.innerHeight - 140
-      pl.style.transform = `translate3d(0,${(70 + p * track).toFixed(1)}px,0) rotate(${(128 + tilt).toFixed(1)}deg)`
+      const track = window.innerHeight - 240
+      pl.style.transform = `translate3d(0,${(130 + p * track).toFixed(1)}px,0) rotate(${(128 + tilt).toFixed(1)}deg)`
       tr.style.transform = `scaleY(${p.toFixed(4)})`
       if (Math.abs(tilt) > 0.2) raf = requestAnimationFrame(draw)
     }

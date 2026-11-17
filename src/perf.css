@@ -1,7 +1,7 @@
 /* ---------- avião que desce com a página ---------- */
 .fp { position:fixed; top:0; bottom:0; right:clamp(8px,1.4vw,22px); width:40px; z-index:90; pointer-events:none }
-.fp-rail { position:absolute; left:19px; top:70px; bottom:70px; width:1px; background:repeating-linear-gradient(to bottom,rgba(255,255,255,.18) 0 4px,transparent 4px 10px) }
-.fp-trail { position:absolute; left:18.5px; top:70px; bottom:70px; width:2px; background:linear-gradient(to bottom,rgba(199,244,1,.1),var(--lime)); transform-origin:top; transform:scaleY(0); box-shadow:0 0 8px rgba(199,244,1,.6); will-change:transform }
+.fp-rail { position:absolute; left:19px; top:130px; bottom:110px; width:1px; background:repeating-linear-gradient(to bottom,rgba(255,255,255,.18) 0 4px,transparent 4px 10px) }
+.fp-trail { position:absolute; left:18.5px; top:130px; bottom:110px; width:2px; background:linear-gradient(to bottom,rgba(199,244,1,.1),var(--lime)); transform-origin:top; transform:scaleY(0); box-shadow:0 0 8px rgba(199,244,1,.6); will-change:transform }
 .fp-plane { position:absolute; left:0; top:0; width:40px; height:auto; margin-top:-16px; will-change:transform }
 @media (max-width:900px) { .fp { right:4px; width:28px } .fp-rail { left:13px; top:80px; bottom:100px } .fp-trail { left:12.5px; top:80px; bottom:100px } .fp-plane { width:28px; margin-top:-11px } }
 

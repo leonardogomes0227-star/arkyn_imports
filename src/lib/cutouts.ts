@@ -24,7 +24,9 @@ const CUT = new Set([
   'paris-corner-marshmallow-blush-100ml',
 ])
 
-export const cutoutOf = (id: string) => (CUT.has(id) ? `/hero/${id}.webp` : undefined)
+// PHOTO_V muda quando as fotos são refeitas, para o navegador não mostrar a versão antiga guardada
+const PHOTO_V = 3
+export const cutoutOf = (id: string) => (CUT.has(id) ? `/hero/${id}.webp?v=${PHOTO_V}` : undefined)
 
 /** Sempre usa o recorte limpo quando ele existe (mesmo se o painel tiver uma foto com fundo branco). */
 export const cutoutFor = (p: { id: string }) => cutoutOf(p.id)
