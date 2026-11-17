@@ -56,7 +56,7 @@ export default function GlobeHero() {
 
     const resize = () => {
       const r = el.getBoundingClientRect()
-      dpr = Math.min(window.devicePixelRatio || 1, 2); W = r.width; H = r.height
+      dpr = Math.min(window.devicePixelRatio || 1, r.width < 700 ? 1.5 : 1.75); W = r.width; H = r.height
       canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr)
       if (W > 1000) { R = Math.min(H * 0.39, W * 0.27); cx = W * 0.7; cy = H * 0.5 }
       else { R = Math.min(W * 0.36, H * 0.22); cx = W * 0.5; cy = H * 0.24 }
@@ -77,8 +77,13 @@ export default function GlobeHero() {
     const P = (r: V3): [number, number] => [cx + r[0] * R, cy - r[1] * R]
     const hidden = (r: V3) => r[2] < 0 && r[0] * r[0] + r[1] * r[1] < 1
 
+    let scrolling = 0, skip = 0
+    const onScroll = () => { scrolling = performance.now() }
+    window.addEventListener('scroll', onScroll, { passive: true })
     const frame = (now: number) => {
       raf = 0
+      // enquanto a pessoa rola, o globo espera (a rolagem fica com o processador); no celular desenha a 30 quadros
+      if (!reduced && (now - scrolling < 140 || (W < 700 && (skip = (skip + 1) % 2) === 1))) { if (visible && !document.hidden) raf = requestAnimationFrame(frame); return }
       const time = now - t0
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
       ctx.clearRect(0, 0, W, H)
@@ -203,7 +208,7 @@ export default function GlobeHero() {
     const move = (e: PointerEvent) => { if (!drag.down) return; const dx = e.clientX - drag.x, dy = e.clientY - drag.y; drag.x = e.clientX; drag.y = e.clientY; drag.lon -= dx * 0.28; drag.lat += dy * 0.2; drag.vlon = -dx * 0.05; drag.vlat = dy * 0.03 }
     const up = () => { drag.down = false }
     el.addEventListener('pointerdown', down); el.addEventListener('pointermove', move); window.addEventListener('pointerup', up)
-    return () => { cancelAnimationFrame(raf); io.disconnect(); ro.disconnect(); document.removeEventListener('visibilitychange', vis); el.removeEventListener('pointerdown', down); el.removeEventListener('pointermove', move); window.removeEventListener('pointerup', up) }
+    return () => { cancelAnimationFrame(raf); io.disconnect(); ro.disconnect(); document.removeEventListener('visibilitychange', vis); window.removeEventListener('scroll', onScroll); el.removeEventListener('pointerdown', down); el.removeEventListener('pointermove', move); window.removeEventListener('pointerup', up) }
   }, [])
 
   const top = Object.entries(products.reduce<Record<string, number>>((m, p) => { if (p.category === 'masculino' || p.category === 'feminino') m[p.brand] = (m[p.brand] ?? 0) + 1; return m }, {})).sort((a, b) => b[1] - a[1]).slice(0, 3).map(x => x[0])

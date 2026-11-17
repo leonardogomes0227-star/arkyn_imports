@@ -16,6 +16,7 @@ import './intro.css'
 import './theme.css'
 import './explore.css'
 import './align.css'
+import './perf.css'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode><BrowserRouter><StoreProvider><ToastProvider><App /></ToastProvider></StoreProvider></BrowserRouter></StrictMode>,
