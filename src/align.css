@@ -1,0 +1,24 @@
+/* =====================================================================
+   ALINHAMENTO DOS CARTÕES — foto, nome, preço e botão sempre na mesma altura
+   ===================================================================== */
+body.ax .grid, body.ax .shelf, body.ax .hm-four { align-items:stretch }
+body.ax .card { display:flex; flex-direction:column; height:100% }
+body.ax .card .thumb-wrap { flex:none }
+body.ax .card .thumb { aspect-ratio:1/1 }
+body.ax .card .info { flex:1; display:flex; flex-direction:column; gap:0 }
+body.ax .card .info small { min-height:1.2em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
+body.ax .card .info h3 { display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; min-height:2.2em; line-height:1.1; margin:6px 0 8px }
+body.ax .card .info .low { order:5; margin-top:6px }
+body.ax .card .pr { margin-top:auto; min-height:2.6em; display:flex; flex-direction:column; justify-content:flex-end }
+body.ax .card .card-add { margin-top:14px; flex:none }
+
+/* cartões das famílias e das marcas: mesma lógica */
+.sx-row { align-items:stretch }
+.sx-p { height:100% }
+.sx-p b { display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; min-height:2.2em }
+.sx-p em { margin-top:auto; padding-top:6px }
+.hm-br-c b { min-height:1.1em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100% }
+
+/* resultado da consultoria e comparação: botões na mesma linha */
+.cmp-table thead th h2 { display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; min-height:2.2em }
+@media (max-width:560px) { body.ax .card .info h3 { font-size:1.28rem } body.ax .card .info small { font-size:.6875rem } }
