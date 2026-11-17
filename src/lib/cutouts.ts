@@ -25,3 +25,6 @@ const CUT = new Set([
 ])
 
 export const cutoutOf = (id: string) => (CUT.has(id) ? `/hero/${id}.webp` : undefined)
+
+/** Recorte da loja só quando o produto usa foto local; foto enviada pelo painel (outra origem) é respeitada. */
+export const cutoutFor = (p: { id: string; image?: string | null }) => (!p.image || p.image.startsWith('/') ? cutoutOf(p.id) : undefined)
