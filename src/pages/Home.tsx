@@ -4,10 +4,12 @@ import GlobeHero from '../components/GlobeHero'
 import { ChristmasBand } from '../components/Festive'
 import ProductCard from '../components/ProductCard'
 import Reveal from '../components/Reveal'
+import { IconCard, IconChat, IconStore, IconTruck } from '../components/Icons'
 import SizedImg from '../components/SizedImg'
 import { brl, useStore } from '../lib/store'
 import { SEASON } from '../lib/season'
 import { PYRAMIDS } from '../lib/pyramids'
+import { cutoutFor } from '../lib/cutouts'
 import { usePageMeta } from '../lib/seo'
 import type { Category, Product } from '../lib/types'
 
@@ -57,7 +59,10 @@ export default function Home() {
   const flagged = live.filter(p => p.featured)
   const featured = flagged.length >= 4 ? flagged.slice(0, 4) : [...flagged, ...live.filter(p => !!p.image && !flagged.includes(p))].slice(0, 4)
   const offers = live.filter(p => !!p.old_price && p.old_price > p.price).slice(0, 8)
-  const brands = [...new Set(products.filter(p => p.category === 'masculino' || p.category === 'feminino').map(p => p.brand))].sort()
+  const brandCards = [...new Set(products.map(p => p.brand))].map(name => {
+    const list = products.filter(p => p.brand === name)
+    return { name, count: list.length, pics: list.map(cutoutFor).filter((x): x is string => !!x).slice(0, 3) }
+  }).filter(b => b.pics.length).sort((a, b) => b.count - a.count || a.name.localeCompare(b.name))
 
   const count = (c: Category) => products.filter(p => p.category === c).length
   const hasCut = (id: string) => products.some(p => p.id === id)
@@ -77,13 +82,16 @@ export default function Home() {
       <GlobeHero />
       {SEASON === 'natal' && <ChristmasBand whatsapp={settings.whatsapp} />}
 
-      {brands.length > 0 && (
-        <section className="hm-mq" aria-label="Marcas da loja">
-          <div className="hm-mq-track">
-            {[0, 1].map(k => (
-              <ul key={k} aria-hidden={k === 1 || undefined}>
-                {brands.map(b => <li key={b}><Link to={`/catalogo?brand=${encodeURIComponent(b)}`} tabIndex={k === 1 ? -1 : 0}>{b}</Link><i aria-hidden="true" /></li>)}
-              </ul>
+      {brandCards.length > 0 && (
+        <section className="hm-br" aria-labelledby="br-t">
+          <div className="hm-head"><h2 id="br-t">Marcas da loja</h2><Link to="/catalogo" className="hm-link">Ver todos <span aria-hidden="true">→</span></Link></div>
+          <div className="hm-br-row">
+            {brandCards.map(b => (
+              <Link key={b.name} to={`/catalogo?brand=${encodeURIComponent(b.name)}`} className="hm-br-c">
+                <span className="hm-br-pics" aria-hidden="true">{b.pics.map((src, i) => <SizedImg key={src} src={src} size={160} width={160} height={160} alt="" loading="lazy" decoding="async" style={{ '--k': i - (b.pics.length - 1) / 2 } as CSSProperties} />)}</span>
+                <b>{b.name}</b>
+                <small>{b.count} {b.count === 1 ? 'produto' : 'produtos'}</small>
+              </Link>
             ))}
           </div>
         </section>
@@ -143,6 +151,12 @@ export default function Home() {
       </section>
 
       <Shelf title="Ofertas" to="/catalogo" items={offers} />
+      <Reveal as="section" className="hm-info" aria-label="Como comprar">
+        <div><IconCard size={24} /><b>{settings.installments > 1 ? `Pix ou até ${settings.installments}x` : 'Pix ou cartão'}</b><span>Pelo Mercado Pago</span></div>
+        <div><IconStore size={24} /><b>Retirada grátis</b><span>Na loja em Coxim – MS</span></div>
+        <div><IconTruck size={24} /><b>Entrega</b><span>{settings.freeShippingFrom > 0 ? `Frete grátis acima de ${brl(settings.freeShippingFrom)}` : 'Consulte a sua cidade'}</span></div>
+        <a href={`https://wa.me/${settings.whatsapp}`} target="_blank" rel="noreferrer"><IconChat size={24} /><b>WhatsApp</b><span>Tire dúvidas antes de comprar</span></a>
+      </Reveal>
 
     </>
   )
