@@ -2,6 +2,7 @@ import { useEffect, useState, type ReactNode } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import CartDrawer from './CartDrawer'
 import CompareBar from './CompareBar'
+import MobileBar from './MobileBar'
 import { ScrollBar } from './Festive'
 import Feel from './Feel'
 import Intro from './Intro'
@@ -115,6 +116,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       <main id="conteudo" key={loc.pathname} className="ax-page">{children}</main>
       <CartDrawer />
       <CompareBar />
+      <MobileBar onSearch={() => setSearch(true)} />
 
       <footer className="ax-footer">
         <div className="ax-foot-cta">
