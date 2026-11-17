@@ -9,15 +9,17 @@ import { CAT_LABEL } from '../lib/search'
 import { usePageMeta } from '../lib/seo'
 import { brl, useStore } from '../lib/store'
 import { cutoutFor } from '../lib/cutouts'
+import { flyToBag } from '../lib/fly'
+import { toggleCompare, useCompare } from '../lib/compare'
 import { PYRAMIDS } from '../lib/pyramids'
 
 const FAMILIES = ['doce', 'amadeirado', 'fresco', 'floral', 'especiado']
-const GENDER = { masculino: 'Masculino', feminino: 'Feminino', unissex: 'Unissex' }
 const cap = (s: string) => s[0].toUpperCase() + s.slice(1)
 
 export default function Product() {
   const { id } = useParams()
   const { products, settings, add, ready, favs, toggleFav } = useStore()
+  const cmpIds = useCompare()
   const [qty, setQty] = useState(1)
   const [pic, setPic] = useState(0)
   const [bar, setBar] = useState(false)
@@ -62,7 +64,14 @@ export default function Product() {
     .map(x => ({ x, s: (x.tags ?? []).filter(t => (p.tags ?? []).includes(t)).length + (x.brand === p.brand ? 1 : 0) }))
     .sort((a, b) => b.s - a.s).slice(0, 4).map(r => r.x)
   const wa = `https://wa.me/${settings.whatsapp}?text=${encodeURIComponent(`Olá! Tenho interesse no ${p.brand} ${p.name}.`)}`
-  const buy = () => add(p.id, true, qty)
+  const comparing = cmpIds.includes(p.id)
+  const share = async () => {
+    const url = window.location.href, text = `${p.brand} ${p.name} por ${brl(p.price)} na Arkyn Imports`
+    try { if (navigator.share) { await navigator.share({ title: p.name, text, url }); return } } catch { return }
+    window.open(`https://wa.me/?text=${encodeURIComponent(`${text}\n${url}`)}`, '_blank', 'noopener')
+  }
+  const waAvise = `https://wa.me/${settings.whatsapp}?text=${encodeURIComponent(`Olá! Quero ser avisado quando o ${p.brand} ${p.name} chegar.`)}`
+  const buy = () => { flyToBag(document.querySelector<HTMLElement>('.pdp-img img:not(.pdp-word)')); add(p.id, true, qty) }
   const zoom = (e: React.MouseEvent<HTMLDivElement>) => {
     const r = e.currentTarget.getBoundingClientRect()
     e.currentTarget.style.setProperty('--zx', `${((e.clientX - r.left) / r.width) * 100}%`)
@@ -115,7 +124,10 @@ export default function Product() {
           )}
           {!out && p.stock <= 3 && <p className="low">{p.stock === 1 ? 'Última unidade em estoque' : `Restam ${p.stock} unidades`}</p>}
           <button type="button" className={favs.includes(p.id) ? 'btn ghost block pdp-fav on' : 'btn ghost block pdp-fav'} aria-pressed={favs.includes(p.id)} onClick={() => toggleFav(p.id)}><IconHeart size={18} filled={favs.includes(p.id)} /> {favs.includes(p.id) ? 'Nos seus favoritos' : 'Salvar nos favoritos'}</button>
+          {out && <a className="btn block" href={waAvise} target="_blank" rel="noreferrer">Avisar quando chegar</a>}
+          <button type="button" className={comparing ? 'btn ghost block on' : 'btn ghost block'} aria-pressed={comparing} onClick={() => { if (!toggleCompare(p.id)) window.alert('Compare até 3 perfumes por vez') }}>{comparing ? 'Na comparação ✓' : 'Comparar com outro perfume'}</button>
           <a className="btn ghost block" href={wa} target="_blank" rel="noreferrer">Tirar dúvida no WhatsApp</a>
+          <button type="button" className="btn ghost block" onClick={share}>Enviar para alguém</button>
 
           <ul className="pdp-ship">
             <li><b>Retirada em Coxim</b><span>Sem custo de frete · {settings.pickupAddress}</span></li>
@@ -143,8 +155,6 @@ export default function Product() {
               <summary>Características</summary>
               <dl className="pdp-specs">
                 <div><dt>Marca</dt><dd>{p.brand}</dd></div>
-                <div><dt>Categoria</dt><dd>{CAT_LABEL[p.category]}</dd></div>
-                {p.category !== 'skincare' && <div><dt>Público</dt><dd>{GENDER[p.gender]}</dd></div>}
                 {volume && <div><dt>Volume</dt><dd>{volume} ml</dd></div>}
                 {!!family.length && <div><dt>Família olfativa</dt><dd>{family.map(cap).join(' · ')}</dd></div>}
                 {!!when.length && <div><dt>Ocasião</dt><dd>{when.map(cap).join(' · ')}</dd></div>}

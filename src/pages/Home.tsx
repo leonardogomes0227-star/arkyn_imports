@@ -53,15 +53,11 @@ export default function Home() {
     ],
   })
   const live = products.filter(p => p.stock > 0)
-  const withPhoto = (c: Category) => live.filter(p => p.category === c && !!p.image)
-  const masc = withPhoto('masculino'), fem = withPhoto('feminino')
 
   // Vitrines: só aparecem quando os dados sustentam (sem "mais vendidos" ou "novidades" inventados).
   const flagged = live.filter(p => p.featured)
   const featured = flagged.length >= 4 ? flagged.slice(0, 4) : [...flagged, ...live.filter(p => !!p.image && !flagged.includes(p))].slice(0, 4)
   const offers = live.filter(p => !!p.old_price && p.old_price > p.price).slice(0, 8)
-  const shown = new Set([...featured, ...offers].map(p => p.id))
-  const by = (list: Product[]) => [...list.filter(p => !shown.has(p.id)), ...list.filter(p => shown.has(p.id))].slice(0, 4)
   const brands = [...new Set(products.filter(p => p.category === 'masculino' || p.category === 'feminino').map(p => p.brand))].sort()
 
   const count = (c: Category) => products.filter(p => p.category === c).length
@@ -76,14 +72,6 @@ export default function Home() {
     const thumbs = list.filter(p => p.image).slice(0, 3).map(p => p.image as string)
     return [t, list.length, notes, thumbs] as [string, number, string[], string[]]
   }).filter(([, c]) => c > 0)
-
-  const n = settings.installments
-  const perks = [
-    [n > 1 ? `Parcele em até ${n}x` : 'Pix e cartão', 'Pagamento seguro pelo Mercado Pago.'],
-    ['Retirada em Coxim', 'Sem custo de frete.'],
-    ['Entrega', settings.freeShippingFrom > 0 ? `Frete grátis acima de ${brl(settings.freeShippingFrom)}.` : 'Consulte a sua cidade.'],
-    ['Atendimento', 'Direto pelo WhatsApp, de gente que conhece os perfumes.'],
-  ]
 
   return (
     <>
@@ -104,7 +92,7 @@ export default function Home() {
 
       <RouteSpine>
       <Reveal as="section" className="hm-sec hm-feat">
-        <SecHead eyebrow="Seleção da loja" title="Os destaques da Arkyn" to="/catalogo" />
+        <SecHead title="Os destaques da Arkyn" to="/catalogo" />
         <div className="grid shelf hm-four">{featured.map(p => <ProductCard key={p.id} p={p} />)}</div>
       </Reveal>
 
@@ -118,21 +106,15 @@ export default function Home() {
             <img src={`/hero/${img}.webp`} width="560" height="560" alt="" loading="lazy" decoding="async" />
           </Link>
         ))}
-        <div className="hm-minis">
-          <Link to="/catalogo?cat=splash"><b>Body Splash</b><small>{count('splash')} produtos</small><span aria-hidden="true">→</span></Link>
-          <Link to="/catalogo?cat=skincare"><b>Skincare</b><small>{count('skincare')} {count('skincare') === 1 ? 'produto' : 'produtos'}</small><span aria-hidden="true">→</span></Link>
-          <Link to="/quiz"><b>Qual é o seu cheiro?</b><small>Quiz de 6 perguntas</small><span aria-hidden="true">→</span></Link>
-        </div>
       </Reveal>
 
       {pyr && PYRAMIDS[PYRAMID_ID] && (
         <Reveal as="section" className="hm-pyr" aria-labelledby="pyr-t">
           <div className="hm-pyr-img"><img src={`/hero/${pyr.id}.webp`} width="900" height="800" alt={`${pyr.brand} ${pyr.name}`} loading="lazy" decoding="async" /></div>
           <div className="hm-pyr-txt">
-            <p className="hm-eyebrow">{pyr.brand} · 100 ml</p>
             <h2 id="pyr-t">Pink Eclipse, em três tempos</h2>
             <ol>
-              {([['Saída', PYRAMIDS[PYRAMID_ID].top], ['Coração', PYRAMIDS[PYRAMID_ID].heart], ['Fundo', PYRAMIDS[PYRAMID_ID].base]] as [string, string[]][]).map(([k, n], i) => <li key={k}><small>{k}</small><div><b>{join(n)}</b><span>{PYRAMIDS[PYRAMID_ID].lines[i]}</span></div></li>)}
+              {([['Saída', PYRAMIDS[PYRAMID_ID].top], ['Coração', PYRAMIDS[PYRAMID_ID].heart], ['Fundo', PYRAMIDS[PYRAMID_ID].base]] as [string, string[]][]).map(([k, n], i) => <li key={k} style={{ '--i': i } as CSSProperties}><small>{k}</small><div><b>{join(n)}</b><span>{PYRAMIDS[PYRAMID_ID].lines[i]}</span></div></li>)}
             </ol>
             <div className="hm-pyr-buy">
               <Link to={`/produto/${pyr.id}`} className="hx-btn">Ver o Pink Eclipse<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg></Link>
@@ -144,7 +126,6 @@ export default function Home() {
 
       <section className="hm-fam" aria-labelledby="fam-t">
         <Reveal className="hm-fam-head">
-          <p className="hm-eyebrow">Compre pelo cheiro</p>
           <h2 id="fam-t">Escolha pela família olfativa</h2>
           <p>Doce, amadeirado, fresco, floral ou especiado. Cada família reúne os perfumes do catálogo com aquele perfil.</p>
           <Link to="/quiz" className="hx-btn hx-btn--ghost">Fazer o quiz</Link>
@@ -163,22 +144,8 @@ export default function Home() {
         </div>
       </section>
 
-      <Shelf eyebrow="Condições especiais" title="Ofertas" to="/catalogo" items={offers} />
-      <Shelf eyebrow="Para ele" title="Perfumes masculinos" to="/catalogo?cat=masculino" items={by(masc)} />
-      <Shelf eyebrow="Para ela" title="Perfumes femininos" to="/catalogo?cat=feminino" items={by(fem)} />
+      <Shelf title="Ofertas" to="/catalogo" items={offers} />
 
-      <Reveal as="section" className="hm-perks" aria-label="Como comprar">
-        {perks.map(([t, d]) => <div key={t}><b>{t}</b><span>{d}</span></div>)}
-      </Reveal>
-
-      {brands.length > 0 && (
-        <Reveal as="section" className="hm-brands">
-          <nav aria-label="Marcas">
-            <p className="hm-eyebrow">Marcas</p>
-            <div>{brands.map(b => <Link key={b} to={`/catalogo?brand=${encodeURIComponent(b)}`}>{b}</Link>)}</div>
-          </nav>
-        </Reveal>
-      )}
       </RouteSpine>
     </>
   )

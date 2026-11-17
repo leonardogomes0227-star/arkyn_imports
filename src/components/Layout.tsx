@@ -1,11 +1,13 @@
 import { useEffect, useState, type ReactNode } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import CartDrawer from './CartDrawer'
+import CompareBar from './CompareBar'
 import { ScrollBar } from './Festive'
+import Feel from './Feel'
 import Intro from './Intro'
 import SearchOverlay from './SearchOverlay'
-import { IconBag, IconHeart, IconSearch, IconTruck } from './Icons'
-import { brl, useStore } from '../lib/store'
+import { IconBag, IconHeart, IconSearch } from './Icons'
+import { useStore } from '../lib/store'
 
 export function Logo({ className = 'ax-logo' }: { className?: string }) {
   return (
@@ -23,7 +25,7 @@ const NAV: [string, string][] = [
   ['Todos os perfumes', '/catalogo'],
 ]
 
-const HEAD_NAV: [string, string][] = [['Início', '/'], ...NAV]
+const HEAD_NAV: [string, string][] = NAV.slice(0, 4)
 
 const phone = (n: string) => (/^55\d{2}9?\d{8}$/.test(n) ? `(${n.slice(2, 4)}) ${n.slice(4, n.length - 4)}-${n.slice(-4)}` : n)
 
@@ -33,7 +35,6 @@ export default function Layout({ children }: { children: ReactNode }) {
   const [scrolled, setScrolled] = useState(false)
   const [menu, setMenu] = useState(false)
   const [search, setSearch] = useState(false)
-  const ship = settings.announcement || (settings.freeShippingFrom > 0 ? `Frete grátis acima de ${brl(settings.freeShippingFrom)}` : 'Retirada grátis em Coxim – MS')
 
   // cabeçalho compacto ao rolar
   useEffect(() => {
@@ -70,13 +71,13 @@ export default function Layout({ children }: { children: ReactNode }) {
     <>
       <a className="ax-skip" href="#conteudo">Pular para o conteúdo</a>
       <Intro />
+      <Feel />
       <ScrollBar />
       <header className={scrolled ? 'ax-header is-scrolled' : 'ax-header'}>
         <div className="ax-topbar sc-top" aria-label="Avisos da loja">
           <div className="sc-top-in">
-            <span className="sc-top-l"><IconTruck size={16} />{ship}</span>
-            <span className="sc-top-c">{settings.installments > 1 ? `Pix ou cartão em até ${settings.installments}x` : 'Pix ou cartão de crédito'} <i aria-hidden="true">·</i> Retirada grátis em Coxim</span>
-            <span className="sc-top-r"><a href={wa} target="_blank" rel="noreferrer">Ajuda e suporte</a><Link to="/quiz">Qual é o seu cheiro?</Link></span>
+            <span className="sc-top-c">{settings.announcement || 'Retirada grátis em Coxim'}<i aria-hidden="true">·</i>Pix ou cartão</span>
+            <a className="sc-top-r" href={wa} target="_blank" rel="noreferrer">Ajuda</a>
           </div>
         </div>
         <div className="ax-head">
@@ -113,6 +114,7 @@ export default function Layout({ children }: { children: ReactNode }) {
 
       <main id="conteudo" key={loc.pathname} className="ax-page">{children}</main>
       <CartDrawer />
+      <CompareBar />
 
       <footer className="ax-footer">
         <div className="ax-foot-cta">
@@ -129,19 +131,12 @@ export default function Layout({ children }: { children: ReactNode }) {
             <h4>Comprar</h4>
             {NAV.map(([label, to]) => <Link key={to} to={to}>{label}</Link>)}
             <Link to="/quiz">Qual é o seu cheiro?</Link>
-            <Link to="/favoritos">Favoritos</Link>
           </div>
           <div>
             <h4>Atendimento</h4>
             <a href={wa} target="_blank" rel="noreferrer">WhatsApp {phone(settings.whatsapp)}</a>
             <span>Retirada: {settings.pickupAddress}</span>
-            <Link to="/carrinho">Minha sacola</Link>
-          </div>
-          <div>
-            <h4>Pagamento</h4>
-            <span>Pix e cartão de crédito</span>
-            <span>Pagamento seguro pelo Mercado Pago</span>
-            <div className="ax-pay"><i>Pix</i><i>Cartão</i></div>
+            <span>Pix e cartão, pelo Mercado Pago</span>
           </div>
         </div>
         <p className="ax-copy"><span>© {new Date().getFullYear()} Arkyn Imports · Coxim – MS</span><Link to="/admin">Área do lojista</Link></p>

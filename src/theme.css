@@ -366,3 +366,138 @@ body.ax .card .thumb.cut img.m, body.ax .pdp-img.cut img, .hm-col img, .hm-pyr-i
   -webkit-mask-image:linear-gradient(to bottom,#000 94%,transparent 100%); mask-image:linear-gradient(to bottom,#000 94%,transparent 100%) }
 body.ax .card .thumb::before { content:''; position:absolute; left:8%; right:8%; bottom:0; height:16%; z-index:0; pointer-events:none; background:radial-gradient(ellipse 60% 100% at 50% 100%,rgba(199,244,1,.11),transparent 72%) }
 body.ax .card .thumb img.m { position:relative; z-index:1 }
+
+/* =====================================================================
+   V3 — menos ruído, mais interação
+   ===================================================================== */
+/* faixa de cima e menu: uma frase só, quatro links */
+body.ax .sc-top-in { display:flex; justify-content:center; align-items:center; gap:24px; position:relative }
+body.ax .sc-top-c { font-size:.6875rem; letter-spacing:.2em; text-transform:uppercase; color:var(--silver) } body.ax .sc-top-c i { margin:0 12px; color:var(--lime); font-style:normal }
+body.ax .sc-top-r { position:absolute; right:var(--gutter,56px); font-size:.6875rem; letter-spacing:.2em; text-transform:uppercase; color:var(--silver) } body.ax .sc-top-r:hover { color:var(--lime) }
+@media (max-width:700px) { body.ax .sc-top-r { display:none } }
+body.ax .ax-nav { gap:clamp(22px,2.6vw,44px) }
+body.ax .ax-nav a { font-size:.75rem }
+
+/* rodapé: três colunas */
+body.ax .ax-footer-in { grid-template-columns:1.6fr 1fr 1.3fr }
+@media (max-width:1020px) { body.ax .ax-footer-in { grid-template-columns:1fr 1fr } }
+@media (max-width:560px) { body.ax .ax-footer-in { grid-template-columns:1fr } }
+
+/* ---------- botões: preenchimento que varre, seta que anda, puxão magnético ---------- */
+.hx-btn, body.ax .pdp-cta, body.ax .btn:not(.ghost):not(.light) { --tx:0px; --ty:0px; transform:translate(var(--tx),var(--ty)); position:relative; isolation:isolate; overflow:hidden;
+  background:linear-gradient(var(--lime-2),var(--lime-2)) no-repeat left center/0% 100%,var(--lime); transition:background-size .5s cubic-bezier(.2,.7,.2,1),transform .25s cubic-bezier(.2,.7,.2,1) }
+.hx-btn:hover, body.ax .pdp-cta:hover, body.ax .btn:not(.ghost):not(.light):hover { background:linear-gradient(var(--lime-2),var(--lime-2)) no-repeat left center/100% 100%,var(--lime); transform:translate(var(--tx),var(--ty)) }
+.hx-btn svg { transition:transform .35s cubic-bezier(.2,.7,.2,1) } .hx-btn:hover svg { transform:translateX(5px) }
+.hx-btn:active, body.ax .pdp-cta:active, body.ax .btn:active { transform:translate(var(--tx),var(--ty)) scale(.97) }
+/* botão secundário: contorno que se enche */
+.hx-btn--ghost, body.ax .btn.ghost, body.ax .btn.light { background:linear-gradient(var(--lime),var(--lime)) no-repeat left center/0% 100%; box-shadow:inset 0 0 0 1px #4a4a4d; color:#fff; transition:background-size .45s cubic-bezier(.2,.7,.2,1),color .3s,box-shadow .3s }
+.hx-btn--ghost:hover, body.ax .btn.ghost:hover, body.ax .btn.light:hover { background-size:100% 100%; color:#000; box-shadow:inset 0 0 0 1px var(--lime) }
+/* cartão: botão discreto, o verde só aparece quando você chega nele */
+body.ax .card .card-add { background:linear-gradient(var(--lime),var(--lime)) no-repeat left center/0% 100%; color:#fff; box-shadow:inset 0 0 0 1px #3a3a3d; clip-path:none; font-weight:700; transition:background-size .45s cubic-bezier(.2,.7,.2,1),color .3s,box-shadow .3s }
+body.ax .card .card-add:hover, body.ax .card:hover .card-add { box-shadow:inset 0 0 0 1px var(--lime) } body.ax .card .card-add:hover { background-size:100% 100%; color:#000 }
+body.ax .card .card-add.done { background-size:100% 100%; color:#000 }
+
+/* anel do cursor e luz nos painéis */
+.feel-ring { position:fixed; left:0; top:0; width:34px; height:34px; border:1px solid rgba(199,244,1,.55); border-radius:50%; z-index:400; pointer-events:none; opacity:0; transition:opacity .3s,width .25s,height .25s,border-color .25s,background .25s; mix-blend-mode:normal }
+.feel-ring.press { background:rgba(199,244,1,.18) }
+@media (hover:none),(pointer:coarse) { .feel-ring { display:none } }
+.hm-col, .hm-fam-c, .hm-pyr-txt li { --px:50%; --py:50%; position:relative }
+.hm-col::after, .hm-fam-c::after { content:''; position:absolute; inset:0; z-index:0; pointer-events:none; opacity:0; transition:opacity .35s; background:radial-gradient(circle 260px at var(--px) var(--py),rgba(199,244,1,.12),transparent 70%) }
+.hm-col:hover::after, .hm-fam-c:hover::after { opacity:1 }
+.hm-col-txt, .hm-fam-c > * { position:relative; z-index:1 }
+
+/* marca que inclina com a rolagem */
+.hm-mq ul { transform:skewX(var(--mq-skew,0deg)); transition:transform .15s linear }
+
+/* pirâmide: a linha em foco se destaca */
+.hm-pyr-txt li { transition:opacity .35s,transform .45s cubic-bezier(.2,.7,.2,1); cursor:default }
+.hm-pyr-txt ol:hover li:not(:hover) { opacity:.38 } .hm-pyr-txt li:hover { transform:translateX(10px) } .hm-pyr-txt li:hover small { letter-spacing:.34em } .hm-pyr-txt li small { transition:letter-spacing .4s }
+.rv .hm-pyr-txt li { opacity:0; transform:translateY(18px) } .rv.in .hm-pyr-txt li { opacity:1; transform:none; transition-delay:calc(var(--i,0)*120ms + 300ms) }
+.rv.in .hm-pyr-txt ol:hover li:not(:hover) { opacity:.38 }
+
+/* dica de arraste no globo */
+.gh-hint { position:absolute; right:var(--gutter,56px); bottom:28px; z-index:3; font-size:.6875rem; letter-spacing:.24em; text-transform:uppercase; color:var(--silver); display:flex; align-items:center; gap:10px; transition:opacity .5s }
+.gh-hint::before { content:''; width:28px; height:1px; background:var(--lime); animation:gh-hint 2.2s ease-in-out infinite }
+@keyframes gh-hint { 50% { transform:scaleX(.3); transform-origin:left } }
+.gh.dragged .gh-hint { opacity:0 }
+@media (hover:none),(max-width:1000px) { .gh-hint { display:none } }
+
+/* cartões da home em tela cheia respiram sem o rodapé de perks */
+.hm-cols { grid-template-columns:1fr 1fr }
+@media (max-width:1000px) { .hm-cols { grid-template-columns:1fr } }
+@media (prefers-reduced-motion:reduce) { .hm-mq ul { transform:none } .gh-hint::before { animation:none } .rv .hm-pyr-txt li { opacity:1; transform:none } }
+
+/* =====================================================================
+   BOTÕES — conteúdo sempre centralizado, ondulação no clique e luz que segue o cursor
+   ===================================================================== */
+.hx-btn, body.ax .btn, body.ax .pdp-cta, body.ax .card-add, body.ax .ch-btn, body.ax .btn-gold, body.ax .ax-menu-wa, body.ax .ax-suggest button {
+  display:inline-flex; align-items:center; justify-content:center; text-align:center; gap:10px; min-height:52px; line-height:1.15; position:relative; overflow:hidden; cursor:pointer }
+.hx-btn { padding-left:30px; padding-right:30px }
+body.ax .btn.block, body.ax .card-add, body.ax .pdp-cta, body.ax .ax-menu-wa { width:100% }
+.gh-cta, .hm-pyr-buy { align-items:center }
+.hx-btn::after, body.ax .btn::after, body.ax .pdp-cta::after, body.ax .card-add::after { content:''; display:block; position:absolute; inset:0; z-index:-1; pointer-events:none; opacity:0; transition:opacity .3s;
+  background:radial-gradient(circle 110px at var(--bx,50%) var(--by,50%),rgba(255,255,255,.55),transparent 70%); left:auto; top:auto; width:auto; height:auto; transform:none }
+.hx-btn:hover::after, body.ax .btn:hover::after, body.ax .pdp-cta:hover::after, body.ax .card-add:hover::after { opacity:.55 }
+.rip { position:absolute; z-index:0; border-radius:50%; pointer-events:none; background:currentColor; opacity:.22; transform:scale(0); animation:rip .65s cubic-bezier(.2,.7,.2,1) forwards }
+@keyframes rip { to { transform:scale(1); opacity:0 } }
+.hx-btn, body.ax .btn { transition:background-size .5s cubic-bezier(.2,.7,.2,1),transform .25s cubic-bezier(.2,.7,.2,1),letter-spacing .35s }
+.hx-btn:hover, body.ax .btn:hover, body.ax .pdp-cta:hover { letter-spacing:.2em }
+body.ax .card-add.done { animation:done-pop .5s cubic-bezier(.2,.9,.3,1.4) }
+@keyframes done-pop { 40% { transform:scale(1.04) } }
+.hx-btn:focus-visible, body.ax .btn:focus-visible, body.ax .card-add:focus-visible, body.ax .pdp-cta:focus-visible { outline:2px solid #fff; outline-offset:3px }
+@media (max-width:1000px) { .gh-cta, .hm-pyr-buy { justify-content:center } .gh-cta .hx-btn { flex:1 1 200px } }
+@media (prefers-reduced-motion:reduce) { .rip { display:none } .hx-btn:hover, body.ax .btn:hover { letter-spacing:.16em } }
+
+/* =====================================================================
+   FERRAMENTAS — comparar, enviar, avisar. Botões sempre bem visíveis.
+   ===================================================================== */
+.hx-btn--ghost, body.ax .btn.ghost, body.ax .btn.light { box-shadow:inset 0 0 0 1.5px #9a9a9e; color:#fff }
+body.ax .card .card-add { box-shadow:inset 0 0 0 1.5px #9a9a9e; color:#fff }
+body.ax .btn.ghost.on { background-size:100% 100%; color:#000; box-shadow:inset 0 0 0 1.5px var(--lime) }
+
+body.ax .card .cmp { position:absolute; left:10px; top:10px; z-index:3; height:30px; padding:0 11px; font:700 .625rem/1 var(--sans); letter-spacing:.14em; text-transform:uppercase; color:#fff; background:rgba(0,0,2,.72); border:1px solid #9a9a9e; border-radius:0; cursor:pointer; backdrop-filter:blur(6px); transition:background .3s,color .3s,border-color .3s,transform .25s }
+body.ax .card .cmp:hover { border-color:var(--lime); color:var(--lime); transform:translateY(-1px) }
+body.ax .card .cmp.on { background:var(--lime); color:#000; border-color:var(--lime) }
+body.ax .card .off { left:auto; right:10px; top:52px }
+
+.cmpbar { position:fixed; left:50%; bottom:22px; transform:translateX(-50%); z-index:120; display:flex; align-items:center; gap:18px; padding:12px 14px 12px 18px; background:rgba(5,5,6,.94); border:1px solid #3a3a3d; box-shadow:0 24px 60px -20px #000; backdrop-filter:blur(12px); animation:cmp-in .45s cubic-bezier(.2,.7,.2,1) both; max-width:calc(100vw - 24px) }
+@keyframes cmp-in { from { opacity:0; transform:translate(-50%,24px) } to { opacity:1; transform:translateX(-50%) } }
+.cmpbar ul { display:flex; gap:8px; list-style:none; margin:0; padding:0 }
+.cmpbar li { width:52px; height:52px; background:radial-gradient(circle at 50% 60%,#2a2a2c,#0b0b0c); border:1px solid #2a2a2c; display:grid; place-items:center; position:relative }
+.cmpbar li.empty { color:#5a5a5d; font-size:1.3rem; border-style:dashed }
+.cmpbar li button { background:none; border:0; padding:0; width:100%; height:100%; cursor:pointer; position:relative }
+.cmpbar li img { width:100%; height:100%; object-fit:contain; padding:4px }
+.cmpbar li i { position:absolute; right:-6px; top:-6px; width:18px; height:18px; display:grid; place-items:center; background:#fff; color:#000; border-radius:50%; font:700 .8rem/1 var(--sans); font-style:normal; opacity:0; transform:scale(.6); transition:.2s }
+.cmpbar li button:hover i, .cmpbar li button:focus-visible i { opacity:1; transform:none }
+.cmpbar-n { font-size:.75rem; letter-spacing:.08em; color:var(--silver); max-width:150px; line-height:1.3 }
+.cmpbar .hx-btn { padding:16px 22px; min-height:48px } .cmpbar .hx-btn.is-off { opacity:.35; pointer-events:none; filter:grayscale(1) }
+body.has-buybar .cmpbar { bottom:84px }
+@media (max-width:640px) { .cmpbar { left:12px; right:12px; transform:none; bottom:92px; justify-content:space-between; gap:10px; padding:10px } @keyframes cmp-in { from { opacity:0; transform:translateY(24px) } to { opacity:1; transform:none } } .cmpbar-n { display:none } .cmpbar li { width:44px; height:44px } .cmpbar .hx-btn { padding:14px 16px } }
+
+.cmp-page h1 { font:600 clamp(2.4rem,4.4vw,4rem)/.95 var(--display); margin-bottom:12px }
+.cmp-page > p { margin-bottom:28px; max-width:620px }
+.cmp-scroll { overflow-x:auto; border:1px solid #1d1d1f; background:var(--night-2) }
+.cmp-table { border-collapse:collapse; width:100%; min-width:640px }
+.cmp-table th, .cmp-table td { padding:20px 22px; text-align:left; vertical-align:top; border-bottom:1px solid #1d1d1f; font-size:.9375rem; color:#fff }
+.cmp-table thead th { position:relative; vertical-align:bottom; text-align:center; min-width:210px }
+.cmp-table thead th:first-child { text-align:left; vertical-align:top; min-width:130px }
+.cmp-table tbody th { width:130px; font:700 .6875rem/1.4 var(--sans); letter-spacing:.2em; text-transform:uppercase; color:var(--lime) }
+.cmp-img { display:block; height:200px; margin:6px 0 8px } .cmp-img img { width:100%; height:100%; object-fit:contain; filter:drop-shadow(0 18px 16px rgba(0,0,0,.7)); transition:transform .5s cubic-bezier(.2,.7,.2,1) } .cmp-img:hover img { transform:scale(1.06) rotate(-1.5deg) }
+.cmp-table thead small { display:block; color:var(--silver); letter-spacing:.22em; text-transform:uppercase; font-size:.625rem }
+.cmp-table h2 { font:600 1.5rem/1.1 var(--display); margin-top:4px }
+.cmp-x { position:absolute; right:10px; top:10px; width:30px; height:30px; background:transparent; color:#fff; border:1px solid #4a4a4d; cursor:pointer; font-size:1.1rem; line-height:1; transition:.25s } .cmp-x:hover { border-color:var(--lime); color:var(--lime); transform:rotate(90deg) }
+.cmp-table td b { font:600 1.6rem/1 var(--display) } .cmp-best { color:var(--lime) } .cmp-best small { display:block; margin-top:6px; font:700 .625rem/1 var(--sans); letter-spacing:.18em; text-transform:uppercase }
+.cmp-notes { list-style:none; margin:0; padding:0; display:grid; gap:10px }
+.cmp-notes li { --c:#C7F401; display:flex; align-items:center; gap:10px; font:600 1.1rem/1.1 var(--display); color:var(--silver) }
+.cmp-notes li.shared { color:#fff } .cmp-notes li.shared::after { content:'em comum'; margin-left:auto; font:700 .5625rem/1 var(--sans); letter-spacing:.14em; text-transform:uppercase; color:var(--lime) }
+.cmp-notes i { width:14px; height:14px; border-radius:50%; flex:none; box-shadow:0 0 12px -2px var(--c) }
+.cmp-act td { border-bottom:0 } .cmp-act .btn { margin-bottom:10px }
+body.ax .btn-gold, body.ax .ch-btn { white-space:nowrap; padding:0 28px }
+@media (max-width:560px) { body.ax .ax-foot-cta .btn-gold { width:100% } }
+/* comparar no celular: botão embaixo da foto (não briga com o coração) e rótulos fixos na tabela */
+.cmp-table tr > :first-child { position:sticky; left:0; z-index:1; background:var(--night-2) }
+@media (max-width:640px) {
+  body.ax .card .cmp { top:auto; bottom:10px; left:10px; height:26px; padding:0 8px; font-size:.5625rem; letter-spacing:.1em }
+  .cmp-table tbody th, .cmp-table thead th:first-child { width:88px; min-width:88px; padding:16px 12px; font-size:.5625rem }
+  .cmp-table thead th { min-width:190px }
+}
