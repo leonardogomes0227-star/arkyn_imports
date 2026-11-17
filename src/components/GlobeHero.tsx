@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
-import { brl, useStore } from '../lib/store'
+import { useStore } from '../lib/store'
 
 // Abertura da home: o globo da logo, girando devagar, com a rota verde e o avião indo até Coxim.
 // Canvas 2D, sem biblioteca. Pontos de terra vêm de src/lib/globeDots (carregado sob demanda).
@@ -16,7 +16,7 @@ const ease = (x: number) => (x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) /
 const clamp = (v: number, a = 0, b = 1) => Math.min(b, Math.max(a, v))
 
 export default function GlobeHero() {
-  const { products, settings } = useStore()
+  const { products } = useStore()
   const box = useRef<HTMLElement>(null)
   const cv = useRef<HTMLCanvasElement>(null)
 
@@ -174,7 +174,7 @@ export default function GlobeHero() {
     document.addEventListener('visibilitychange', vis)
     const ro = new ResizeObserver(resize); ro.observe(el); resize(); start()
 
-    const down = (e: PointerEvent) => { if (e.pointerType === 'touch') return; drag.down = true; drag.x = e.clientX; drag.y = e.clientY; drag.vlon = drag.vlat = 0; el.setPointerCapture?.(e.pointerId) }
+    const down = (e: PointerEvent) => { if (e.pointerType === 'touch') return; drag.down = true; el.classList.add('dragged'); drag.x = e.clientX; drag.y = e.clientY; drag.vlon = drag.vlat = 0; el.setPointerCapture?.(e.pointerId) }
     const move = (e: PointerEvent) => { if (!drag.down) return; const dx = e.clientX - drag.x, dy = e.clientY - drag.y; drag.x = e.clientX; drag.y = e.clientY; drag.lon -= dx * 0.28; drag.lat += dy * 0.2; drag.vlon = -dx * 0.05; drag.vlat = dy * 0.03 }
     const up = () => { drag.down = false }
     el.addEventListener('pointerdown', down); el.addEventListener('pointermove', move); window.addEventListener('pointerup', up)
@@ -182,7 +182,6 @@ export default function GlobeHero() {
   }, [])
 
   const top = Object.entries(products.reduce<Record<string, number>>((m, p) => { if (p.category === 'masculino' || p.category === 'feminino') m[p.brand] = (m[p.brand] ?? 0) + 1; return m }, {})).sort((a, b) => b[1] - a[1]).slice(0, 3).map(x => x[0])
-  const n = settings.installments
   return (
     <section ref={box} className="gh" aria-label="Arkyn Imports">
       <canvas ref={cv} className="gh-cv" aria-hidden="true" />
@@ -195,12 +194,7 @@ export default function GlobeHero() {
           <Link to="/quiz" className="hx-btn hx-btn--ghost">Qual é o seu cheiro?</Link>
         </div>
       </div>
-      <div className="hx-strip">
-        <span><b>Pix</b> ou cartão{n > 1 ? ` em até ${n}x` : ''}</span>
-        <span><b>Retirada</b> grátis em Coxim – MS</span>
-        <span><b>Entrega</b> {settings.freeShippingFrom > 0 ? `frete grátis acima de ${brl(settings.freeShippingFrom)}` : 'para a sua cidade'}</span>
-        <span><b>Atendimento</b> direto no WhatsApp</span>
-      </div>
+      <span className="gh-hint" aria-hidden="true">Arraste para girar</span>
     </section>
   )
 }
