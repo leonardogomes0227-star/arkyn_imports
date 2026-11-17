@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Arkyn Imports — direção visual</title>
+<style>
+@font-face{font-family:Manrope;font-weight:500;src:url(fonts/manrope-latin-500-normal.woff2)}
+@font-face{font-family:Manrope;font-weight:700;src:url(fonts/manrope-latin-700-normal.woff2)}
+@font-face{font-family:Cormorant;font-weight:600;src:url(fonts/cormorant-garamond-latin-600-normal.woff2)}
+:root{--ink:#000002;--g1:#0b0b0c;--g2:#161617;--graph:#424242;--silver:#c6c6c6;--lime:#C7F401;--lime2:#DEFF78;--white:#fff}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--ink);color:var(--white);font:500 15px/1.5 Manrope,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.eyebrow{font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--silver)}
+/* header */
+header{position:absolute;inset:0 0 auto 0;z-index:5;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:22px 56px}
+header img{height:54px}
+nav{display:flex;gap:34px;font-size:11px;letter-spacing:.2em;text-transform:uppercase}
+nav a{padding:8px 0;border-bottom:1px solid transparent} nav a:first-child{border-color:var(--lime)}
+.tools{justify-self:end;display:flex;gap:26px;font-size:11px;letter-spacing:.2em;text-transform:uppercase}
+.tools b{color:var(--lime);font-weight:700}
+/* hero */
+.hero{position:relative;min-height:900px;overflow:hidden;background:radial-gradient(ellipse 48% 62% at 56% 58%,#2b2b2d 0%,#0b0b0c 62%,#000002 100%)}
+.hero .word{position:absolute;left:50%;top:50%;transform:translate(-50%,-56%);font:700 min(34vw,520px)/.8 Manrope;letter-spacing:-.05em;color:transparent;-webkit-text-stroke:2px #3d3d40;white-space:nowrap;user-select:none}
+.hero .bottle{position:absolute;z-index:2;left:55%;top:50%;height:600px;transform:translate(-50%,-50%) rotate(-3deg);filter:drop-shadow(0 50px 50px rgba(0,0,0,.8))}
+.hero .floor{position:absolute;left:54%;bottom:96px;width:560px;height:60px;transform:translateX(-50%);background:radial-gradient(ellipse,rgba(199,244,1,.28),transparent 68%)}
+.copy{position:absolute;left:56px;bottom:120px;max-width:430px;z-index:3}
+.copy h1{font:600 clamp(64px,7vw,104px)/.9 Cormorant,serif;letter-spacing:-.02em;margin:18px 0 22px}
+.copy h1 i{display:block;font-style:normal;color:var(--silver)}
+.copy p{color:var(--silver);max-width:360px}
+.buy{display:flex;align-items:center;gap:26px;margin-top:34px}
+.btn{display:inline-flex;align-items:center;gap:12px;background:var(--lime);color:#000;font-weight:700;font-size:12px;letter-spacing:.16em;text-transform:uppercase;padding:20px 30px;clip-path:polygon(0 0,100% 0,100% calc(100% - 14px),calc(100% - 14px) 100%,0 100%)}
+.price{font:600 34px Cormorant,serif;color:var(--white)} .price small{display:block;font:500 11px Manrope;letter-spacing:.2em;color:var(--silver);text-transform:uppercase}
+.notes{position:absolute;right:56px;bottom:120px;z-index:3;width:230px;display:grid;gap:0}
+.notes div{padding:15px 0;border-top:1px solid #2a2a2c;display:grid;grid-template-columns:70px 1fr}
+.notes small{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--lime)}
+.notes span{font-size:13px;color:var(--silver)}
+.route{position:absolute;inset:0;z-index:1;pointer-events:none}
+.tag{position:absolute;left:56px;top:150px;z-index:3}
+.tag b{display:block;font:600 30px Cormorant,serif;letter-spacing:.02em}
+.tag b em{font-style:normal;color:var(--lime)}
+.strip{position:absolute;left:0;right:0;bottom:0;border-top:1px solid #1f1f21;display:flex;justify-content:space-between;padding:20px 56px;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--silver);background:rgba(0,0,2,.7)}
+.strip b{color:var(--white);font-weight:700}
+/* coleção — cartões embarque */
+.col{padding:130px 56px 120px;background:var(--ink)}
+.col-h{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:56px}
+.col-h h2{font:600 clamp(48px,5.4vw,84px)/.92 Cormorant,serif;letter-spacing:-.02em}
+.col-h h2 i{font-style:normal;color:var(--lime)}
+.col-h p{max-width:300px;color:var(--silver)}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.card{position:relative;background:var(--g1);border:1px solid #1d1d1f;padding:22px 22px 24px;overflow:hidden}
+.card .top{display:flex;justify-content:space-between;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--silver)}
+.card .top b{color:var(--lime);font-weight:700}
+.card .pic{height:300px;display:grid;place-items:center;margin:14px 0 6px;background:radial-gradient(circle at 50% 60%,#2a2a2c,transparent 66%)}
+.card .pic img{height:270px;filter:drop-shadow(0 24px 22px rgba(0,0,0,.7))}
+.card h3{font:600 30px/1 Cormorant,serif}
+.card .br{font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--silver);margin-bottom:8px;display:block}
+.perf{margin:20px -22px;border-top:2px dashed #2a2a2c;position:relative}
+.perf::before,.perf::after{content:"";position:absolute;top:-11px;width:20px;height:20px;border-radius:50%;background:var(--ink);border:1px solid #1d1d1f}
+.perf::before{left:-11px}.perf::after{right:-11px}
+.route-line{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--silver)}
+.route-line i{height:1px;background:linear-gradient(90deg,#424242,var(--lime))}
+.route-line b{color:var(--white)}
+.card .foot{display:flex;justify-content:space-between;align-items:center;margin-top:18px}
+.card .foot .p{font:600 28px Cormorant,serif}
+.card .add{font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--lime);border-bottom:1px solid var(--lime);padding-bottom:3px}
+/* pirâmide */
+.pyr{display:grid;grid-template-columns:1fr 1fr;min-height:640px;background:var(--g1);border-top:1px solid #1d1d1f}
+.pyr .l{display:grid;place-items:center;background:radial-gradient(ellipse 60% 55% at 50% 55%,#2b2b2d,#0b0b0c 70%);position:relative}
+.pyr .l img{height:520px;filter:drop-shadow(0 40px 40px #000)}
+.pyr .r{padding:90px 80px;display:flex;flex-direction:column;justify-content:center;gap:0}
+.pyr h2{font:600 clamp(40px,4.4vw,68px)/.95 Cormorant,serif;margin:16px 0 40px}
+.step{display:grid;grid-template-columns:90px 1fr;padding:22px 0;border-top:1px solid #262628;align-items:baseline}
+.step small{font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--lime)}
+.step b{font:600 26px Cormorant,serif;font-weight:600}
+.step span{display:block;color:var(--silver);font-size:13px;margin-top:2px}
+/* mobile */
+@media(max-width:820px){
+ header{padding:14px 18px;grid-template-columns:auto 1fr auto}header img{height:38px}nav{display:none}.tools{gap:14px}.tools span:not(.bag){display:none}
+ .hero{min-height:844px}
+ .hero .word{font-size:62vw;top:34%}
+ .hero .bottle{height:400px;left:50%;top:36%}
+ .hero .floor{width:300px;bottom:auto;top:57%}
+ .tag{display:none}
+ .copy{left:18px;right:18px;bottom:82px;max-width:none}
+ .copy h1{font-size:60px;margin:12px 0 14px}.copy p{font-size:13px}
+ .buy{margin-top:20px;gap:16px}.btn{padding:17px 20px;font-size:11px}.price{font-size:28px}
+ .notes{display:none}.strip{padding:14px 18px;font-size:9px}.strip span:nth-child(n+3){display:none}
+ .col{padding:80px 18px}.col-h{display:block}.col-h p{margin-top:16px}.cards{grid-template-columns:1fr 1fr;gap:10px}
+ .card{padding:14px}.card .pic{height:170px}.card .pic img{height:150px}.card h3{font-size:22px}.card .foot .p{font-size:20px}.card .add{display:none}
+ .pyr{grid-template-columns:1fr}.pyr .l{height:380px}.pyr .l img{height:300px}.pyr .r{padding:48px 18px}
+}
+</style></head><body>
+
+<section class="hero" id="hero">
+ <header>
+  <a href="#"><img src="img/logo.png" alt="Arkyn Imports"></a>
+  <nav><a href="#">Início</a><a href="#">Masculinos</a><a href="#">Femininos</a><a href="#">Coleções</a><a href="#">Quiz</a></nav>
+  <div class="tools"><span>Buscar</span><span>Favoritos</span><span class="bag">Sacola <b>0</b></span></div>
+ </header>
+ <div class="word">NERO</div>
+ <svg class="route" viewBox="0 0 1440 900" preserveAspectRatio="none">
+  <path d="M-20 850 C 420 880, 900 760, 1120 380 S 1380 200, 1500 230" fill="none" stroke="#C7F401" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="1 0" opacity=".9"/>
+  <path d="M-20 862 C 420 892, 900 774, 1120 394 S 1380 214, 1500 244" fill="none" stroke="#C7F401" stroke-width="1" opacity=".35"/>
+  <g transform="translate(1318 250) rotate(-30)" fill="#c6c6c6"><path d="M0 0l30-7 12-26h6l-5 25 20-3 6-9h4l-3 12 3 12h-4l-6-9-20-3 5 25h-6L30 7z" transform="scale(.9) translate(-24 6)"/></g>
+ </svg>
+ <img class="bottle" src="img/maison-alhambra-victorioso-nero-100ml.webp" alt="">
+ <div class="floor"></div>
+ <div class="tag"><span class="eyebrow">Importado</span><b>Até <em>Coxim</em></b><span class="eyebrow">Retirada sem frete na loja</span></div>
+ <div class="copy">
+  <span class="eyebrow">Maison Alhambra · Eau de Parfum · 100 ml</span>
+  <h1>Victorioso<i>Nero</i></h1>
+  <p>Fresco e aromático, com doçura suave e fundo amadeirado. Feito para a noite.</p>
+  <div class="buy"><a class="btn" href="#">Comprar agora <span>→</span></a><div class="price"><small>a partir de</small>R$ 199,90</div></div>
+ </div>
+ <div class="notes">
+  <div><small>Saída</small><span>Limão e pimenta rosa</span></div>
+  <div><small>Coração</small><span>Lavanda e incenso</span></div>
+  <div><small>Fundo</small><span>Baunilha e âmbar</span></div>
+ </div>
+ <div class="strip"><span><b>Pix</b> ou cartão em até 12x</span><span><b>Retirada</b> grátis em Coxim – MS</span><span><b>Atendimento</b> direto no WhatsApp</span><span>Role ↓</span></div>
+</section>
+
+<section class="col">
+ <div class="col-h"><div><span class="eyebrow">Chegou na loja</span><h2>Importados com <i>pronta entrega</i><br>em Coxim</h2></div><p>[FALTA: confirmar frase com o lojista] Retirada grátis na loja ou entrega, com pagamento por Pix e cartão.</p></div>
+ <div class="cards">
+  <article class="card"><div class="top"><span>Arkyn Air</span><b>Embarque 01</b></div><div class="pic"><img src="img/french-avenue-vulcan-feu-100ml.webp" alt=""></div><span class="br">French Avenue</span><h3>Vulcan Feu</h3><div class="perf"></div><div class="route-line"><b>Origem</b><i></i><b>Coxim – MS</b></div><div class="foot"><span class="p">R$ 339,90</span><a class="add">Adicionar</a></div></article>
+  <article class="card"><div class="top"><span>Arkyn Air</span><b>Embarque 02</b></div><div class="pic"><img src="img/maison-alhambra-salvo-elixir-60ml.webp" alt=""></div><span class="br">Maison Alhambra</span><h3>Salvo Elixir</h3><div class="perf"></div><div class="route-line"><b>Origem</b><i></i><b>Coxim – MS</b></div><div class="foot"><span class="p">R$ 233,90</span><a class="add">Adicionar</a></div></article>
+  <article class="card"><div class="top"><span>Arkyn Air</span><b>Embarque 03</b></div><div class="pic"><img src="img/armaf-club-de-nuit-maleka-105ml.webp" alt=""></div><span class="br">Armaf</span><h3>Club de Nuit Maleka</h3><div class="perf"></div><div class="route-line"><b>Origem</b><i></i><b>Coxim – MS</b></div><div class="foot"><span class="p">R$ 366,90</span><a class="add">Adicionar</a></div></article>
+  <article class="card"><div class="top"><span>Arkyn Air</span><b>Embarque 04</b></div><div class="pic"><img src="img/maison-alhambra-pink-eclipse-100ml.webp" alt=""></div><span class="br">Maison Alhambra</span><h3>Pink Eclipse</h3><div class="perf"></div><div class="route-line"><b>Origem</b><i></i><b>Coxim – MS</b></div><div class="foot"><span class="p">R$ 322,90</span><a class="add">Adicionar</a></div></article>
+ </div>
+</section>
+
+<section class="pyr">
+ <div class="l"><img src="img/maison-alhambra-pink-eclipse-100ml.webp" alt=""></div>
+ <div class="r"><span class="eyebrow">Maison Alhambra · 100 ml</span><h2>Pink Eclipse,<br>em três tempos</h2>
+  <div class="step"><small>Saída</small><div><b>Pera, bergamota e tangerina</b><span>A primeira impressão, nos primeiros minutos.</span></div></div>
+  <div class="step"><small>Coração</small><div><b>Flor de laranjeira, jasmim e neroli</b><span>O que fica depois que a abertura passa.</span></div></div>
+  <div class="step"><small>Fundo</small><div><b>Baunilha, benjoim, almíscar e âmbar</b><span>A assinatura que dura no tecido e na pele.</span></div></div>
+ </div>
+</section>
+</body></html>
