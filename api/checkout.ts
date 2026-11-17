@@ -13,7 +13,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const token = process.env.MP_ACCESS_TOKEN
   if (!token) return res.status(500).json({ error: 'MP_ACCESS_TOKEN não configurado' })
 
-  const { items, name, phone, method, coupon } = req.body as { items: { id: string; qty: number }[]; name: string; phone: string; method: string; coupon?: string }
+  const body = (req.body ?? {}) as { items?: { id: string; qty: number }[]; name?: string; phone?: string; method?: string; coupon?: string }
+  // entrada do navegador: corta tamanhos e ignora o que não for válido (preço e total são sempre recalculados aqui)
+  const items = Array.isArray(body.items) ? body.items.slice(0, 50) : []
+  const name = String(body.name ?? '').trim().slice(0, 80)
+  const phone = String(body.phone ?? '').trim().slice(0, 25)
+  const method = String(body.method ?? '').slice(0, 60)
+  const coupon = body.coupon ? String(body.coupon).slice(0, 40) : undefined
+  if (name.length < 2 || phone.replace(/\D/g, '').length < 10) return res.status(400).json({ error: 'Confira nome e telefone' })
   let products: Product[] = SEED_PRODUCTS
   let settings: Settings = DEFAULT_SETTINGS
   if (SB && SK) {
@@ -23,9 +30,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (s?.[0]?.value) settings = { ...DEFAULT_SETTINGS, ...s[0].value }
   }
 
-  const lines = (items || []).flatMap(i => {
+  const lines = items.flatMap(i => {
     const p = products.find(x => x.id === i.id)
-    return p && i.qty > 0 && i.qty <= p.stock ? [{ p, qty: i.qty }] : []
+    return p && p.active !== false && Number.isInteger(i.qty) && i.qty > 0 && i.qty <= p.stock ? [{ p, qty: i.qty }] : []
   })
   if (!lines.length) return res.status(400).json({ error: 'Carrinho inválido ou sem estoque' })
 

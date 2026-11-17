@@ -99,7 +99,7 @@ export default function Home() {
       <Reveal as="section" className="hm-cols" aria-label="Compre por coleção">
         {([
           ['Para ele', 'Masculinos', 'Amadeirados e especiados, do dia a dia à noite.', '/catalogo?cat=masculino', 'french-avenue-vulcan-feu-100ml', count('masculino')],
-          ['Para ela', 'Femininos', 'Doces, florais e marcantes.', '/catalogo?cat=feminino', 'armaf-club-de-nuit-maleka-105ml', count('feminino')],
+          ['Para ela', 'Femininos', 'Doces e florais, do dia à noite.', '/catalogo?cat=feminino', 'armaf-club-de-nuit-maleka-105ml', count('feminino')],
         ] as [string, string, string, string, string, number][]).filter(c => hasCut(c[4])).map(([k, t, d, to, img, c]) => (
           <Link key={to} to={to} className="hm-col">
             <span className="hm-col-txt"><small>{k}</small><b>{t}</b><em>{d}</em><i>{c} {c === 1 ? 'perfume' : 'perfumes'} <span aria-hidden="true">→</span></i></span>
@@ -127,7 +127,7 @@ export default function Home() {
       <section className="hm-fam" aria-labelledby="fam-t">
         <Reveal className="hm-fam-head">
           <h2 id="fam-t">Escolha pela família olfativa</h2>
-          <p>Doce, amadeirado, fresco, floral ou especiado. Cada família reúne os perfumes do catálogo com aquele perfil.</p>
+          <p>Escolha o tipo de cheiro que você gosta e veja só os perfumes com esse perfil.</p>
           <Link to="/quiz" className="hx-btn hx-btn--ghost">Fazer o quiz</Link>
         </Reveal>
         <div className="hm-fam-grid">

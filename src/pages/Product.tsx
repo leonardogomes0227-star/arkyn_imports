@@ -165,7 +165,7 @@ export default function Product() {
       </div>
 
       {(!!related.length || !ready) && <>
-        <div className="ax-sec-head pdp-rel"><div><p className="ax-eyebrow">Continue explorando</p><h2>Você também pode gostar</h2></div></div>
+        <div className="ax-sec-head pdp-rel"><div><h2>Do mesmo estilo</h2></div></div>
         <div className="grid shelf">{ready ? related.map(r => <ProductCard key={r.id} p={r} />) : <ProductSkeleton />}</div>
       </>}
 
