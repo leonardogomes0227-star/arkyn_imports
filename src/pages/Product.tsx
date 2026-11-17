@@ -4,11 +4,12 @@ import { IconHeart } from '../components/Icons'
 import Placeholder from '../components/Placeholder'
 import SizedImg from '../components/SizedImg'
 import ProductCard, { ProductSkeleton } from '../components/ProductCard'
-import { noteGradient, noteIcon } from '../lib/noteColors'
+import { noteColor, noteGradient } from '../lib/noteColors'
 import { CAT_LABEL } from '../lib/search'
 import { usePageMeta } from '../lib/seo'
 import { brl, useStore } from '../lib/store'
 import { cutoutFor } from '../lib/cutouts'
+import { PYRAMIDS } from '../lib/pyramids'
 
 const FAMILIES = ['doce', 'amadeirado', 'fresco', 'floral', 'especiado']
 const GENDER = { masculino: 'Masculino', feminino: 'Feminino', unissex: 'Unissex' }
@@ -49,7 +50,9 @@ export default function Product() {
   const out = p.stock <= 0
   const sale = !!p.old_price && p.old_price > p.price
   const n = settings.installments
-  const images = [cutoutFor(p), p.image, ...(p.images ?? [])].filter((x, i, a): x is string => !!x && a.indexOf(x) === i)
+  const cutImg = cutoutFor(p)
+  const images = (cutImg ? [cutImg] : [p.image, ...(p.images ?? [])]).filter((x, i, a): x is string => !!x && a.indexOf(x) === i)
+  const pyr = PYRAMIDS[p.id]
   const word = (p.name.replace(/\s?\d+\s?ml$/i, '').split(' ').sort((a, b) => b.length - a.length)[0] ?? '').toUpperCase()
   const family = (p.tags ?? []).filter(t => FAMILIES.includes(t))
   const when = (p.tags ?? []).filter(t => t === 'dia' || t === 'noite')
@@ -123,9 +126,17 @@ export default function Product() {
             {!!p.notes?.length && (
               <details open>
                 <summary>Notas olfativas</summary>
-                <ol className="pdp-notes-list">
-                  {p.notes.map((nt, i) => <li key={nt}><em>{String(i + 1).padStart(2, '0')}</em>{noteIcon(nt) ? <i className="emo" aria-hidden="true">{noteIcon(nt)}</i> : <i style={{ background: noteGradient(nt) }} />}{nt}</li>)}
-                </ol>
+                {pyr ? (
+                  <ol className="np-tiers">
+                    {([['Saída', pyr.top], ['Coração', pyr.heart], ['Fundo', pyr.base]] as [string, string[]][]).map(([k, list]) => (
+                      <li key={k}><small>{k}</small><ul>{list.map(nt => <li key={nt} style={{ '--c': noteColor(nt)[1] } as React.CSSProperties}><i style={{ background: noteGradient(nt) }} />{nt}</li>)}</ul></li>
+                    ))}
+                  </ol>
+                ) : (
+                  <ul className="np-grid">
+                    {p.notes.map(nt => <li key={nt} style={{ '--c': noteColor(nt)[1] } as React.CSSProperties}><i style={{ background: noteGradient(nt) }} />{nt}</li>)}
+                  </ul>
+                )}
               </details>
             )}
             <details open>

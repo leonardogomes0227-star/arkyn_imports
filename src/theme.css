@@ -339,3 +339,30 @@ body.ax .ax-topbar.sc-top, body.ax .ax-header.is-scrolled .ax-topbar { height:39
 body.ax .ax-head, body.ax .ax-header.is-scrolled .ax-head { padding-top:10px; padding-bottom:10px; transition:none }
 body.ax .ax-logo img, body.ax .ax-header.is-scrolled .ax-logo img { height:56px; transition:none }
 @media (max-width:900px) { body.ax .ax-logo img, body.ax .ax-header.is-scrolled .ax-logo img { height:42px } }
+
+/* =====================================================================
+   NOTAS OLFATIVAS — sem emoji, estilo perfumaria
+   ===================================================================== */
+.np-grid { list-style:none; margin:0; padding:0 0 18px; display:grid; grid-template-columns:1fr 1fr; gap:0 32px }
+.np-grid li, .np-tiers ul li { --c:#C7F401; display:flex; align-items:center; gap:14px; font:600 1.35rem/1.1 var(--display); color:#fff }
+.np-grid li { padding:15px 0; border-bottom:1px solid #1d1d1f }
+.np-grid i, .np-tiers i { position:relative; flex:none; width:18px; height:18px; border-radius:50%; box-shadow:0 0 0 3px rgba(255,255,255,.05),0 0 18px -2px var(--c); animation:none }
+.np-tiers { list-style:none; margin:0; padding:0 0 18px }
+.np-tiers > li { display:grid; grid-template-columns:92px 1fr; gap:6px 16px; padding:18px 0; border-bottom:1px solid #1d1d1f; align-items:center }
+.np-tiers > li > small { font-size:.6875rem; letter-spacing:.24em; text-transform:uppercase; color:var(--lime) }
+.np-tiers ul { list-style:none; margin:0; padding:0; display:flex; flex-wrap:wrap; gap:10px 26px }
+.np-tiers ul li { font-size:1.25rem }
+/* no cartão: lista limpa que sobe ao passar o mouse */
+body.ax .card .notes { background:linear-gradient(to top,rgba(0,0,2,.97) 35%,rgba(0,0,2,0)); padding:46px 16px 14px; gap:6px 14px; border-radius:0 }
+body.ax .card .notes b { color:var(--lime); letter-spacing:.24em; font-size:.625rem; opacity:1 }
+body.ax .card .notes i { background:none; border:0; border-radius:0; padding:0; backdrop-filter:none; color:#e6e6e8; font:600 1.02rem/1.2 var(--display); display:inline-flex; align-items:center; gap:7px }
+body.ax .card .notes i u { width:9px; height:9px; margin:0; box-shadow:0 0 10px -1px currentColor }
+@media (max-width:560px) { .np-grid { grid-template-columns:1fr 1fr; gap:0 16px } .np-grid li { font-size:1.15rem } .np-tiers > li { grid-template-columns:1fr } }
+
+/* =====================================================================
+   FOTOS — base macia (some qualquer sobra de recorte) e chão com brilho
+   ===================================================================== */
+body.ax .card .thumb.cut img.m, body.ax .pdp-img.cut img, .hm-col img, .hm-pyr-img img {
+  -webkit-mask-image:linear-gradient(to bottom,#000 94%,transparent 100%); mask-image:linear-gradient(to bottom,#000 94%,transparent 100%) }
+body.ax .card .thumb::before { content:''; position:absolute; left:8%; right:8%; bottom:0; height:16%; z-index:0; pointer-events:none; background:radial-gradient(ellipse 60% 100% at 50% 100%,rgba(199,244,1,.11),transparent 72%) }
+body.ax .card .thumb img.m { position:relative; z-index:1 }
