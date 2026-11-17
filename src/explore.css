@@ -1,0 +1,60 @@
+/* =====================================================================
+   ESCOLHA PELO CHEIRO — seção inteira com a cor da família
+   ===================================================================== */
+@property --fam { syntax:'<color>'; inherits:true; initial-value:#7a1f3d }
+.sx { position:relative; margin-top:clamp(64px,7vw,104px); padding:clamp(56px,7vw,96px) 0; overflow:hidden; isolation:isolate;
+  background:radial-gradient(ellipse 90% 70% at 75% 60%,color-mix(in srgb,var(--fam) 70%,transparent),transparent 70%),linear-gradient(180deg,#000002,color-mix(in srgb,var(--fam) 22%,#000002) 60%,#000002);
+  transition:--fam 1s cubic-bezier(.4,0,.2,1) }
+.sx-in { max-width:1360px; margin:0 auto; padding:0 var(--gutter,20px) }
+.sx-h { font:600 clamp(2.6rem,5.4vw,5rem)/.95 var(--display); margin:0 0 24px; color:#fff }
+.sx-tabs { display:flex; gap:10px; overflow-x:auto; scrollbar-width:none; margin:0 calc(-1*var(--gutter,20px)) 34px; padding:4px var(--gutter,20px) }
+.sx-tabs::-webkit-scrollbar { display:none }
+.sx-tabs button { --c:#7a1f3d; flex:none; display:inline-flex; align-items:center; gap:10px; padding:13px 20px; border-radius:40px; border:1.5px solid rgba(255,255,255,.22); background:rgba(0,0,2,.35); color:#fff; font:600 1rem/1 var(--sans); cursor:pointer; transition:background .4s,border-color .4s,transform .3s cubic-bezier(.2,.7,.2,1) }
+.sx-tabs button small { font-size:.75rem; color:#d4d4d7; background:rgba(255,255,255,.1); padding:3px 8px; border-radius:20px; transition:.3s }
+.sx-tabs button:hover { border-color:rgba(255,255,255,.5) } .sx-tabs button:active { transform:scale(.95) }
+.sx-tabs button.on { background:#fff; color:#000; border-color:#fff } .sx-tabs button.on small { background:var(--c); color:#fff }
+.sx-body { display:grid; grid-template-columns:minmax(280px,.8fr) 1.6fr; gap:clamp(24px,4vw,56px); align-items:center }
+.sx-name { display:block; font:600 clamp(4rem,10vw,8.5rem)/.85 var(--display); color:#fff; letter-spacing:-.02em; animation:sx-in .7s cubic-bezier(.2,.7,.2,1) both }
+.sx-info p { color:#e6e6e8; font-size:1.0625rem; line-height:1.6; margin:14px 0 20px; animation:sx-in .7s cubic-bezier(.2,.7,.2,1) .06s both }
+.sx-notes { display:flex; flex-wrap:wrap; gap:8px; list-style:none; margin:0 0 26px; padding:0 }
+.sx-notes li { --c:#C7F401; display:inline-flex; align-items:center; gap:8px; padding:8px 14px 8px 9px; border-radius:30px; background:rgba(0,0,2,.4); border:1px solid rgba(255,255,255,.14); color:#fff; font:600 .9375rem/1 var(--display); animation:sx-pop .5s cubic-bezier(.2,.9,.3,1.3) calc(.12s + var(--i)*.06s) both }
+.sx-notes i { width:14px; height:14px; border-radius:50%; box-shadow:0 0 12px -1px var(--c) }
+.sx-row { display:grid; grid-auto-flow:column; grid-auto-columns:minmax(180px,1fr); gap:14px; overflow-x:auto; scroll-snap-type:x mandatory; scrollbar-width:none; padding:6px 2px 16px }
+.sx-row::-webkit-scrollbar { display:none }
+.sx-p { scroll-snap-align:start; display:flex; flex-direction:column; gap:3px; padding:14px 14px 16px; background:rgba(0,0,2,.42); border:1px solid rgba(255,255,255,.12); -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px); color:#fff; animation:sx-in .7s cubic-bezier(.2,.7,.2,1) calc(.1s + var(--i)*.07s) both; transition:border-color .3s,transform .45s cubic-bezier(.2,.7,.2,1) }
+.sx-p:hover { border-color:#fff; transform:translateY(-5px) }
+.sx-img { display:grid; place-items:center; height:200px; margin-bottom:8px }
+.sx-img img { width:100%; height:100%; object-fit:contain; filter:drop-shadow(0 18px 16px rgba(0,0,0,.6)); transition:transform .6s cubic-bezier(.2,.7,.2,1) }
+.sx-p:hover .sx-img img { transform:scale(1.07) rotate(-2deg) }
+.sx-p small { color:#d4d4d7; font:700 .75rem/1.2 var(--sans); letter-spacing:.08em; text-transform:uppercase }
+.sx-p b { font:600 1.3rem/1.1 var(--display) }
+.sx-p em { font-style:normal; font:600 1.15rem/1 var(--display); color:#fff; margin-top:4px }
+@keyframes sx-in { from { opacity:0; transform:translateY(18px) } }
+@keyframes sx-pop { from { opacity:0; transform:scale(.6) } }
+@media (max-width:900px) {
+  .sx-body { grid-template-columns:1fr; gap:20px }
+  .sx-name { font-size:clamp(3.4rem,17vw,5rem) }
+  .sx-row { grid-auto-columns:46%; margin:0 calc(-1*var(--gutter,20px)); padding-left:var(--gutter,20px); padding-right:var(--gutter,20px); scroll-padding:0 var(--gutter,20px) }
+  .sx-img { height:150px }
+  .sx-info .hx-btn { width:100%; justify-content:center }
+}
+@media (prefers-reduced-motion:reduce) { .sx { transition:none } .sx-name, .sx-info p, .sx-notes li, .sx-p { animation:none } }
+
+/* =====================================================================
+   MOVIMENTO MAIS FLUIDO
+   ===================================================================== */
+html { scroll-behavior:smooth }
+@media (prefers-reduced-motion:reduce) { html { scroll-behavior:auto } }
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion:no-preference) {
+    .hm-col, .hm-info > *, .grid > .card, .hm-br-c, .qz-pass { animation:sc-rise2 linear both; animation-timeline:view(); animation-range:entry 0% entry 70% }
+    @keyframes sc-rise2 { from { opacity:0; transform:translateY(28px) } to { opacity:1; transform:none } }
+  }
+}
+.rv { transition:opacity 1s cubic-bezier(.16,1,.3,1) var(--d,0ms),transform 1s cubic-bezier(.16,1,.3,1) var(--d,0ms) }
+a, button, [role=tab] { touch-action:manipulation; -webkit-tap-highlight-color:transparent }
+@media (hover:none) {
+  body.ax .card:hover { transform:none }
+  body.ax .card:active { transform:scale(.985) }
+  .hm-col:active, .hm-br-c:active, .sx-p:active { transform:scale(.98) }
+}

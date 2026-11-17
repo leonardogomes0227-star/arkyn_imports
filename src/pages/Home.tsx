@@ -1,6 +1,7 @@
 import type { CSSProperties } from 'react'
 import { Link } from 'react-router-dom'
 import GlobeHero from '../components/GlobeHero'
+import ScentExplorer from '../components/ScentExplorer'
 import { ChristmasBand } from '../components/Festive'
 import ProductCard from '../components/ProductCard'
 import Reveal from '../components/Reveal'
@@ -12,10 +13,6 @@ import { cutoutFor } from '../lib/cutouts'
 import { usePageMeta } from '../lib/seo'
 import type { Category, Product } from '../lib/types'
 
-const SCENTS = ['doce', 'amadeirado', 'fresco', 'floral', 'especiado']
-// cor de aura de cada família olfativa (sobre o preto)
-const FAM: Record<string, string> = { doce: '#6b1d36', amadeirado: '#5a3b1c', fresco: '#1d5a52', floral: '#6b2a5a', especiado: '#7a3b12' }
-const cap = (t: string) => t[0].toUpperCase() + t.slice(1)
 
 
 function SecHead({ eyebrow, title, to, link = 'Ver todos' }: { eyebrow?: string; title: string; to?: string; link?: string }) {
@@ -64,14 +61,6 @@ export default function Home() {
   const count = (c: Category) => products.filter(p => p.category === c).length
   const hasCut = (id: string) => products.some(p => p.id === id)
 
-  const scents = SCENTS.map(t => {
-    const list = products.filter(p => p.tags?.includes(t))
-    const freq = new Map<string, number>()
-    list.forEach(p => p.notes?.forEach(x => freq.set(x, (freq.get(x) ?? 0) + 1)))
-    const notes = [...freq.entries()].sort((a, b) => b[1] - a[1]).slice(0, 4).map(([x]) => x)
-    const thumbs = list.filter(p => p.image).slice(0, 3).map(p => p.image as string)
-    return [t, list.length, notes, thumbs] as [string, number, string[], string[]]
-  }).filter(([, c]) => c > 0)
 
   return (
     <>
@@ -113,25 +102,7 @@ export default function Home() {
       </Reveal>
 
 
-      <section className="hm-fam" aria-labelledby="fam-t">
-        <Reveal className="hm-fam-head">
-          <h2 id="fam-t">Escolha pela família olfativa</h2>
-          <p>Escolha o tipo de cheiro que você gosta e veja só os perfumes com esse perfil.</p>
-          <Link to="/quiz" className="hx-btn hx-btn--ghost">Fazer o quiz</Link>
-        </Reveal>
-        <div className="hm-fam-grid">
-          {scents.map(([t, count, notes, thumbs], i) => (
-            <Reveal key={t} delay={i * 70}>
-              <Link to={`/catalogo?tag=${t}`} className="hm-fam-c" style={{ '--fam': FAM[t] ?? '#3a2e22' } as CSSProperties}>
-                <b>{cap(t)}</b>
-                <small>{notes.join(' · ')}</small>
-                <span className="hm-fam-th">{thumbs.map(src => <i key={src}><SizedImg src={src} size={160} width={160} height={160} alt="" loading="lazy" decoding="async" /></i>)}</span>
-                <em>{count} perfumes →</em>
-              </Link>
-            </Reveal>
-          ))}
-        </div>
-      </section>
+      <ScentExplorer />
 
       <Shelf title="Ofertas" to="/catalogo" items={offers} />
       <Reveal as="section" className="hm-info" aria-label="Como comprar">
