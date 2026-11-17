@@ -26,5 +26,7 @@ const CUT = new Set([
 
 export const cutoutOf = (id: string) => (CUT.has(id) ? `/hero/${id}.webp` : undefined)
 
-/** Recorte da loja só quando o produto usa foto local; foto enviada pelo painel (outra origem) é respeitada. */
-export const cutoutFor = (p: { id: string; image?: string | null }) => (!p.image || p.image.startsWith('/') ? cutoutOf(p.id) : undefined)
+/** Sempre usa o recorte limpo quando ele existe (mesmo se o painel tiver uma foto com fundo branco). */
+export const cutoutFor = (p: { id: string }) => cutoutOf(p.id)
+/** Foto para mostrar: recorte limpo ou, sem recorte, a foto do cadastro. */
+export const photoOf = (p: { id: string; image?: string | null }) => cutoutOf(p.id) ?? p.image ?? undefined

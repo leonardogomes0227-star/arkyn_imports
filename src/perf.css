@@ -31,3 +31,7 @@ body.ax .card, .hm-col, .hm-br-c, .sx-p { will-change:auto }
 /* o avião passa por cima; a linha fica atrás dos cartões e títulos, que têm fundo próprio */
 .rs-in .hm-head, .rs-in .sx-h { position:relative }
 @media (max-width:700px) { .rs-line { stroke-width:1.8 } .rs-plane { width:46px } }
+/* o avião voa por trás dos produtos e títulos: aparece nos espaços entre as seções, nunca cobre um produto */
+.rs-plane { z-index:0 !important }
+.rs-in > section, .rs-in > div { position:relative }
+body.ax .card, .hm-br-c, .hm-col, .hm-info > *, .sx { position:relative; z-index:1 }
