@@ -98,7 +98,7 @@ export default function Home() {
         ] as [string, string, string, string, string, number][]).filter(c => hasCut(c[4])).map(([k, t, d, to, img, c]) => (
           <Link key={to} to={to} className="hm-col">
             <span className="hm-col-txt"><small>{k}</small><b>{t}</b><em>{d}</em><i>{c} {c === 1 ? 'perfume' : 'perfumes'} <span aria-hidden="true">→</span></i></span>
-            <img src={`/hero/${img}.webp`} width="560" height="560" alt="" loading="lazy" decoding="async" />
+            <img src={`/hero/${img}.webp?v=3`} width="560" height="560" alt="" loading="lazy" decoding="async" />
           </Link>
         ))}
       </Reveal>
