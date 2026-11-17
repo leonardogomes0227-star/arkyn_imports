@@ -212,7 +212,7 @@ export default function GlobeHero() {
       <canvas ref={cv} className="gh-cv" aria-hidden="true" />
       <div className="gh-copy">
         <p className="gh-eyebrow">Arkyn Imports · Envio para todo o Brasil</p>
-        <h1 className="gh-title"><span>Perfumaria árabe,</span><span>direto para todo o <em>Brasil.</em></span></h1>
+        <h1 className="gh-title"><span>Perfumes árabes</span><span>e importados,</span><span>para todo o <em>Brasil.</em></span></h1>
         {top.length > 0 && <p className="gh-sub">{top.join(', ')} e outras marcas. Enviamos para todo o país, e em Coxim – MS você retira na loja sem frete.</p>}
         <div className="gh-cta">
           <Link to="/catalogo" className="hx-btn">Ver os perfumes<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg></Link>
