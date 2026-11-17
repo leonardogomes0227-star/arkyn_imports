@@ -20,4 +20,15 @@ body.ax .card, .hm-col, .hm-br-c, .sx-p { will-change:auto }
   .hm-col, .hm-info > *, .grid > .card, .hm-br-c, .qz-pass { animation:none !important; animation-timeline:none !important }
 }
 /* conteúdo fora da tela não é desenhado até chegar perto */
-.sx, .hm-br, .hm-info, .hm-cols { content-visibility:auto; contain-intrinsic-size:auto 700px }
+/* (content-visibility removido: mudava a altura da home e desalinhava a rota) */
+
+/* ---------- rota que atravessa a home ---------- */
+.rs { position:relative; overflow:hidden; padding-bottom:40px }
+.rs-in { position:relative; z-index:1 }
+.rs-svg { position:absolute; left:0; top:0; z-index:0; pointer-events:none; overflow:visible }
+.rs-ghost { fill:none; stroke:rgba(255,255,255,.08); stroke-width:1.2; stroke-dasharray:3 8 }
+.rs-line { fill:none; stroke:var(--lime); stroke-width:2.2; stroke-linecap:round; opacity:.85 }
+.rs-plane { position:absolute; left:0; top:0; z-index:2; width:clamp(44px,4.6vw,70px); height:auto; pointer-events:none; opacity:0; transition:opacity .4s; will-change:transform }
+/* o avião passa por cima; a linha fica atrás dos cartões e títulos, que têm fundo próprio */
+.rs-in .hm-head, .rs-in .sx-h { position:relative }
+@media (max-width:700px) { .rs-line { stroke-width:1.6 } .rs-plane { width:38px } }

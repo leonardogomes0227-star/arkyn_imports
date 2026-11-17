@@ -29,7 +29,7 @@ export default function FlightPath() {
     return () => { window.removeEventListener('scroll', on); window.removeEventListener('resize', on); cancelAnimationFrame(raf) }
   }, [pathname])
 
-  if (pathname.startsWith('/carrinho') || pathname.startsWith('/quiz')) return null
+  if (pathname === '/' || pathname.startsWith('/carrinho') || pathname.startsWith('/quiz')) return null
   return (
     <div className="fp" aria-hidden="true">
       <span className="fp-rail" />
