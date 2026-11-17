@@ -4,7 +4,6 @@
 .fp-trail { position:absolute; left:18.5px; top:70px; bottom:70px; width:2px; background:linear-gradient(to bottom,rgba(199,244,1,.1),var(--lime)); transform-origin:top; transform:scaleY(0); box-shadow:0 0 8px rgba(199,244,1,.6); will-change:transform }
 .fp-plane { position:absolute; left:0; top:0; width:40px; height:auto; margin-top:-16px; will-change:transform }
 @media (max-width:900px) { .fp { right:4px; width:28px } .fp-rail { left:13px; top:80px; bottom:100px } .fp-trail { left:12.5px; top:80px; bottom:100px } .fp-plane { width:28px; margin-top:-11px } }
-@media (prefers-reduced-motion:reduce) { .fp { display:none } }
 
 /* ---------- desempenho: tira o que pesa na rolagem ---------- */
 /* desfoque de fundo é caro; troca por fundo sólido translúcido */
@@ -28,7 +27,7 @@ body.ax .card, .hm-col, .hm-br-c, .sx-p { will-change:auto }
 .rs-svg { position:absolute; left:0; top:0; z-index:0; pointer-events:none; overflow:visible }
 .rs-ghost { fill:none; stroke:rgba(255,255,255,.08); stroke-width:1.2; stroke-dasharray:3 8 }
 .rs-line { fill:none; stroke:var(--lime); stroke-width:2.2; stroke-linecap:round; opacity:.85 }
-.rs-plane { position:absolute; left:0; top:0; z-index:2; width:clamp(44px,4.6vw,70px); height:auto; pointer-events:none; opacity:0; transition:opacity .4s; will-change:transform }
+.rs-plane { position:absolute; left:0; top:0; z-index:2; width:clamp(52px,5.2vw,80px); filter:drop-shadow(0 8px 10px rgba(0,0,0,.6)); height:auto; pointer-events:none; opacity:0; transition:opacity .4s; will-change:transform }
 /* o avião passa por cima; a linha fica atrás dos cartões e títulos, que têm fundo próprio */
 .rs-in .hm-head, .rs-in .sx-h { position:relative }
-@media (max-width:700px) { .rs-line { stroke-width:1.6 } .rs-plane { width:38px } }
+@media (max-width:700px) { .rs-line { stroke-width:1.8 } .rs-plane { width:46px } }

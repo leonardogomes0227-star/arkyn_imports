@@ -38,7 +38,6 @@ export default function RouteSpine({ children }: { children: ReactNode }) {
   useEffect(() => {
     const el = root.current, p = path.current, pl = plane.current
     if (!el || !p || !pl || !box.h) return
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { pl.style.display = 'none'; return }
     // amostra a rota uma vez: posição e ângulo em cada ponto
     const L = p.getTotalLength()
     const xs = new Float32Array(SAMPLES + 1), ys = new Float32Array(SAMPLES + 1), an = new Float32Array(SAMPLES + 1)
