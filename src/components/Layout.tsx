@@ -77,7 +77,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       <header className={scrolled ? 'ax-header is-scrolled' : 'ax-header'}>
         <div className="ax-topbar sc-top" aria-label="Avisos da loja">
           <div className="sc-top-in">
-            <span className="sc-top-c">{settings.announcement || 'Retirada grátis em Coxim'}<i aria-hidden="true">·</i>Pix ou cartão</span>
+            <span className="sc-top-c">{settings.announcement || 'Envio para todo o Brasil'}<i aria-hidden="true">·</i>Retirada grátis em Coxim</span>
             <a className="sc-top-r" href={wa} target="_blank" rel="noreferrer">Ajuda</a>
           </div>
         </div>
