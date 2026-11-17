@@ -22,20 +22,6 @@ export default function Feel() {
     document.addEventListener('pointerdown', down, { passive: true })
     return () => document.removeEventListener('pointerdown', down)
   }, [])
-  // a faixa de marcas "inclina" conforme a velocidade da rolagem e volta ao normal
-  useEffect(() => {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-    let last = window.scrollY, v = 0, raf = 0
-    const tick = () => {
-      v *= 0.88
-      const mq = document.querySelector<HTMLElement>('.hm-mq')
-      if (mq) mq.style.setProperty('--mq-skew', `${Math.max(-7, Math.min(7, v)).toFixed(2)}deg`)
-      raf = Math.abs(v) > 0.05 ? requestAnimationFrame(tick) : 0
-    }
-    const on = () => { const y = window.scrollY; v += (y - last) * 0.06; last = y; if (!raf) raf = requestAnimationFrame(tick) }
-    window.addEventListener('scroll', on, { passive: true })
-    return () => { window.removeEventListener('scroll', on); cancelAnimationFrame(raf) }
-  }, [])
   useEffect(() => {
     if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
     const el = ring.current!
