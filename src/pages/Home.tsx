@@ -8,7 +8,6 @@ import { IconCard, IconChat, IconStore, IconTruck } from '../components/Icons'
 import SizedImg from '../components/SizedImg'
 import { brl, useStore } from '../lib/store'
 import { SEASON } from '../lib/season'
-import { PYRAMIDS } from '../lib/pyramids'
 import { cutoutFor } from '../lib/cutouts'
 import { usePageMeta } from '../lib/seo'
 import type { Category, Product } from '../lib/types'
@@ -18,8 +17,6 @@ const SCENTS = ['doce', 'amadeirado', 'fresco', 'floral', 'especiado']
 const FAM: Record<string, string> = { doce: '#6b1d36', amadeirado: '#5a3b1c', fresco: '#1d5a52', floral: '#6b2a5a', especiado: '#7a3b12' }
 const cap = (t: string) => t[0].toUpperCase() + t.slice(1)
 
-const PYRAMID_ID = 'maison-alhambra-pink-eclipse-100ml'
-const join = (n: string[]) => (n.length > 1 ? `${n.slice(0, -1).join(', ')} e ${n[n.length - 1]}` : n[0])
 
 function SecHead({ eyebrow, title, to, link = 'Ver todos' }: { eyebrow?: string; title: string; to?: string; link?: string }) {
   return (
@@ -66,7 +63,6 @@ export default function Home() {
 
   const count = (c: Category) => products.filter(p => p.category === c).length
   const hasCut = (id: string) => products.some(p => p.id === id)
-  const pyr = products.find(p => p.id === PYRAMID_ID)
 
   const scents = SCENTS.map(t => {
     const list = products.filter(p => p.tags?.includes(t))
@@ -86,13 +82,15 @@ export default function Home() {
         <section className="hm-br" aria-labelledby="br-t">
           <div className="hm-head"><h2 id="br-t">Marcas da loja</h2><Link to="/catalogo" className="hm-link">Ver todos <span aria-hidden="true">→</span></Link></div>
           <div className="hm-br-row">
-            {brandCards.map(b => (
-              <Link key={b.name} to={`/catalogo?brand=${encodeURIComponent(b.name)}`} className="hm-br-c">
-                <span className="hm-br-pics" aria-hidden="true">{b.pics.map((src, i) => <SizedImg key={src} src={src} size={160} width={160} height={160} alt="" loading="lazy" decoding="async" style={{ '--k': i - (b.pics.length - 1) / 2 } as CSSProperties} />)}</span>
-                <b>{b.name}</b>
-                <small>{b.count} {b.count === 1 ? 'produto' : 'produtos'}</small>
-              </Link>
-            ))}
+            <div className="hm-br-track">
+              {[0, 1].map(k => brandCards.map(b => (
+                <Link key={`${k}-${b.name}`} to={`/catalogo?brand=${encodeURIComponent(b.name)}`} className="hm-br-c" aria-hidden={k === 1 || undefined} tabIndex={k === 1 ? -1 : undefined}>
+                  <span className="hm-br-pics" aria-hidden="true">{b.pics.map((src, i) => <SizedImg key={src} src={src} size={160} width={160} height={160} alt="" loading="lazy" decoding="async" style={{ '--k': i - (b.pics.length - 1) / 2 } as CSSProperties} />)}</span>
+                  <b>{b.name}</b>
+                  <small>{b.count} {b.count === 1 ? 'produto' : 'produtos'}</small>
+                </Link>
+              )))}
+            </div>
           </div>
         </section>
       )}
@@ -114,21 +112,6 @@ export default function Home() {
         ))}
       </Reveal>
 
-      {pyr && PYRAMIDS[PYRAMID_ID] && (
-        <Reveal as="section" className="hm-pyr" aria-labelledby="pyr-t">
-          <div className="hm-pyr-img"><img src={`/hero/${pyr.id}.webp`} width="900" height="800" alt={`${pyr.brand} ${pyr.name}`} loading="lazy" decoding="async" /></div>
-          <div className="hm-pyr-txt">
-            <h2 id="pyr-t">Pink Eclipse, em três tempos</h2>
-            <ol>
-              {([['Saída', PYRAMIDS[PYRAMID_ID].top], ['Coração', PYRAMIDS[PYRAMID_ID].heart], ['Fundo', PYRAMIDS[PYRAMID_ID].base]] as [string, string[]][]).map(([k, n], i) => <li key={k} style={{ '--i': i } as CSSProperties}><small>{k}</small><div><b>{join(n)}</b><span>{PYRAMIDS[PYRAMID_ID].lines[i]}</span></div></li>)}
-            </ol>
-            <div className="hm-pyr-buy">
-              <Link to={`/produto/${pyr.id}`} className="hx-btn">Ver o Pink Eclipse<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg></Link>
-              <span className="hx-price"><small>a partir de</small>{brl(pyr.price)}</span>
-            </div>
-          </div>
-        </Reveal>
-      )}
 
       <section className="hm-fam" aria-labelledby="fam-t">
         <Reveal className="hm-fam-head">
