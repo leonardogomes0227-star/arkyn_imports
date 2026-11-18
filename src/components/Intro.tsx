@@ -40,6 +40,7 @@ export default function Intro() {
     const skip = () => setPhase('out')
     window.addEventListener('keydown', skip)
     let raf = 0, timer = 0
+    const cleanups: (() => void)[] = []
 
     if (reduced) {
       if (logo.current) logo.current.style.clipPath = 'none'
@@ -47,9 +48,10 @@ export default function Intro() {
       timer = window.setTimeout(() => setPhase('out'), 1300)
     } else {
       const p = path.current!, L = p.getTotalLength()
-      const t0 = performance.now()
+      let t0 = 0
       let landed = false
       const frame = (now: number) => {
+        if (!t0) t0 = now
         const t = now - t0
         const x = clamp(t / FLY)
         const e = 1 - Math.pow(1 - x, 2)                   // chega desacelerando
@@ -84,10 +86,16 @@ export default function Intro() {
         if (!landed && t >= FLY) { landed = true; stage.current?.classList.add('land') }
         if (t < HOLD) raf = requestAnimationFrame(frame)
       }
-      raf = requestAnimationFrame(frame)
-      timer = window.setTimeout(() => setPhase('out'), HOLD)
+      // só começa quando a logo e o avião já carregaram (senão o voo corre com a tela ainda em branco)
+      let gone = false
+      const load = (src: string) => { const im = new Image(); im.src = src; return (im.decode ? im.decode() : Promise.resolve()).catch(() => undefined) }
+      const begin = () => { if (gone) return; gone = true; raf = requestAnimationFrame(() => { raf = requestAnimationFrame(frame) }); timer = window.setTimeout(() => setPhase('out'), HOLD + 120) }
+      const fallback = window.setTimeout(begin, 2500)
+      Promise.all([load('/intro/logo-arkyn.webp'), load('/intro/aviao.webp'), document.fonts?.ready]).then(() => { window.clearTimeout(fallback); begin() })
+      const stopBegin = () => { gone = true; window.clearTimeout(fallback) }
+      cleanups.push(stopBegin)
     }
-    return () => { cancelAnimationFrame(raf); window.clearTimeout(timer); window.removeEventListener('keydown', skip); document.documentElement.style.overflow = prev }
+    return () => { cleanups.forEach(f => f()); cancelAnimationFrame(raf); window.clearTimeout(timer); window.removeEventListener('keydown', skip); document.documentElement.style.overflow = prev }
   }, [phase])
 
   useEffect(() => {
