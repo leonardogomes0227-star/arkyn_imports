@@ -1,0 +1,70 @@
+/* =====================================================================
+   TIPOGRAFIA — títulos em Bodoni Moda (serifada de moda), dados em Manrope
+   Nomes, preços, notas e números sempre na sans: números alinhados, sem "dançar".
+   ===================================================================== */
+body.ax { --display:'Bodoni Moda','Didot','Bodoni 72',Georgia,serif; --serif:var(--display) }
+body.ax h1, body.ax h2, .gh-title, .hm-head h2, .sx-h, .sx-name, .hm-col-txt b, .qz-q h1, .qz-intro h1, .qz-result h1, .cmp-page h1, body.ax .pdp-info h1, body.ax .ax-foot-cta b, body.ax .catalog h1, body.ax .ax-empty-page h1, body.ax .ax-sec-head h2 {
+  font-family:var(--display); font-weight:500; letter-spacing:-.015em }
+.gh-title { font-size:clamp(2.7rem,4.9vw,4.7rem); line-height:1.02 }
+.gh-title em { font-style:italic; font-weight:400; letter-spacing:-.01em }
+.hm-head h2, .sx-h { font-size:clamp(2.1rem,4vw,3.8rem); line-height:1 }
+.sx-name { font-size:clamp(3.4rem,8vw,7rem); line-height:.95 }
+.hm-col-txt b { font-size:clamp(2rem,3.2vw,3rem); line-height:1 }
+body.ax .pdp-info h1 { font-size:clamp(2.3rem,3.8vw,3.4rem); line-height:1.02 }
+
+/* nomes de produto: sans, peso médio, até duas linhas */
+body.ax .card .info h3, .sx-p b, .hm-br-c b, .cmp-table thead h2, .qz-pass h2, .hm-minis b {
+  font-family:var(--sans); font-weight:600; letter-spacing:-.005em }
+body.ax .card .info h3 { font-size:1.0625rem; line-height:1.3; min-height:2.6em; margin:6px 0 10px }
+.sx-p b { font-size:1rem; line-height:1.3 } .hm-br-c b { font-size:1.0625rem } .cmp-table thead h2 { font-size:1.125rem; line-height:1.3 }
+.qz-pass h2 { font-size:clamp(1.4rem,2.6vw,1.9rem); line-height:1.15 }
+
+/* preços: sans forte com números de mesma largura */
+body.ax .card .pr strong, body.ax .card .pline strong, .sx-p em, .hx-price, body.ax .pdp-now, .cmp-table td b, .qz-budget output, .qz-pct, .qz-intro li b, body.ax .ck-sum strong, body.ax .ax-drawer strong {
+  font-family:var(--sans); font-weight:800; font-variant-numeric:tabular-nums lining-nums; letter-spacing:-.01em }
+body.ax .card .pr strong, body.ax .card .pline strong { font-size:1.25rem }
+.sx-p em { font-size:1rem } .hx-price { font-size:1.75rem } body.ax .pdp-now { font-size:2rem } .cmp-table td b { font-size:1.35rem }
+.qz-budget output { font-size:clamp(2.6rem,8vw,3.8rem) } .qz-pct { font-size:1.1rem } .qz-intro li b { font-size:2rem }
+
+/* notas e chips: sans (a serifada fina não lê bem pequena) */
+.np-grid li, .np-tiers ul li, .sx-notes li, .cmp-notes li, .qz-note, .hm-pyr-txt li b, body.ax .card .notes i, .qz-opt b, .qz-fam b, .qz-pw b, .hm-perks b, .hm-fam-c b {
+  font-family:var(--sans); font-weight:600; letter-spacing:0 }
+.np-grid li, .np-tiers ul li { font-size:1rem } .sx-notes li, .qz-note { font-size:.875rem } .cmp-notes li { font-size:.9375rem }
+.qz-opt b, .qz-pw b { font-size:1.125rem } .qz-fam b { font-family:var(--display); font-weight:500; font-size:1.6rem }
+
+/* =====================================================================
+   ABERTURA NO CELULAR — globo em cima, texto embaixo, sem se encostar
+   ===================================================================== */
+.gh-cta::before { display:none !important }
+.gh-sparks { z-index:1 }
+.gh-copy { z-index:4 }
+.gh-cta .hx-btn--ghost { background-color:rgba(0,0,2,.75) }
+@media (max-width:1000px) {
+  .gh { min-height:0 !important; max-height:none !important; padding:calc(min(84vw,360px) + 34px) 0 44px }
+  .gh-copy { position:relative !important; left:auto !important; right:auto !important; top:auto !important; bottom:auto !important; transform:none !important; padding:0 20px; max-width:none }
+  .gh-title { font-size:clamp(2.35rem,10.5vw,3.2rem) }
+  .gh-sub { margin-bottom:22px }
+}
+
+/* =====================================================================
+   RESPIRO — menos buracos entre as seções
+   ===================================================================== */
+.hm-sec, .hm-cols, .hm-br { padding-top:clamp(52px,5.5vw,84px) }
+.sx { margin-top:clamp(52px,5.5vw,84px); padding:clamp(44px,5vw,72px) 0 }
+.hm-info { margin-top:clamp(44px,5vw,72px) }
+.rs { padding-bottom:0 }
+body.ax .ax-footer { margin-top:clamp(56px,6vw,88px) }
+
+/* =====================================================================
+   FINALIZAR COMPRA E SACOLA
+   ===================================================================== */
+body.ax img { mix-blend-mode:normal }
+body.ax .ck-img, body.ax .ax-line-img { background:radial-gradient(circle at 50% 60%,#2a2a2c,#111113 70%) }
+body.ax .ck-img img, body.ax .ax-line-img img { object-fit:contain; padding:6% }
+body.ax .ck-card legend { font-family:var(--display); font-weight:500; font-size:1.45rem }
+body.ax .ck-card legend i { background:var(--lime); color:#000; font:800 13px/28px var(--sans); font-style:normal }
+body.ax .ck-sum h2, body.ax .ck-sum h3 { font-family:var(--display); font-weight:500 }
+body.ax .ck-sum b, body.ax .ck-sum .ck-name, body.ax .ck-line b, body.ax .ck-line h3, body.ax .ck-line a, body.ax .ax-line h3, body.ax .ax-line b { font-family:var(--sans); font-weight:600; letter-spacing:0 }
+body.ax .ck-total dd, body.ax .ck-totals dd, body.ax .ck-sum dd { font-family:var(--sans); font-weight:800; font-variant-numeric:tabular-nums lining-nums }
+body.ax .ck-total dd { font-size:1.75rem }
+body.ax .ck-card input::placeholder { text-transform:none; letter-spacing:0 }

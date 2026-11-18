@@ -6,7 +6,7 @@ import { useLocation } from 'react-router-dom'
 const SEL = [
   '.card', '.hm-br-c', '.hm-info > *', '.sx-p', '.hm-col', '.hm-head', '.sx-h', '.sx-tabs',
   '.pdp-info > *', '.pdp-gallery', '.np-grid li', '.np-tiers > li', '.cmp-table tr', '.qz-opt', '.qz-fam',
-  '.ft', '.ax-foot-cta', '.crumbs', '.page-title', '.toolbar',
+  '.crumbs', '.page-title', '.toolbar',
 ].join(',')
 
 export default function Motion() {
@@ -36,9 +36,13 @@ export default function Motion() {
       })
     }
     scan()
+    // segurança: nada fica escondido se o navegador não avisar (fim da página, aba em segundo plano)
+    const reveal = () => document.querySelectorAll<HTMLElement>('.mv:not(.mv-in)').forEach(el => { if (el.getBoundingClientRect().top < window.innerHeight + 40) el.classList.add('mv-in') })
+    let raf = 0, idle = 0; const onScroll = () => { window.clearTimeout(idle); idle = window.setTimeout(reveal, 220) }
+    window.addEventListener('scroll', onScroll, { passive: true }); const t = window.setTimeout(reveal, 1500)
     const mo = new MutationObserver(() => scan())
     mo.observe(document.getElementById('conteudo') ?? document.body, { childList: true, subtree: true })
-    return () => { io.disconnect(); mo.disconnect() }
+    return () => { io.disconnect(); mo.disconnect(); window.removeEventListener('scroll', onScroll); window.clearTimeout(t); window.clearTimeout(idle); cancelAnimationFrame(raf) }
   }, [pathname, search])
   return null
 }
