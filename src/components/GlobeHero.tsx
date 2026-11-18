@@ -59,7 +59,7 @@ export default function GlobeHero() {
       dpr = Math.min(window.devicePixelRatio || 1, r.width < 700 ? 1.5 : 1.25); W = r.width; H = r.height
       canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr)
       if (W > 1000) { R = Math.min(H * 0.39, W * 0.27); cx = W * 0.7; cy = H * 0.5 }
-      else { R = Math.min(W * 0.36, H * 0.22); cx = W * 0.5; cy = H * 0.24 }
+      else { R = Math.min(W * 0.42, 180) * 0.94; cx = W * 0.5; cy = Math.min(W * 0.42, 180) + 14 }
       if (reduced) frame(performance.now())
     }
 
