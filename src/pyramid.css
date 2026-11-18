@@ -1,0 +1,52 @@
+/* =====================================================================
+   PIRÂMIDE OLFATIVA — camadas champanhe com os ingredientes, legendas pontilhadas
+   ===================================================================== */
+.np { position:relative; display:grid; gap:8px; margin:8px 0 26px; padding:6px 0 }
+.np-title { margin:0 0 10px; font:500 1.6rem/1 var(--display); color:#fff }
+.np-tier { display:grid; grid-template-columns:62% 1fr; align-items:center; gap:0 }
+.np-shape { position:relative; height:118px; display:grid; place-items:center; isolation:isolate }
+.np-shape::before { content:''; position:absolute; inset:0; z-index:-1;
+  background:linear-gradient(180deg,#efe6d6 0%,#d9c9ad 100%); box-shadow:inset 0 -10px 22px rgba(120,95,60,.18) }
+.np-t0 .np-shape::before { clip-path:polygon(50% 0,66.7% 100%,33.3% 100%) }
+.np-t1 .np-shape::before { clip-path:polygon(33.3% 0,66.7% 0,83.4% 100%,16.6% 100%) }
+.np-t2 .np-shape::before { clip-path:polygon(16.6% 0,83.4% 0,100% 100%,0 100%) }
+.np-pics { position:relative; display:flex; justify-content:center; align-items:flex-end; height:100%; padding:10px 0 8px }
+.np-pics img { width:auto; height:82%; max-width:30%; object-fit:contain; margin:0 -3%; filter:drop-shadow(0 6px 6px rgba(70,50,20,.35)); transform:translateY(calc(var(--k) * var(--k) * 4px)) rotate(calc(var(--k) * 6deg)) }
+.np-t0 .np-pics { padding:0 33% 6px } .np-t0 .np-pics img { height:58%; max-width:50% }
+.np-t1 .np-pics { padding:8px 20% 6px } .np-t1 .np-pics img { max-width:36% }
+.np-t2 .np-pics { padding:8px 9% 6px }
+.np-words { font:600 .8125rem/1.3 var(--sans); color:#3b2f20; text-align:center; padding:0 22% }
+.np-t0 .np-words { padding:30px 36% 0; font-size:.6875rem }
+.np-side { position:relative; display:flex; align-items:center; gap:10px; min-width:0 }
+.np-dots { flex:0 0 34px; height:0; border-top:2px dotted #8d846f; position:relative }
+.np-dots::after { content:''; position:absolute; right:-4px; top:-5px; width:8px; height:8px; border-radius:50%; background:#d9c9ad }
+.np-side b { display:block; font:400 italic 1.2rem/1.1 var(--display); color:#efe6d6; letter-spacing:0 }
+.np-side span { display:block; margin-top:5px; font:600 .875rem/1.35 var(--sans); color:#fff }
+.np-side small { display:block; margin-top:3px; font-size:.75rem; color:#9d9a92 }
+/* entra camada por camada */
+.np .np-tier { animation:np-in .7s cubic-bezier(.16,1,.3,1) calc(var(--i) * 120ms) both }
+@keyframes np-in { from { opacity:0; transform:translate3d(0,16px,0) } }
+.np .np-pics img { animation:np-pop .6s cubic-bezier(.2,.9,.3,1.3) calc(var(--i) * 120ms + 200ms) both }
+@keyframes np-pop { from { opacity:0; scale:.6 } }
+@media (max-width:640px) {
+  .np-tier { grid-template-columns:58% 1fr }
+  .np-shape { height:96px }
+  .np-dots { flex-basis:16px }
+  .np-side b { font-size:1rem } .np-side span { font-size:.8125rem } .np-side small { display:none }
+}
+
+/* versão do cartão: só a pirâmide com fotos e o nome da camada embaixo */
+.np--mini { margin:0; gap:3px; width:100%; padding:0 }
+.np--mini .np-tier { grid-template-columns:1fr; justify-items:center }
+.np--mini .np-shape { width:100%; height:62px }
+.np--mini .np-side { justify-content:center; text-align:center; margin-top:2px }
+.np--mini .np-dots { display:none }
+.np--mini .np-side b { font-size:.75rem; color:#d9c9ad }
+.np--mini .np-side span { display:none }
+.np--mini .np-words { font-size:.6875rem; padding:0 16% }
+body.ax .card .notes .np-tier { opacity:0; transform:translate3d(0,8px,0); transition:opacity .35s, transform .45s cubic-bezier(.16,1,.3,1); transition-delay:calc(var(--i) * 70ms); animation:none }
+body.ax .card .notes .np-pics img { animation:none }
+body.ax .card .notes.on .np-tier { opacity:1; transform:none }
+@media (hover:hover) { body.ax .card:hover .notes .np-tier { opacity:1; transform:none } }
+@media (max-width:640px) { .np--mini .np-shape { height:44px } .np--mini .np-side b { font-size:.625rem } }
+@media (prefers-reduced-motion:reduce) { .np .np-tier, .np .np-pics img { animation:none } }
