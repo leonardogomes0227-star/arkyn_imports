@@ -5,7 +5,7 @@ import { useLocation } from 'react-router-dom'
 // com atraso em cascata entre irmãos. Um único observador, só transform e opacity (leve no celular).
 const SEL = [
   '.card', '.hm-br-c', '.hm-info > *', '.sx-p', '.hm-col', '.hm-head', '.sx-h', '.sx-tabs',
-  '.pdp-info > *', '.pdp-gallery', '.np-grid li', '.np-tiers > li', '.cmp-table tr', '.qz-opt', '.qz-fam',
+  '.pdp-info > *', '.pdp-gallery', '.np-grid li', '.np:not(.np--mini) .np-row', '.cmp-table tr', '.qz-opt', '.qz-fam',
   '.crumbs', '.page-title', '.toolbar',
 ].join(',')
 
