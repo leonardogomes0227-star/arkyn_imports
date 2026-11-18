@@ -68,3 +68,49 @@ body.ax .sc-top-c { overflow:hidden; text-overflow:ellipsis; max-width:100% }
 @media (max-width:900px) { .hm-col.mv:nth-child(odd), .hm-col.mv:nth-child(even) { transform:translate3d(0,30px,0) } .hm-col.mv.mv-in { transform:none } }
 /* zoom duplo-toque e arrasto de texto não "puxam" a página */
 @media (hover:none) { html { touch-action:manipulation } img { -webkit-user-drag:none; user-select:none } }
+
+/* =====================================================================
+   MAIS VIDA (tudo só com transform/opacity, roda na placa de vídeo)
+   ===================================================================== */
+/* faíscas verdes subindo devagar na abertura */
+.gh-sparks { position:absolute; inset:0; z-index:2; pointer-events:none; overflow:hidden }
+.gh-sparks i { position:absolute; bottom:-10px; left:calc(4% + var(--i) * 6.8%); width:4px; height:4px; border-radius:50%; background:var(--lime); opacity:0;
+  box-shadow:0 0 8px 2px rgba(199,244,1,.6); animation:gh-spark calc(7s + var(--i) * .45s) linear calc(var(--i) * -.9s) infinite }
+.gh-sparks i:nth-child(3n) { width:2px; height:2px } .gh-sparks i:nth-child(4n) { background:#fff; box-shadow:0 0 6px 1px rgba(255,255,255,.5) }
+@keyframes gh-spark { 0% { transform:translate3d(0,0,0); opacity:0 } 12% { opacity:.9 } 80% { opacity:.6 } 100% { transform:translate3d(calc(sin(var(--i)) * 60px),-105vh,0); opacity:0 } }
+@supports not (transform:translateX(calc(sin(1) * 1px))) { @keyframes gh-spark { 0% { transform:translate3d(0,0,0); opacity:0 } 12% { opacity:.9 } 100% { transform:translate3d(30px,-105vh,0); opacity:0 } } }
+
+/* título da abertura: cada linha entra e o "Brasil." brilha */
+.gh-title em { position:relative; display:inline-block }
+.gh-title em::after { content:''; position:absolute; left:0; right:0; bottom:.06em; height:.07em; background:var(--lime); transform:scaleX(0); transform-origin:left; animation:gh-line 5s cubic-bezier(.16,1,.3,1) 1.2s infinite }
+@keyframes gh-line { 0% { transform:scaleX(0); transform-origin:left } 25%,60% { transform:scaleX(1); transform-origin:left } 61% { transform-origin:right } 85%,100% { transform:scaleX(0); transform-origin:right } }
+
+/* frascos das coleções e da "Escolha pelo cheiro" flutuam */
+.hm-col img { animation:mv-float 6s ease-in-out infinite }
+.hm-col:nth-child(2) img { animation-delay:-3s }
+.sx-p:nth-child(odd) .sx-img img { animation:mv-float 5.5s ease-in-out infinite } .sx-p:nth-child(even) .sx-img img { animation:mv-float 5.5s ease-in-out -2.7s infinite }
+@keyframes mv-float { 0%,100% { transform:translate3d(0,0,0) rotate(0) } 50% { transform:translate3d(0,-10px,0) rotate(-1.2deg) } }
+.hm-col:hover img, .sx-p:hover .sx-img img { animation-play-state:paused }
+
+/* nome da família entra letra por letra a cada troca */
+.sx-name span { display:inline-block; animation:sx-letter .55s cubic-bezier(.2,.9,.3,1.2) calc(var(--i) * 40ms) both }
+@keyframes sx-letter { from { opacity:0; transform:translate3d(0,.45em,0) rotate(6deg) } }
+
+/* sublinhado verde que se desenha sob cada título */
+.hm-head h2, .sx-h { position:relative }
+.hm-head h2::after, .sx-h::after { content:''; position:absolute; left:0; bottom:-10px; width:64px; height:3px; background:var(--lime); transform:scaleX(0); transform-origin:left; transition:transform .9s cubic-bezier(.16,1,.3,1) .35s }
+.hm-head.mv-in h2::after, .sx-h.mv-in::after { transform:scaleX(1) }
+
+/* setas dos botões dão um "toque" de vez em quando */
+.hx-btn svg { animation:mv-nudge 3s ease-in-out 1.5s infinite }
+@keyframes mv-nudge { 0%,82%,100% { transform:none } 88% { transform:translateX(5px) } 94% { transform:translateX(0) } }
+
+/* contador da sacola e coração pulsam ao mudar */
+body.ax .card .fav.on svg { animation:mv-heart .45s cubic-bezier(.2,.9,.3,1.5) }
+@keyframes mv-heart { 40% { transform:scale(1.35) } }
+
+
+@media (prefers-reduced-motion:reduce) {
+  .gh-sparks { display:none } .gh-title em::after { animation:none }
+  .hm-col img, .sx-img img, .sx-name span, .hx-btn svg { animation:none !important }
+}
