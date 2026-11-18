@@ -68,3 +68,8 @@ body.ax .ck-sum b, body.ax .ck-sum .ck-name, body.ax .ck-line b, body.ax .ck-lin
 body.ax .ck-total dd, body.ax .ck-totals dd, body.ax .ck-sum dd { font-family:var(--sans); font-weight:800; font-variant-numeric:tabular-nums lining-nums }
 body.ax .ck-total dd { font-size:1.75rem }
 body.ax .ck-card input::placeholder { text-transform:none; letter-spacing:0 }
+
+/* botão verde: texto sempre preto (alguns blocos pintavam os links de cinza-claro) */
+body.ax .hx-btn:not(.hx-btn--ghost), body.ax .hx-btn:not(.hx-btn--ghost):hover, body.ax .hx-btn:not(.hx-btn--ghost):visited { color:#000 }
+.cmp-empty .hx-btn, .cmp .hx-btn { margin-top:22px }
+.ax-empty-page .hx-btn { margin-top:22px }
