@@ -29,6 +29,25 @@ export interface Settings {
   heroTitle?: string
   installments: number // parcelas máximas no cartão (1 = sem parcelamento)
   shipping: { city: string; price: number }[]
+  // Envio para fora da cidade (Correios/transportadora)
+  originCep?: string // CEP de onde sai o pedido
+  freeShippingOutsideFrom?: number // 0 = sem frete grátis para fora
+  shipHandlingFee?: number // embalagem/manuseio somado ao frete (R$)
+  itemWeightG?: number // peso médio de cada item embalado (g)
+  shipRegions?: ShipRegion[] // tabela usada quando a consulta automática não está disponível
+}
+
+export interface ShipRegion { key: string; label: string; price: number; days: number }
+
+export interface ShipOption { id: string; label: string; price: number; days: number; estimated?: boolean }
+export interface ShipAddress { cep: string; street: string; number: string; complement: string; district: string; city: string; uf: string }
+export interface ShipQuote {
+  ok: boolean
+  error?: string
+  local?: string // CEP pertence a uma cidade com entrega local: nome da cidade
+  address?: Partial<ShipAddress>
+  options?: ShipOption[]
+  estimated?: boolean // true = valores da tabela, não de consulta em tempo real
 }
 
 export interface CartItem { id: string; qty: number }

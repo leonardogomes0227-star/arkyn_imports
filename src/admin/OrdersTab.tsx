@@ -28,7 +28,7 @@ export default function OrdersTab() {
   function printOrder(o: Order) {
     const w = window.open('', '_blank'); if (!w) return
     const rows = o.items.map(i => `<tr><td>${i.qty}x</td><td>${name(i.id)}</td></tr>`).join('')
-    w.document.write(`<html><head><title>Pedido #${o.id}</title><style>body{font-family:sans-serif;padding:24px;max-width:480px}table{width:100%;border-collapse:collapse}td{padding:6px 0;border-bottom:1px solid #ddd}h2{margin:0 0 4px}</style></head><body><h2>Arkyn Imports · Pedido #${o.id}</h2><p>${new Date(o.created_at).toLocaleString('pt-BR')}</p><p><b>${o.customer_name}</b><br>${o.phone}<br>${o.delivery === 'pickup' ? 'Retirada' : 'Entrega: ' + o.delivery}</p><table>${rows}</table><p><b>Total: ${brl(Number(o.total))}</b>${o.payment ? ' · ' + o.payment : ''}</p>${o.notes ? '<p>Obs: ' + o.notes + '</p>' : ''}</body></html>`)
+    w.document.write(`<html><head><title>Pedido #${o.id}</title><style>body{font-family:sans-serif;padding:24px;max-width:480px}table{width:100%;border-collapse:collapse}td{padding:6px 0;border-bottom:1px solid #ddd}h2{margin:0 0 4px}</style></head><body><h2>Arkyn Imports · Pedido #${o.id}</h2><p>${new Date(o.created_at).toLocaleString('pt-BR')}</p><p><b>${o.customer_name}</b><br>${o.phone}<br>${o.delivery === 'pickup' ? 'Retirada' : 'Entrega: ' + o.delivery}${o.address?.street ? '<br>' + o.address.street + ', ' + o.address.number + (o.address.complement ? ' ' + o.address.complement : '') + ' - ' + o.address.district + '<br>' + o.address.city + '/' + o.address.uf + ' · CEP ' + o.address.cep : ''}</p><table>${rows}</table><p><b>Total: ${brl(Number(o.total))}</b>${o.payment ? ' · ' + o.payment : ''}</p>${o.notes ? '<p>Obs: ' + o.notes + '</p>' : ''}</body></html>`)
     w.document.close(); w.print()
   }
 
@@ -66,6 +66,7 @@ export default function OrdersTab() {
           {open === o.id && (
             <>
               <p>{o.phone} · {o.delivery === 'pickup' ? 'Retirada' : `Entrega em ${o.delivery}`}{o.payment ? ` · ${o.payment}` : ''}{o.source === 'manual' ? ' · venda manual' : ''}</p>
+              {o.address?.street && <p><b>Enviar para:</b> {o.address.street}, {o.address.number}{o.address.complement ? ` ${o.address.complement}` : ''} · {o.address.district} · {o.address.city}/{o.address.uf} · CEP {o.address.cep}{o.shipping_service ? ` · ${o.shipping_service}` : ''}{o.shipping != null ? ` · frete ${brl(Number(o.shipping))}` : ''}</p>}
               <div className="adm-row" style={{ gap: 6, justifyContent: 'flex-start' }}>
                 {([
                   ['Confirmar pedido', `Olá ${o.customer_name}! Recebemos o seu pedido #${o.id} na Arkyn Imports (${brl(Number(o.total))}). Já estamos separando. Obrigado!`],

@@ -419,3 +419,12 @@ html { -webkit-text-size-adjust:100%; text-size-adjust:100% }
   .ax-all { text-align:left; line-height:1.5; padding-bottom:6px; letter-spacing:.08em }
   .ax-hits a { grid-template-columns:60px 1fr; grid-template-areas:'i t' 'i p'; row-gap:2px } .ax-hit-img { grid-area:i; width:60px; height:60px } .ax-hit-t { grid-area:t } .ax-hit-p { grid-area:p; font-size:var(--fs-base) }}
 @media (max-width:820px) { .cat-txt small { letter-spacing:.08em; white-space:nowrap } .ax-all { letter-spacing:.03em; font-size:12px }}
+/* ---------- entrega: endereço e frete por CEP ---------- */
+.ck-addr { display:grid; gap:14px; margin-top:4px; padding-top:18px; border-top:1px solid var(--line) }
+.ck-cep input { max-width:200px } .ck-hint { margin:0; color:var(--mute); font-size:var(--fs-sm); font-weight:400 } .ck-hint a { color:inherit; text-decoration:underline }
+.ck-ship-opts { display:grid; gap:10px }
+.ck-addr-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px } .ck-span { grid-column:1 / -1 }
+.ck-f input[aria-invalid="true"] { border-color:#b3261e }
+@media (max-width:480px) { .ck-addr-grid { grid-template-columns:1fr } .ck-cep input { max-width:none } }
+.ax-cep { display:flex; gap:8px; margin:2px 0 4px } .ax-cep input { flex:1 1 0; width:0; min-width:0 } .ax-cep .btn { min-height:auto; padding:0 18px }
+.ax-cep-res { margin:0 0 4px; font-size:var(--fs-xs); color:var(--mute); line-height:1.5 } .ax-cep-res b { color:var(--ink) }

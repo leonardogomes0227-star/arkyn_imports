@@ -1,7 +1,8 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { DEFAULT_SETTINGS, SEED_PRODUCTS } from '../src/lib/seed.js'
-import type { Product, Settings } from '../src/lib/types'
+import type { ShipAddress } from '../src/lib/types'
 import { validateCoupon } from './coupon.js'
+import { loadCatalog } from './shipping.js'
+import { onlyDigits, quoteShipping } from './_shipping.js'
 
 const SB = process.env.SUPABASE_URL
 const SK = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -13,22 +14,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const token = process.env.MP_ACCESS_TOKEN
   if (!token) return res.status(500).json({ error: 'MP_ACCESS_TOKEN não configurado' })
 
-  const body = (req.body ?? {}) as { items?: { id: string; qty: number }[]; name?: string; phone?: string; method?: string; coupon?: string }
+  const body = (req.body ?? {}) as { items?: { id: string; qty: number }[]; name?: string; phone?: string; method?: string; coupon?: string; address?: Partial<ShipAddress>; shippingId?: string }
   // entrada do navegador: corta tamanhos e ignora o que não for válido (preço e total são sempre recalculados aqui)
   const items = Array.isArray(body.items) ? body.items.slice(0, 50) : []
   const name = String(body.name ?? '').trim().slice(0, 80)
   const phone = String(body.phone ?? '').trim().slice(0, 25)
   const method = String(body.method ?? '').slice(0, 60)
   const coupon = body.coupon ? String(body.coupon).slice(0, 40) : undefined
+  const address = body.address && typeof body.address === 'object' ? body.address : undefined
+  const shippingId = body.shippingId ? String(body.shippingId).slice(0, 40) : undefined
   if (name.length < 2 || phone.replace(/\D/g, '').length < 10) return res.status(400).json({ error: 'Confira nome e telefone' })
-  let products: Product[] = SEED_PRODUCTS
-  let settings: Settings = DEFAULT_SETTINGS
-  if (SB && SK) {
-    const p = await (await sb('products?select=*')).json()
-    if (Array.isArray(p) && p.length) products = p
-    const s = await (await sb('settings?id=eq.1&select=value')).json()
-    if (s?.[0]?.value) settings = { ...DEFAULT_SETTINGS, ...s[0].value }
-  }
+  const { products, settings } = await loadCatalog()
 
   const lines = items.flatMap(i => {
     const p = products.find(x => x.id === i.id)
@@ -37,9 +33,32 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (!lines.length) return res.status(400).json({ error: 'Carrinho inválido ou sem estoque' })
 
   const subtotal = lines.reduce((s, l) => s + l.p.price * l.qty, 0)
-  const city = settings.shipping.find(s => s.city === method)
-  const free = settings.freeShippingFrom > 0 && subtotal >= settings.freeShippingFrom
-  const shipping = method === 'pickup' || free ? 0 : city?.price ?? 0
+  // frete sempre recalculado aqui: o valor que a tela mostra nunca é confiado
+  const addr = address ? {
+    cep: onlyDigits(address.cep), street: String(address.street || '').trim(), number: String(address.number || '').trim(),
+    complement: String(address.complement || '').trim(), district: String(address.district || '').trim(),
+    city: String(address.city || '').trim(), uf: String(address.uf || '').trim().toUpperCase(),
+  } : null
+  let shipping = 0
+  let shipLabel = method === 'pickup' ? 'Retirada' : ''
+  if (method !== 'pickup') {
+    if (!addr || !addr.street || !addr.number) return res.status(400).json({ error: 'Informe rua e número para a entrega.' })
+    if (method === 'ship') {
+      const q = await quoteShipping(addr.cep, lines, settings)
+      if (!q.ok) return res.status(400).json({ error: q.error || 'Não foi possível calcular o frete.' })
+      if (q.local) return res.status(400).json({ error: `Esse CEP é de ${q.local}. Escolha "Entrega em ${q.local}".` })
+      const opt = q.options?.find(o => o.id === shippingId)
+      if (!opt) return res.status(400).json({ error: 'Escolha uma opção de frete.' })
+      shipping = opt.price
+      shipLabel = `${opt.label} (${addr.city}/${addr.uf})`
+    } else {
+      const city = settings.shipping.find(s => s.city === method)
+      if (!city) return res.status(400).json({ error: 'Forma de entrega inválida.' })
+      const free = settings.freeShippingFrom > 0 && subtotal >= settings.freeShippingFrom
+      shipping = free ? 0 : city.price
+      shipLabel = `Entrega em ${city.city}`
+    }
+  }
 
   const cp = coupon ? await validateCoupon(coupon, subtotal) : null
   const discount = cp?.ok ? cp.discount : 0
@@ -47,9 +66,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   let orderId = `pedido-${Date.now()}`
   if (SB && SK) {
-    const base = { customer_name: name, phone, delivery: method, items, total, status: 'pending' }
-    let r = await sb('orders', { method: 'POST', body: JSON.stringify({ ...base, subtotal, shipping, discount, coupon: cp?.ok ? coupon!.trim().toUpperCase() : null }) })
-    if (!r.ok) r = await sb('orders', { method: 'POST', body: JSON.stringify(base) }) // banco sem a migração do painel
+    const delivery = method === 'ship' ? `${addr!.city}/${addr!.uf}` : method
+    const addrText = addr ? `${shipLabel} · ${addr.street}, ${addr.number}${addr.complement ? ' ' + addr.complement : ''} · ${addr.district} · ${addr.city}/${addr.uf} · CEP ${addr.cep}` : ''
+    const base = { customer_name: name, phone, delivery, items, total, status: 'pending' }
+    const extra = { subtotal, shipping, discount, coupon: cp?.ok ? coupon!.trim().toUpperCase() : null }
+    let r = await sb('orders', { method: 'POST', body: JSON.stringify({ ...base, ...extra, address: addr, shipping_service: shipLabel }) })
+    // bancos sem a migração do frete (supabase/frete.sql): guarda o endereço em "notes"
+    if (!r.ok) r = await sb('orders', { method: 'POST', body: JSON.stringify({ ...base, ...extra, notes: addrText }) })
+    if (!r.ok) r = await sb('orders', { method: 'POST', body: JSON.stringify({ ...base, notes: addrText }) })
+    if (!r.ok) r = await sb('orders', { method: 'POST', body: JSON.stringify(base) })
     const o = await r.json()
     if (o?.[0]?.id) orderId = String(o[0].id)
   }

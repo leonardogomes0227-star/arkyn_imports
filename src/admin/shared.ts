@@ -6,6 +6,7 @@ export interface Order {
   id: number; customer_name: string; phone: string; delivery: string
   items: { id: string; qty: number }[]; total: number; status: string; created_at: string
   notes?: string | null; tracking?: string | null; payment?: string | null; source?: string | null; shipping?: number | null; discount?: number | null; coupon?: string | null
+  address?: { cep?: string; street?: string; number?: string; complement?: string; district?: string; city?: string; uf?: string } | null; shipping_service?: string | null
 }
 export interface Coupon { code: string; type: 'percent' | 'fixed'; value: number; min_total: number; active: boolean; max_uses: number | null; uses: number; expires_at: string | null }
 

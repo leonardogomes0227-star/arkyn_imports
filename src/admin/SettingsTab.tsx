@@ -32,6 +32,19 @@ export default function SettingsTab() {
         </div>
       ))}
       <button type="button" className="btn ghost" onClick={() => setS({ ...s, shipping: [...s.shipping, { city: '', price: 0 }] })}>+ ADICIONAR CIDADE</button>
+      <h4>Envio para fora da cidade</h4>
+      <p className="muted">Com o token do Melhor Envio configurado na Vercel, o valor vem dos Correios em tempo real. A tabela abaixo é a reserva (e vale se o token não estiver ativo).</p>
+      <label>CEP de origem (de onde sai o pedido)<input inputMode="numeric" value={s.originCep ?? ''} onChange={e => setS({ ...s, originCep: e.target.value.replace(/\D/g, '').slice(0, 8) })} /></label>
+      <label>Peso médio de cada item embalado (gramas)<input type="number" min="50" step="10" value={s.itemWeightG ?? 450} onChange={e => setS({ ...s, itemWeightG: Number(e.target.value) || 450 })} /></label>
+      <label>Embalagem/manuseio somado ao frete (R$)<input type="number" min="0" step="0.5" value={s.shipHandlingFee ?? 0} onChange={e => setS({ ...s, shipHandlingFee: Number(e.target.value) })} /></label>
+      <label>Frete grátis para fora a partir de R$ (0 = desativado)<input type="number" min="0" step="0.01" value={s.freeShippingOutsideFrom ?? 0} onChange={e => setS({ ...s, freeShippingOutsideFrom: Number(e.target.value) })} /></label>
+      {(s.shipRegions ?? []).map((r, i) => (
+        <div className="adm-row" key={r.key}>
+          <span style={{ flex: 2 }}>{r.label}</span>
+          <input type="number" min="0" step="0.01" aria-label={`Valor ${r.label}`} placeholder="R$ (1 kg)" value={r.price} onChange={e => setS({ ...s, shipRegions: s.shipRegions!.map((y, j) => j === i ? { ...y, price: Number(e.target.value) } : y) })} />
+          <input type="number" min="1" aria-label={`Dias ${r.label}`} placeholder="Dias" value={r.days} onChange={e => setS({ ...s, shipRegions: s.shipRegions!.map((y, j) => j === i ? { ...y, days: Number(e.target.value) } : y) })} />
+        </div>
+      ))}
       {msg && <p className="muted">{msg}</p>}
       <button className="btn">SALVAR</button>
     </form>
