@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, type CSSProperties } from 'react'
 import { Link } from 'react-router-dom'
 import { useStore } from '../lib/store'
 
@@ -217,6 +217,7 @@ export default function GlobeHero() {
   return (
     <section ref={box} className="gh" aria-label="Arkyn Imports">
       <canvas ref={cv} className="gh-cv" aria-hidden="true" />
+      <span className="gh-sparks" aria-hidden="true">{Array.from({ length: 14 }, (_, i) => <i key={i} style={{ '--i': i } as CSSProperties} />)}</span>
       <div className="gh-copy">
         <p className="gh-eyebrow">Arkyn Imports · Envio para todo o Brasil</p>
         <h1 className="gh-title"><span>Perfumes árabes</span><span>e importados,</span><span>para todo o <em>Brasil.</em></span></h1>

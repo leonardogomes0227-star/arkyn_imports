@@ -41,7 +41,7 @@ export default function ScentExplorer() {
 
         <div key={f.id} className="sx-body" role="tabpanel">
           <div className="sx-info">
-            <b className="sx-name">{f.name}</b>
+            <b className="sx-name" aria-label={f.name}>{[...f.name].map((ch, i) => <span key={i} aria-hidden="true" style={{ '--i': i } as CSSProperties}>{ch}</span>)}</b>
             <p>{f.line}</p>
             <ul className="sx-notes" aria-label="Notas que mais aparecem">
               {f.notes.map((n, i) => <li key={n} style={{ '--c': noteColor(n)[1], '--i': i } as CSSProperties}><i style={{ background: noteGradient(n) }} />{n}</li>)}
