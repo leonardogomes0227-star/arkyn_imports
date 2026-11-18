@@ -5,7 +5,10 @@ import SizedImg from './SizedImg'
 import { useToast } from './Toast'
 import { brl, useStore } from '../lib/store'
 import { IconHeart } from './Icons'
-import { noteGradient, noteIcon } from '../lib/noteColors'
+import NotePyramid from './NotePyramid'
+import { cutoutFor } from '../lib/cutouts'
+import { flyToBag } from '../lib/fly'
+import { toggleCompare, useCompare } from '../lib/compare'
 import type { Product } from '../lib/types'
 
 export function ProductSkeleton({ n = 4 }: { n?: number }) {
@@ -14,10 +17,12 @@ export function ProductSkeleton({ n = 4 }: { n?: number }) {
   ))}</>
 }
 
-export default function ProductCard({ p }: { p: Product }) {
+export default function ProductCard({ p, priority = false }: { p: Product; priority?: boolean }) {
   const { add, settings, setOpen, favs, toggleFav } = useStore()
   const fav = favs.includes(p.id)
   const { toast } = useToast()
+  const comparing = useCompare().includes(p.id)
+  const [showPyr, setShowPyr] = useState(false)
   const [loaded, setLoaded] = useState(false)
   const [done, setDone] = useState(false)
   const img = useRef<HTMLImageElement>(null)
@@ -26,32 +31,45 @@ export default function ProductCard({ p }: { p: Product }) {
   const out = p.stock <= 0
   const sale = !!p.old_price && p.old_price > p.price && !out
   const n = settings.installments
-  const clean = !!p.image?.includes('-net/')
+  const cut = cutoutFor(p)
+  const shot = cut ?? p.image
+  const clean = !cut && !!p.image?.includes('-net/')
   const second = p.images?.find(x => x && x !== p.image) // segunda foto real do cadastro, se existir
-  const hint = p.notes?.length ? p.notes : [p.family, ...(p.tags ?? [])].filter(Boolean) as string[]
+  const tilt = (e: React.PointerEvent<HTMLElement>) => {
+    if (e.pointerType !== 'mouse') return
+    const t = e.currentTarget.querySelector('.thumb') as HTMLElement | null
+    if (!t) return
+    const r = t.getBoundingClientRect(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height
+    const st = e.currentTarget.style
+    st.setProperty('--rx', String((x - 0.5) * 2)); st.setProperty('--ry', String((y - 0.5) * 2))
+    st.setProperty('--px', `${x * 100}%`); st.setProperty('--py', `${y * 100}%`)
+  }
+  const untilt = (e: React.PointerEvent<HTMLElement>) => { const st = e.currentTarget.style; st.setProperty('--rx', '0'); st.setProperty('--ry', '0') }
   const quick = (e: React.MouseEvent) => {
     e.preventDefault()
     add(p.id, false)
+    flyToBag(img.current)
     setDone(true); window.setTimeout(() => setDone(false), 1400)
     toast(`${p.name} adicionado à sacola`, { label: 'Ver sacola', run: () => setOpen(true) })
   }
 
   return (
-    <article className={out ? 'card is-out' : 'card'}>
-      <Link to={`/produto/${p.id}`} className={`thumb${clean ? ' clean' : ''}${loaded || !p.image ? ' ready' : ''}`} aria-label={`${p.brand} ${p.name}`}>
-        {!loaded && p.image && <span className="ax-skel thumb-skel" />}
+    <article className={out ? 'card is-out' : 'card'} onPointerMove={tilt} onPointerLeave={untilt}>
+      <div className="thumb-wrap">
+      <Link to={`/produto/${p.id}`} className={`thumb${clean ? ' clean' : ''}${cut ? ' cut' : ''}${loaded || !shot ? ' ready' : ''}`} tabIndex={-1} aria-hidden="true">
+        {!loaded && shot && <span className="ax-skel thumb-skel" />}
         {sale && <span className="off">-{Math.round((1 - p.price / p.old_price!) * 100)}%</span>}
-        {p.image ? <SizedImg ref={img} className="m" src={p.image} size={480} responsive sizes="(max-width:560px) 45vw, (max-width:1100px) 30vw, 300px" width={800} height={800} alt={`${p.brand} ${p.name}`} loading="lazy" decoding="async" onLoad={() => setLoaded(true)} /> : <Placeholder brand={p.brand} />}
+        {shot ? <SizedImg ref={img} className="m" src={shot} size={480} responsive sizes="(max-width:560px) 45vw, (max-width:1100px) 30vw, 300px" width={800} height={800} alt={`${p.brand} ${p.name}`} loading={priority ? 'eager' : 'lazy'} {...(priority ? { fetchpriority: 'high' } : {})} decoding="async" onLoad={() => setLoaded(true)} /> : <Placeholder brand={p.brand} />}
         {second && <SizedImg className="alt" src={second} size={480} width={800} height={800} alt="" loading="lazy" decoding="async" />}
         {out && <span className="sold">Esgotado</span>}
-        <button type="button" className={fav ? 'fav on' : 'fav'} aria-pressed={fav} aria-label={fav ? `Remover ${p.name} dos favoritos` : `Favoritar ${p.name}`} onClick={e => { e.preventDefault(); toggleFav(p.id) }}><IconHeart size={18} filled={fav} /></button>
-        {!!hint.length && !out && (
-          <span className="notes" aria-hidden="true">
-            <b>{p.notes?.length ? 'Notas' : 'Perfil'}</b>
-            {hint.slice(0, 6).map(x => <i key={x}>{p.notes?.length ? (noteIcon(x) ? <span className="ni" aria-hidden="true">{noteIcon(x)}</span> : <u style={{ background: noteGradient(x) }} />) : null}{x}</i>)}
-          </span>
+        {!!p.notes?.length && !out && (
+          <span className={showPyr ? 'notes on' : 'notes'} aria-hidden="true"><NotePyramid p={p} compact /></span>
         )}
       </Link>
+      <button type="button" className={comparing ? 'cmp on' : 'cmp'} aria-pressed={comparing}  onClick={e => { e.preventDefault(); if (!toggleCompare(p.id)) toast('Compare até 3 perfumes por vez') }}>{comparing ? 'Comparando ✓' : 'Comparar'}<span className="sr-only"> {p.name}</span></button>
+      {!!p.notes?.length && !out && <button type="button" className={showPyr ? 'pyr-btn on' : 'pyr-btn'} aria-pressed={showPyr} onClick={() => setShowPyr(v => !v)}>{showPyr ? 'Fechar' : 'Notas'}</button>}
+      <button type="button" className={fav ? 'fav on' : 'fav'} aria-pressed={fav} aria-label={fav ? `Remover ${p.name} dos favoritos` : `Favoritar ${p.name}`} onClick={e => { e.preventDefault(); toggleFav(p.id) }}><IconHeart size={18} filled={fav} /></button>
+      </div>
       <div className="info">
         <small>{p.brand}</small>
         <Link to={`/produto/${p.id}`}><h3>{p.name}</h3></Link>

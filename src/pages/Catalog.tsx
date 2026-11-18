@@ -94,7 +94,7 @@ export default function Catalog() {
           )}
 
           {!ready ? <div className="grid"><ProductSkeleton n={6} /></div> : list.length > 0 ? (
-            <div className="grid">{list.map(p => <ProductCard key={p.id} p={p} />)}</div>
+            <><h2 className="sr-only">Produtos</h2><div className="grid">{list.map((p, i) => <ProductCard key={p.id} p={p} priority={i < 3} />)}</div></>
           ) : (
             <div className="ax-empty-results">
               <p className="ax-eyebrow">Sem resultados</p>

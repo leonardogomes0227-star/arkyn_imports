@@ -2,6 +2,8 @@ User-agent: *
 Allow: /
 Disallow: /admin
 Disallow: /carrinho
+Disallow: /favoritos
+Disallow: /comparar
 Disallow: /api/
 
 Sitemap: https://arkyn-imports.vercel.app/sitemap.xml

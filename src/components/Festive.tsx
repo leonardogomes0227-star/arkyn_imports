@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 /* ---------- barra de progresso da rolagem (topo da tela) ---------- */
@@ -64,80 +64,4 @@ export function ChristmasBand({ whatsapp }: { whatsapp: string }) {
       </div>
     </section>
   )
-}
-
-/* ---------- faixa de marcas em movimento ---------- */
-export function Marquee({ items }: { items: string[] }) {
-  if (!items.length) return null
-  const row = (hidden: boolean) => (
-    <ul className="nt-mq-row" aria-hidden={hidden || undefined}>
-      {items.map(b => <li key={b}><Link to={`/catalogo?brand=${encodeURIComponent(b)}`} tabIndex={hidden ? -1 : 0}>{b}</Link><i aria-hidden="true">❄</i></li>)}
-    </ul>
-  )
-  return (
-    <section className="nt-mq" aria-label="Marcas da loja">
-      <div className="nt-mq-track">{row(false)}{row(true)}{row(true)}</div>
-    </section>
-  )
-}
-
-/* ---------- luz dourada desfocada, flutuando devagar no banner ---------- */
-const ORBS = [
-  { x: '62%', y: '30%', s: 220, d: '0s', t: '16s' }, { x: '84%', y: '62%', s: 160, d: '-5s', t: '19s' },
-  { x: '48%', y: '74%', s: 120, d: '-9s', t: '14s' }, { x: '92%', y: '18%', s: 90, d: '-3s', t: '12s' },
-  { x: '12%', y: '86%', s: 140, d: '-7s', t: '18s' }, { x: '30%', y: '14%', s: 70, d: '-11s', t: '13s' },
-]
-export function Bokeh() {
-  return (
-    <div className="lx-bokeh" aria-hidden="true">
-      {ORBS.map((o, i) => <i key={i} style={{ '--x': o.x, '--y': o.y, '--s': `${o.s}px`, '--d': o.d, '--t': o.t } as CSSProperties} />)}
-    </div>
-  )
-}
-
-/* ---------- jornada do pedido (linha dourada que se desenha ao rolar) ---------- */
-export function Journey({ steps }: { steps: [ReactNode, string, string][] }) {
-  const ref = useRef<HTMLElement>(null)
-  const [on, setOn] = useState(false)
-  useEffect(() => {
-    const el = ref.current
-    if (!el || typeof IntersectionObserver === 'undefined') { setOn(true); return }
-    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setOn(true); io.disconnect() } }, { threshold: 0.25 })
-    io.observe(el); return () => io.disconnect()
-  }, [])
-  return (
-    <section ref={ref} className={on ? 'nt-jn in' : 'nt-jn'} aria-label="Como comprar na Arkyn">
-      <header className="nt-jn-head">
-        <p className="nt-kicker">Do pedido ao presente</p>
-        <h2>Sem complicação, do começo ao embrulho.</h2>
-      </header>
-      <div className="nt-jn-body">
-        <svg className="nt-jn-line" viewBox="0 0 1000 26" preserveAspectRatio="none" aria-hidden="true">
-          <path d="M0 13 C 125 0, 125 26, 250 13 S 375 0, 500 13 S 625 26, 750 13 S 875 0, 1000 13" pathLength={1} />
-        </svg>
-        <ol>
-          {steps.map(([ic, t, d], i) => (
-            <li key={t} style={{ '--i': i } as CSSProperties}>
-              <span className="nt-jn-node">{ic}<b>{i + 1}</b></span>
-              <h3>{t}</h3><p>{d}</p>
-            </li>
-          ))}
-        </ol>
-      </div>
-    </section>
-  )
-}
-
-/* ---------- link com inclinação 3D que segue o mouse ---------- */
-export function TiltLink({ to, className, children }: { to: string; className?: string; children: ReactNode }) {
-  const ref = useRef<HTMLAnchorElement>(null)
-  const move = (e: React.PointerEvent) => {
-    if (e.pointerType !== 'mouse') return
-    const el = ref.current; if (!el) return
-    const r = el.getBoundingClientRect()
-    el.style.setProperty('--rx', String(((e.clientX - r.left) / r.width - 0.5) * 2))
-    el.style.setProperty('--ry', String(((e.clientY - r.top) / r.height - 0.5) * 2))
-  }
-  const leave = () => { ref.current?.style.setProperty('--rx', '0'); ref.current?.style.setProperty('--ry', '0') }
-  return <Link ref={ref} to={to} className={className} onPointerMove={move} onPointerLeave={leave}>{children}</Link>
 }

@@ -1,16 +1,21 @@
 import { useEffect, useState, type ReactNode } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import CartDrawer from './CartDrawer'
+import CompareBar from './CompareBar'
+import MobileBar from './MobileBar'
 import { ScrollBar } from './Festive'
+import Feel from './Feel'
+import Motion from './Motion'
+import FlightPath from './FlightPath'
 import Intro from './Intro'
 import SearchOverlay from './SearchOverlay'
-import { IconBag, IconHeart, IconSearch, IconTruck } from './Icons'
-import { brl, useStore } from '../lib/store'
+import { IconBag, IconHeart, IconSearch } from './Icons'
+import { useStore } from '../lib/store'
 
 export function Logo({ className = 'ax-logo' }: { className?: string }) {
   return (
     <Link to="/" className={className} aria-label="Arkyn Imports, página inicial">
-      <img src="/logo-natal-xs.webp" width="256" height="256" alt="Arkyn Imports" />
+      <img src="/brand/logo-xxs.webp" srcSet="/brand/logo-xxs.webp 200w, /brand/logo-xs.webp 360w" sizes="100px" width="360" height="212" alt="Arkyn Imports" {...{ fetchpriority: 'high' }} />
     </Link>
   )
 }
@@ -23,7 +28,7 @@ const NAV: [string, string][] = [
   ['Todos os perfumes', '/catalogo'],
 ]
 
-const HEAD_NAV: [string, string][] = [['Início', '/'], ...NAV]
+const HEAD_NAV: [string, string][] = NAV.slice(0, 4)
 
 const phone = (n: string) => (/^55\d{2}9?\d{8}$/.test(n) ? `(${n.slice(2, 4)}) ${n.slice(4, n.length - 4)}-${n.slice(-4)}` : n)
 
@@ -33,7 +38,6 @@ export default function Layout({ children }: { children: ReactNode }) {
   const [scrolled, setScrolled] = useState(false)
   const [menu, setMenu] = useState(false)
   const [search, setSearch] = useState(false)
-  const ship = settings.announcement || (settings.freeShippingFrom > 0 ? `Frete grátis acima de ${brl(settings.freeShippingFrom)}` : 'Retirada grátis em Coxim – MS')
 
   // cabeçalho compacto ao rolar
   useEffect(() => {
@@ -44,6 +48,7 @@ export default function Layout({ children }: { children: ReactNode }) {
   }, [])
   // ao trocar de página: volta ao topo e fecha menu/busca
   useEffect(() => { window.scrollTo(0, 0); setMenu(false); setSearch(false) }, [loc.pathname, loc.search])
+  useEffect(() => { document.body.classList.add('ax'); return () => document.body.classList.remove('ax') }, [])
   useEffect(() => {
     document.body.classList.toggle('page-checkout', loc.pathname === '/carrinho')
     document.body.classList.toggle('page-product', loc.pathname.startsWith('/produto/'))
@@ -69,13 +74,15 @@ export default function Layout({ children }: { children: ReactNode }) {
     <>
       <a className="ax-skip" href="#conteudo">Pular para o conteúdo</a>
       <Intro />
+      <Feel />
+      <Motion />
+      <FlightPath />
       <ScrollBar />
       <header className={scrolled ? 'ax-header is-scrolled' : 'ax-header'}>
         <div className="ax-topbar sc-top" aria-label="Avisos da loja">
           <div className="sc-top-in">
-            <span className="sc-top-l"><IconTruck size={16} />{ship}</span>
-            <span className="sc-top-c">Natal Arkyn <i aria-hidden="true">·</i> presentes que ficam na memória</span>
-            <span className="sc-top-r"><a href={wa} target="_blank" rel="noreferrer">Ajuda e suporte</a><Link to="/quiz">Qual é o seu cheiro?</Link></span>
+            <span className="sc-top-c">{settings.announcement || 'Envio para todo o Brasil'}<i aria-hidden="true">·</i>Retirada grátis em Coxim</span>
+            <a className="sc-top-r" href={wa} target="_blank" rel="noreferrer">Ajuda</a>
           </div>
         </div>
         <div className="ax-head">
@@ -112,35 +119,24 @@ export default function Layout({ children }: { children: ReactNode }) {
 
       <main id="conteudo" key={loc.pathname} className="ax-page">{children}</main>
       <CartDrawer />
+      <CompareBar />
+      <MobileBar onSearch={() => setSearch(true)} />
 
       <footer className="ax-footer">
         <div className="ax-foot-cta">
-          <div><b>Dúvidas para escolher o seu perfume?</b><span>Fale com a gente direto pelo WhatsApp.</span></div>
+          <div><b>Não sabe qual escolher?</b><span>Diga as notas que você gosta e indicamos pelo WhatsApp.</span></div>
           <a className="btn-gold" href={wa} target="_blank" rel="noreferrer">Chamar no WhatsApp</a>
         </div>
-        <div className="ax-footer-in">
-          <div className="ax-foot-brand">
-            <Logo className="ax-foot-logo" />
-            <p>Perfumaria árabe e importada em Coxim – MS. Atendimento próximo, do pedido à retirada.</p>
-            <a className="ax-foot-ig" href="https://instagram.com/arkyn_imports" target="_blank" rel="noreferrer">@arkyn_imports no Instagram</a>
-          </div>
-          <div>
-            <h4>Comprar</h4>
+        <div className="ft">
+          <Logo className="ax-foot-logo" />
+          <nav className="ft-nav" aria-label="Rodapé">
             {NAV.map(([label, to]) => <Link key={to} to={to}>{label}</Link>)}
-            <Link to="/quiz">Qual é o seu cheiro?</Link>
-            <Link to="/favoritos">Favoritos</Link>
-          </div>
-          <div>
-            <h4>Atendimento</h4>
+            <Link to="/quiz">Quiz</Link>
+          </nav>
+          <div className="ft-contact">
             <a href={wa} target="_blank" rel="noreferrer">WhatsApp {phone(settings.whatsapp)}</a>
-            <span>Retirada: {settings.pickupAddress}</span>
-            <Link to="/carrinho">Minha sacola</Link>
-          </div>
-          <div>
-            <h4>Pagamento</h4>
-            <span>Pix e cartão de crédito</span>
-            <span>Pagamento seguro pelo Mercado Pago</span>
-            <div className="ax-pay"><i>Pix</i><i>Cartão</i></div>
+            <a href="https://instagram.com/arkyn_imports" target="_blank" rel="noreferrer">@arkyn_imports</a>
+            <span>Retirada na loja em Coxim – MS</span>
           </div>
         </div>
         <p className="ax-copy"><span>© {new Date().getFullYear()} Arkyn Imports · Coxim – MS</span><Link to="/admin">Área do lojista</Link></p>

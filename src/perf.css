@@ -1,0 +1,37 @@
+/* ---------- avião que desce com a página ---------- */
+.fp { position:fixed; top:0; bottom:0; right:clamp(8px,1.4vw,22px); width:40px; z-index:90; pointer-events:none }
+.fp-rail { position:absolute; left:19px; top:130px; bottom:110px; width:1px; background:repeating-linear-gradient(to bottom,rgba(255,255,255,.18) 0 4px,transparent 4px 10px) }
+.fp-trail { position:absolute; left:18.5px; top:130px; bottom:110px; width:2px; background:linear-gradient(to bottom,rgba(199,244,1,.1),var(--lime)); transform-origin:top; transform:scaleY(0); box-shadow:0 0 8px rgba(199,244,1,.6); will-change:transform }
+.fp-plane { position:absolute; left:0; top:0; width:40px; height:auto; margin-top:-16px; will-change:transform }
+@media (max-width:900px) { .fp { right:4px; width:28px } .fp-rail { left:13px; top:80px; bottom:100px } .fp-trail { left:12.5px; top:80px; bottom:100px } .fp-plane { width:28px; margin-top:-11px } }
+
+/* ---------- desempenho: tira o que pesa na rolagem ---------- */
+/* desfoque de fundo é caro; troca por fundo sólido translúcido */
+.sx-p, .cmpbar, body.ax .card .cmp, body.ax .ax-header { -webkit-backdrop-filter:none !important; backdrop-filter:none !important }
+.sx-p { background:rgba(8,8,10,.72) }
+body.ax .ax-header { background:rgba(0,0,2,.97) }
+/* sombras com filter em muitas fotos travam o celular; usa uma sombra só no chão */
+body.ax .card .thumb.cut img.m, .sx-img img, .hm-br-pics img, .hm-col img { filter:none }
+/* nada de will-change espalhado (gasta memória de vídeo) */
+body.ax .card, .hm-col, .hm-br-c, .sx-p { will-change:auto }
+/* rolagem: animações ligadas à rolagem só em telas grandes */
+@media (max-width:900px) {
+  .hm-col, .hm-info > *, .grid > .card, .hm-br-c, .qz-pass { animation:none !important; animation-timeline:none !important }
+}
+/* conteúdo fora da tela não é desenhado até chegar perto */
+/* (content-visibility removido: mudava a altura da home e desalinhava a rota) */
+
+/* ---------- rota que atravessa a home ---------- */
+.rs { position:relative; overflow:hidden; padding-bottom:40px }
+.rs-in { position:relative; z-index:1 }
+.rs-svg { position:absolute; left:0; top:0; z-index:0; pointer-events:none; overflow:visible }
+.rs-ghost { fill:none; stroke:rgba(255,255,255,.08); stroke-width:1.2; stroke-dasharray:3 8 }
+.rs-line { fill:none; stroke:var(--lime); stroke-width:2.2; stroke-linecap:round; opacity:.85 }
+.rs-plane { position:absolute; left:0; top:0; z-index:2; width:clamp(52px,5.2vw,80px); filter:drop-shadow(0 8px 10px rgba(0,0,0,.6)); height:auto; pointer-events:none; opacity:0; transition:opacity .4s; will-change:transform }
+/* o avião passa por cima; a linha fica atrás dos cartões e títulos, que têm fundo próprio */
+.rs-in .hm-head, .rs-in .sx-h { position:relative }
+@media (max-width:700px) { .rs-line { stroke-width:1.8 } .rs-plane { width:46px } }
+/* o avião voa por trás dos produtos e títulos: aparece nos espaços entre as seções, nunca cobre um produto */
+.rs-plane { z-index:0 !important }
+.rs-in > section, .rs-in > div { position:relative }
+body.ax .card, .hm-br-c, .hm-col, .hm-info > *, .sx { position:relative; z-index:1 }

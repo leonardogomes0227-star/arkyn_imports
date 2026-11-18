@@ -12,6 +12,15 @@ import './boutique.css'
 import './scente.css'
 import './natal.css'
 import './banner.css'
+import './intro.css'
+import './theme.css'
+import './explore.css'
+import './align.css'
+import './perf.css'
+import './anim.css'
+import './type.css'
+import './notes.css'
+import './pyramid.css'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode><BrowserRouter><StoreProvider><ToastProvider><App /></ToastProvider></StoreProvider></BrowserRouter></StrictMode>,

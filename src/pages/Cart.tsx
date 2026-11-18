@@ -6,6 +6,7 @@ import { usePageMeta } from '../lib/seo'
 import { brl, useStore } from '../lib/store'
 import { emptyAddress, fetchQuote, maskCep, savedCep, saveCep } from '../lib/shipping'
 import type { ShipAddress, ShipQuote } from '../lib/types'
+import { photoOf } from '../lib/cutouts'
 
 const maskPhone = (v: string) => {
   const d = v.replace(/\D/g, '').slice(0, 11)
@@ -217,7 +218,7 @@ export default function Cart() {
           <ul className="ck-items">
             {lines.map(({ p, qty }) => (
               <li key={p.id}>
-                <Link to={`/produto/${p.id}`} className="ck-img">{p.image ? <SizedImg src={p.image} size={160} alt="" width={160} height={160} /> : null}</Link>
+                <Link to={`/produto/${p.id}`} className="ck-img">{photoOf(p) ? <SizedImg src={photoOf(p)!} size={160} alt="" width={160} height={160} /> : null}</Link>
                 <div>
                   <small>{p.brand}</small>
                   <Link to={`/produto/${p.id}`} className="ck-name">{p.name}</Link>

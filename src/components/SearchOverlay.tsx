@@ -5,6 +5,7 @@ import { IconSearch } from './Icons'
 import { brl, useStore } from '../lib/store'
 import { CAT_LABEL, norm, searchProducts } from '../lib/search'
 import type { Category } from '../lib/types'
+import { photoOf } from '../lib/cutouts'
 
 const FAMILIES = ['doce', 'amadeirado', 'fresco', 'floral', 'especiado']
 const cap = (s: string) => s[0].toUpperCase() + s.slice(1)
@@ -73,7 +74,7 @@ export default function SearchOverlay({ open, onClose }: { open: boolean; onClos
               {results.map((p, i) => (
                 <li key={p.id} role="option" aria-selected={i === cur} className={i === cur ? 'on' : ''}>
                   <Link to={`/produto/${p.id}`} onClick={onClose} tabIndex={open ? 0 : -1}>
-                    <span className="ax-hit-img">{p.image ? <SizedImg src={p.image} size={160} alt="" width={96} height={96} loading="lazy" /> : null}</span>
+                    <span className="ax-hit-img">{photoOf(p) ? <SizedImg src={photoOf(p)!} size={160} alt="" width={96} height={96} loading="lazy" /> : null}</span>
                     <span className="ax-hit-t"><small>{p.brand}</small><b>{p.name}</b></span>
                     <span className="ax-hit-p">{p.stock > 0 ? brl(p.price) : 'Esgotado'}</span>
                   </Link>
