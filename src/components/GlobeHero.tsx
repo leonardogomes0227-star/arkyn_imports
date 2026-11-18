@@ -206,7 +206,7 @@ export default function GlobeHero() {
     document.addEventListener('visibilitychange', vis)
     const ro = new ResizeObserver(resize); ro.observe(el); resize(); start()
 
-    const down = (e: PointerEvent) => { if (e.pointerType === 'touch') return; drag.down = true; el.classList.add('dragged'); drag.x = e.clientX; drag.y = e.clientY; drag.vlon = drag.vlat = 0; el.setPointerCapture?.(e.pointerId) }
+    const down = (e: PointerEvent) => { if (e.pointerType === 'touch' || e.target !== canvas) return; drag.down = true; el.classList.add('dragged'); drag.x = e.clientX; drag.y = e.clientY; drag.vlon = drag.vlat = 0; el.setPointerCapture?.(e.pointerId) }
     const move = (e: PointerEvent) => { if (!drag.down) return; const dx = e.clientX - drag.x, dy = e.clientY - drag.y; drag.x = e.clientX; drag.y = e.clientY; drag.lon -= dx * 0.28; drag.lat += dy * 0.2; drag.vlon = -dx * 0.05; drag.vlat = dy * 0.03 }
     const up = () => { drag.down = false }
     el.addEventListener('pointerdown', down); el.addEventListener('pointermove', move); window.addEventListener('pointerup', up)
