@@ -20,6 +20,7 @@ import './perf.css'
 import './anim.css'
 import './type.css'
 import './notes.css'
+import './pyramid.css'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode><BrowserRouter><StoreProvider><ToastProvider><App /></ToastProvider></StoreProvider></BrowserRouter></StrictMode>,
