@@ -5,7 +5,7 @@ import SizedImg from './SizedImg'
 import { useToast } from './Toast'
 import { brl, useStore } from '../lib/store'
 import { IconHeart } from './Icons'
-import { noteGradient } from '../lib/noteColors'
+import NotePyramid from './NotePyramid'
 import { cutoutFor } from '../lib/cutouts'
 import { flyToBag } from '../lib/fly'
 import { toggleCompare, useCompare } from '../lib/compare'
@@ -22,6 +22,7 @@ export default function ProductCard({ p, priority = false }: { p: Product; prior
   const fav = favs.includes(p.id)
   const { toast } = useToast()
   const comparing = useCompare().includes(p.id)
+  const [showPyr, setShowPyr] = useState(false)
   const [loaded, setLoaded] = useState(false)
   const [done, setDone] = useState(false)
   const img = useRef<HTMLImageElement>(null)
@@ -34,7 +35,6 @@ export default function ProductCard({ p, priority = false }: { p: Product; prior
   const shot = cut ?? p.image
   const clean = !cut && !!p.image?.includes('-net/')
   const second = p.images?.find(x => x && x !== p.image) // segunda foto real do cadastro, se existir
-  const hint = p.notes?.length ? p.notes : [p.family, ...(p.tags ?? [])].filter(Boolean) as string[]
   const tilt = (e: React.PointerEvent<HTMLElement>) => {
     if (e.pointerType !== 'mouse') return
     const t = e.currentTarget.querySelector('.thumb') as HTMLElement | null
@@ -62,14 +62,12 @@ export default function ProductCard({ p, priority = false }: { p: Product; prior
         {shot ? <SizedImg ref={img} className="m" src={shot} size={480} responsive sizes="(max-width:560px) 45vw, (max-width:1100px) 30vw, 300px" width={800} height={800} alt={`${p.brand} ${p.name}`} loading={priority ? 'eager' : 'lazy'} {...(priority ? { fetchpriority: 'high' } : {})} decoding="async" onLoad={() => setLoaded(true)} /> : <Placeholder brand={p.brand} />}
         {second && <SizedImg className="alt" src={second} size={480} width={800} height={800} alt="" loading="lazy" decoding="async" />}
         {out && <span className="sold">Esgotado</span>}
-        {!!hint.length && !out && (
-          <span className="notes" aria-hidden="true">
-            <b>{p.notes?.length ? 'Notas' : 'Perfil'}</b>
-            {hint.slice(0, 6).map(x => <i key={x}>{p.notes?.length ? <u style={{ background: noteGradient(x) }} /> : null}{x}</i>)}
-          </span>
+        {!!p.notes?.length && !out && (
+          <span className={showPyr ? 'notes on' : 'notes'} aria-hidden="true"><NotePyramid p={p} compact /></span>
         )}
       </Link>
       <button type="button" className={comparing ? 'cmp on' : 'cmp'} aria-pressed={comparing}  onClick={e => { e.preventDefault(); if (!toggleCompare(p.id)) toast('Compare até 3 perfumes por vez') }}>{comparing ? 'Comparando ✓' : 'Comparar'}<span className="sr-only"> {p.name}</span></button>
+      {!!p.notes?.length && !out && <button type="button" className={showPyr ? 'pyr-btn on' : 'pyr-btn'} aria-pressed={showPyr} onClick={() => setShowPyr(v => !v)}>{showPyr ? 'Fechar' : 'Notas'}</button>}
       <button type="button" className={fav ? 'fav on' : 'fav'} aria-pressed={fav} aria-label={fav ? `Remover ${p.name} dos favoritos` : `Favoritar ${p.name}`} onClick={e => { e.preventDefault(); toggleFav(p.id) }}><IconHeart size={18} filled={fav} /></button>
       </div>
       <div className="info">

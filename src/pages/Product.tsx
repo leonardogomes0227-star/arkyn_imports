@@ -4,14 +4,13 @@ import { IconHeart } from '../components/Icons'
 import Placeholder from '../components/Placeholder'
 import SizedImg from '../components/SizedImg'
 import ProductCard, { ProductSkeleton } from '../components/ProductCard'
-import { noteColor, noteGradient } from '../lib/noteColors'
+import NotePyramid from '../components/NotePyramid'
 import { CAT_LABEL } from '../lib/search'
 import { usePageMeta } from '../lib/seo'
 import { brl, useStore } from '../lib/store'
 import { cutoutFor } from '../lib/cutouts'
 import { flyToBag } from '../lib/fly'
 import { toggleCompare, useCompare } from '../lib/compare'
-import { PYRAMIDS } from '../lib/pyramids'
 
 const FAMILIES = ['doce', 'amadeirado', 'fresco', 'floral', 'especiado']
 const cap = (s: string) => s[0].toUpperCase() + s.slice(1)
@@ -54,7 +53,6 @@ export default function Product() {
   const n = settings.installments
   const cutImg = cutoutFor(p)
   const images = (cutImg ? [cutImg] : [p.image, ...(p.images ?? [])]).filter((x, i, a): x is string => !!x && a.indexOf(x) === i)
-  const pyr = PYRAMIDS[p.id]
   const word = (p.name.replace(/\s?\d+\s?ml$/i, '').split(' ').sort((a, b) => b.length - a.length)[0] ?? '').toUpperCase()
   const family = (p.tags ?? []).filter(t => FAMILIES.includes(t))
   const when = (p.tags ?? []).filter(t => t === 'dia' || t === 'noite')
@@ -138,17 +136,7 @@ export default function Product() {
             {!!p.notes?.length && (
               <details open>
                 <summary>Notas olfativas</summary>
-                {pyr ? (
-                  <ol className="np-tiers">
-                    {([['Saída', pyr.top], ['Coração', pyr.heart], ['Fundo', pyr.base]] as [string, string[]][]).map(([k, list]) => (
-                      <li key={k}><small>{k}</small><ul>{list.map(nt => <li key={nt} style={{ '--c': noteColor(nt)[1] } as React.CSSProperties}><i style={{ background: noteGradient(nt) }} />{nt}</li>)}</ul></li>
-                    ))}
-                  </ol>
-                ) : (
-                  <ul className="np-grid">
-                    {p.notes.map(nt => <li key={nt} style={{ '--c': noteColor(nt)[1] } as React.CSSProperties}><i style={{ background: noteGradient(nt) }} />{nt}</li>)}
-                  </ul>
-                )}
+                <NotePyramid p={p} />
               </details>
             )}
             <details open>

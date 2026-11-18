@@ -1,0 +1,103 @@
+/* =====================================================================
+   NOTAS OLFATIVAS — organizadas por grupo, sem bolinhas brilhando
+   ===================================================================== */
+/* página do produto: uma linha por grupo */
+.np-groups { margin:0 0 18px; display:grid; gap:0 }
+.np-groups > div { --g:#C7F401; display:grid; grid-template-columns:150px 1fr; gap:6px 18px; align-items:baseline; padding:16px 0; border-bottom:1px solid #26262a }
+.np-groups dt { display:flex; align-items:center; gap:10px; font:700 .75rem/1.3 var(--sans); letter-spacing:.1em; text-transform:uppercase; color:#cfcfd3 }
+.np-groups dt::before { content:''; width:3px; height:16px; border-radius:2px; background:var(--g); flex:none }
+.np-groups dd { margin:0; display:flex; flex-wrap:wrap; gap:8px }
+.np-groups dd span { padding:7px 13px; border:1px solid #34343a; border-radius:30px; font:600 .9375rem/1 var(--sans); color:#fff; background:#141417 }
+@media (max-width:560px) { .np-groups > div { grid-template-columns:1fr; gap:10px } }
+/* pirâmide (Pink Eclipse): mesmas pílulas */
+.np-tiers ul li { padding:7px 13px; border:1px solid #34343a; border-radius:30px; background:#141417; font-size:.9375rem }
+.np-tiers ul li i { display:none }
+
+/* "Escolha pelo cheiro": pílula com marquinha da cor do grupo */
+.sx-notes li { --g:#C7F401; padding:8px 14px; gap:9px; background:rgba(0,0,2,.45); border-color:rgba(255,255,255,.16) }
+.sx-notes li i { width:8px; height:8px; border-radius:2px; background:var(--g); box-shadow:none; transform:rotate(45deg) }
+
+/* quiz: seletor Amo/Evito + grupos */
+.qz-mode { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:0 0 20px; padding:5px; background:#121214; border:1px solid #2c2c30; border-radius:14px; position:sticky; top:126px; z-index:6 }
+.qz-mode button { display:flex; align-items:center; justify-content:center; gap:9px; height:46px; border:0; border-radius:10px; background:transparent; color:#bdbdc1; font:700 .9375rem/1 var(--sans); cursor:pointer; transition:background .25s,color .25s }
+.qz-mode button b { min-width:24px; height:24px; padding:0 7px; border-radius:12px; background:#26262a; color:#fff; font:800 .75rem/24px var(--sans) }
+.qz-mode button i { font-style:normal; font-size:1rem }
+.qz-mode button.on.love { background:var(--lime); color:#000 } .qz-mode button.on.love b { background:#000; color:var(--lime) }
+.qz-mode button.on.avoid { background:#e2574c; color:#fff } .qz-mode button.on.avoid b { background:#fff; color:#c63a30 }
+.qz-groups { display:grid; gap:22px; padding-bottom:20px }
+.qz-group { --g:#C7F401 }
+.qz-group h3 { display:flex; align-items:center; gap:10px; margin:0 0 10px; font:700 .75rem/1 var(--sans); letter-spacing:.12em; text-transform:uppercase; color:#cfcfd3 }
+.qz-group h3::before { content:''; width:3px; height:14px; border-radius:2px; background:var(--g) }
+.qz-groups .qz-notes { gap:8px }
+.qz-note { padding:10px 15px 10px 10px; gap:9px; border-radius:30px; background:#141417; border:1px solid #34343a; color:#fff; font:600 .9375rem/1 var(--sans); text-decoration:none }
+.qz-note i, .qz-note em { display:none }
+.qz-tick { width:22px; height:22px; border-radius:50%; display:grid; place-items:center; background:#26262a; color:#9d9da2; font:800 .8125rem/1 var(--sans); transition:background .2s,color .2s,transform .3s cubic-bezier(.2,.9,.3,1.4) }
+.qz-note.love { background:rgba(199,244,1,.12); border-color:var(--lime) } .qz-note.love .qz-tick { background:var(--lime); color:#000; transform:scale(1.08) }
+.qz-note.avoid { background:rgba(226,87,76,.12); border-color:#e2574c; color:#d9d9dc; text-decoration:none } .qz-note.avoid .qz-tick { background:#e2574c; color:#fff }
+.qz-legend { display:none }
+@media (max-width:700px) { .qz-mode { top:112px } }
+
+/* cartão (ao passar o mouse) e comparar: marca plana, sem brilho */
+body.ax .card .notes i u { width:7px; height:7px; border-radius:1px; transform:rotate(45deg); box-shadow:none }
+.cmp-notes i { width:8px; height:8px; border-radius:2px; transform:rotate(45deg); box-shadow:none }
+.cmp-notes li { font-family:var(--sans); font-weight:600; font-size:.9375rem }
+
+/* foto alta (ex.: Asad Elixir) nunca sai do quadro */
+.sx-img { position:relative; overflow:hidden }
+.sx-img img { position:absolute; inset:0; width:100%; height:100%; object-fit:contain }
+
+/* =====================================================================
+   PIRÂMIDE OLFATIVA (saída, corpo, fundo)
+   ===================================================================== */
+.pyr { --w:100%; display:grid; gap:6px; margin:6px 0 20px }
+.pyr-row { position:relative; display:grid; grid-template-columns:1fr; align-items:center; min-height:74px; padding:12px 18px; isolation:isolate }
+.pyr-band { position:absolute; inset:0; z-index:-1; background:linear-gradient(180deg,#24231f,#17171a); border:1px solid #3a3730 }
+/* recortes em trapézio formando o triângulo */
+.pyr-0 .pyr-band { clip-path:polygon(38% 0,62% 0,72% 100%,28% 100%); background:linear-gradient(180deg,#3d3a1e,#25241a) }
+.pyr-1 .pyr-band { clip-path:polygon(27% 0,73% 0,86% 100%,14% 100%); background:linear-gradient(180deg,#3a2433,#221a20) }
+.pyr-2 .pyr-band { clip-path:polygon(13% 0,87% 0,100% 100%,0 100%); background:linear-gradient(180deg,#3b2b1c,#221a14) }
+.pyr-notes { display:flex; flex-wrap:wrap; justify-content:center; gap:6px; text-align:center; padding:0 26% }
+.pyr-1 .pyr-notes { padding:0 16% } .pyr-2 .pyr-notes { padding:0 6% }
+.pyr-notes span { --g:#C7F401; display:inline-flex; align-items:center; gap:6px; padding:5px 10px; border-radius:20px; background:rgba(0,0,2,.55); border:1px solid rgba(255,255,255,.14); font:600 .8125rem/1 var(--sans); color:#fff; white-space:nowrap }
+.pyr-notes span::before { content:''; width:6px; height:6px; border-radius:1px; transform:rotate(45deg); background:var(--g) }
+.pyr-label { display:flex; align-items:baseline; justify-content:center; gap:8px; margin-top:8px }
+.pyr-label b { font:700 .6875rem/1 var(--sans); letter-spacing:.14em; text-transform:uppercase; color:var(--lime) }
+.pyr-label small { font-size:.75rem; color:#a9a9ad }
+/* entra em camadas */
+.pyr .pyr-row { animation:pyr-in .6s cubic-bezier(.16,1,.3,1) calc(var(--i) * 110ms) both }
+@keyframes pyr-in { from { opacity:0; transform:translate3d(0,14px,0) } }
+
+/* versão do cartão: aparece por cima da foto ao passar o mouse (PC) ou tocar em "Notas" (celular) */
+body.ax .card .notes { position:absolute; inset:0; z-index:4; display:flex; align-items:center; justify-content:center; padding:10px; background:rgba(6,6,8,.9); opacity:0; transform:none; transition:opacity .3s; pointer-events:none; flex-wrap:nowrap }
+body.ax .card .notes.on { opacity:1 }
+@media (hover:hover) { body.ax .card:hover .notes, body.ax .card:focus-within .notes { opacity:1 } }
+
+/* botão "Notas" no cartão */
+body.ax .card .pyr-btn { position:absolute; right:10px; bottom:10px; z-index:5; height:30px; padding:0 12px; font:700 .6875rem/1 var(--sans); letter-spacing:.06em; text-transform:uppercase; color:#fff; background:rgba(0,0,2,.72); border:1px solid #9a9a9e; cursor:pointer; transition:.25s }
+body.ax .card .pyr-btn.on, body.ax .card .pyr-btn:hover { background:var(--lime); color:#000; border-color:var(--lime) }
+@media (hover:hover) and (pointer:fine) { body.ax .card .pyr-btn { display:none } }
+@media (max-width:640px) { body.ax .card .pyr-btn { height:26px; padding:0 8px; font-size:.5625rem } }
+@media (prefers-reduced-motion:reduce) { .pyr .pyr-row, body.ax .card .notes .pyr-row { animation:none !important } }
+
+/* pirâmide miniatura do cartão: triângulo em 3 faixas com as notas por extenso */
+body.ax .card .notes { background:rgba(8,8,10,.94); padding:12px 8px }
+.pyr-mini { width:100%; height:100%; display:flex; flex-direction:column; justify-content:center; align-items:center; gap:4px; text-align:center }
+body.ax .card .notes b.pyr-mini-t, .pyr-mini-t { display:block; flex:0 0 auto !important; flex-basis:auto !important; margin-bottom:4px; font:700 .625rem/1 var(--sans); letter-spacing:.16em; text-transform:uppercase; color:var(--lime); opacity:1; flex-basis:auto }
+.pyq-row { position:relative; display:flex; flex-direction:column; justify-content:center; gap:3px; padding:9px 8px; flex:0 0 auto; min-height:auto; isolation:isolate }
+.pyq-row::before { content:''; position:absolute; inset:0; z-index:-1 }
+.pyq-0 { width:46% } .pyq-1 { width:72% } .pyq-2 { width:100% }
+.pyq-0::before { background:linear-gradient(180deg,#4a4620,#2c2a18); clip-path:polygon(22% 0,78% 0,100% 100%,0 100%) }
+.pyq-1::before { background:linear-gradient(180deg,#45293d,#2a1d26); clip-path:polygon(10% 0,90% 0,100% 100%,0 100%) }
+.pyq-2::before { background:linear-gradient(180deg,#46331f,#2a1f15); clip-path:polygon(7% 0,93% 0,100% 100%,0 100%) }
+.pyq-row small { font:700 .5625rem/1 var(--sans); letter-spacing:.12em; text-transform:uppercase; color:#cfc7a0 }
+.pyq-row span { font:600 .75rem/1.25 var(--sans); color:#fff }
+.pyq-0 span { font-size:.6875rem }
+body.ax .card .notes .pyq-row { opacity:0; transform:translate3d(0,8px,0); transition:opacity .35s, transform .45s cubic-bezier(.16,1,.3,1); transition-delay:calc(var(--i) * 70ms) }
+body.ax .card .notes.on .pyq-row { opacity:1; transform:none }
+@media (hover:hover) { body.ax .card:hover .notes .pyq-row { opacity:1; transform:none } }
+@media (max-width:640px) { .pyq-row span { font-size:.6875rem } .pyq-0 { width:56% } .pyq-1 { width:80% } .pyq-row { padding:6px 4px } }
+/* com a pirâmide aberta no celular, os botões da foto saem da frente */
+body.ax .card:has(.notes.on) .cmp, body.ax .card:has(.notes.on) .fav { opacity:0; pointer-events:none }
+@media (max-width:640px) { .pyr-mini { gap:3px } .pyr-mini-t { margin-bottom:2px } }
+body.ax .card .pyr-btn.on { top:10px; bottom:auto }
+@media (max-width:640px) { body.ax .card .notes b.pyr-mini-t { display:none } }
