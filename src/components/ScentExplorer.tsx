@@ -2,7 +2,7 @@ import { useState, type CSSProperties } from 'react'
 import { Link } from 'react-router-dom'
 import SizedImg from './SizedImg'
 import { cutoutFor } from '../lib/cutouts'
-import { noteColor, noteGradient } from '../lib/noteColors'
+import { groupOf } from '../lib/noteGroups'
 import { brl, useStore } from '../lib/store'
 
 // Seção "Escolha pelo cheiro": a página inteira ganha a cor da família escolhida,
@@ -44,7 +44,7 @@ export default function ScentExplorer() {
             <b className="sx-name" aria-label={f.name}>{[...f.name].map((ch, i) => <span key={i} aria-hidden="true" style={{ '--i': i } as CSSProperties}>{ch}</span>)}</b>
             <p>{f.line}</p>
             <ul className="sx-notes" aria-label="Notas que mais aparecem">
-              {f.notes.map((n, i) => <li key={n} style={{ '--c': noteColor(n)[1], '--i': i } as CSSProperties}><i style={{ background: noteGradient(n) }} />{n}</li>)}
+              {f.notes.map((n, i) => <li key={n} style={{ '--g': groupOf(n).color, '--i': i } as CSSProperties}><i />{n}</li>)}
             </ul>
             <Link to={`/catalogo?tag=${f.id}`} className="hx-btn">Ver os {f.list.length} {f.name.toLowerCase()}s<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg></Link>
           </div>

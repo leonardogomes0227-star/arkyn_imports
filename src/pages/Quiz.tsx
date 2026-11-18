@@ -1,10 +1,10 @@
-import { useEffect, useMemo, useState, type CSSProperties, type ReactNode } from 'react'
+import { useMemo, useState, type CSSProperties, type ReactNode } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import SizedImg from '../components/SizedImg'
 import { useToast } from '../components/Toast'
 import { clearCompare, toggleCompare } from '../lib/compare'
 import { cutoutFor } from '../lib/cutouts'
-import { noteColor, noteGradient } from '../lib/noteColors'
+import { groupNotes } from '../lib/noteGroups'
 import { usePageMeta } from '../lib/seo'
 import { brl, useStore } from '../lib/store'
 import type { Product } from '../lib/types'
@@ -73,8 +73,12 @@ export default function Quiz() {
   const go = (n: number) => { setDir(n > step ? 1 : -1); setStep(n); window.scrollTo({ top: 0, behavior: 'smooth' }) }
   const set = (patch: Partial<Answers>) => setA(x => ({ ...x, ...patch }))
   const toggle = (k: 'moments' | 'families', v: string, max = 9) => setA(x => ({ ...x, [k]: x[k].includes(v) ? x[k].filter(y => y !== v) : x[k].length >= max ? [...x[k].slice(1), v] : [...x[k], v] }))
-  const cycleNote = (n: string) => setA(x => x.love.includes(n) ? { ...x, love: x.love.filter(y => y !== n), avoid: [...x.avoid, n] } : x.avoid.includes(n) ? { ...x, avoid: x.avoid.filter(y => y !== n) } : { ...x, love: [...x.love, n] })
-  useEffect(() => { if (a.who && a.gender && step === 1) { const t = window.setTimeout(() => go(2), 380); return () => window.clearTimeout(t) } }, [a.who, a.gender]) // eslint-disable-line react-hooks/exhaustive-deps
+  const [mode, setMode] = useState<'love' | 'avoid'>('love')
+  const markNote = (n: string) => setA(x => {
+    const other = mode === 'love' ? 'avoid' : 'love'
+    if (x[mode].includes(n)) return { ...x, [mode]: x[mode].filter(y => y !== n) }
+    return { ...x, [mode]: [...x[mode], n], [other]: x[other].filter(y => y !== n) }
+  })
   const finish = () => { setThinking(true); go(7); window.setTimeout(() => setThinking(false), 1500) }
 
   const results = useMemo(() => {
@@ -168,18 +172,28 @@ export default function Quiz() {
         </>)}
 
         {step === 4 && (<>
-          {head(4, 'Notas que você ama e que evita', 'Toque uma vez para "amo", duas para "evito", três para limpar. Pode pular.')}
-          <div className="qz-notes">
-            {notes.map(n => {
-              const st = a.love.includes(n) ? 'love' : a.avoid.includes(n) ? 'avoid' : ''
-              return (
-                <button key={n} type="button" className={`qz-note ${st}`} style={{ '--c': noteColor(n)[1] } as CSSProperties} onClick={() => cycleNote(n)} aria-label={`${n}${st === 'love' ? ', amo' : st === 'avoid' ? ', evito' : ''}`}>
-                  <i style={{ background: noteGradient(n) }} />{n}{st && <em>{st === 'love' ? 'amo' : 'evito'}</em>}
-                </button>
-              )
-            })}
+          {head(4, 'Notas que você ama e que evita', 'Escolha o que marcar e toque nas notas. Pode pular.')}
+          <div className="qz-mode" role="radiogroup" aria-label="Marcar notas como">
+            <button type="button" role="radio" aria-checked={mode === 'love'} className={mode === 'love' ? 'on love' : 'love'} onClick={() => setMode('love')}><i aria-hidden="true">♥</i>Amo <b>{a.love.length}</b></button>
+            <button type="button" role="radio" aria-checked={mode === 'avoid'} className={mode === 'avoid' ? 'on avoid' : 'avoid'} onClick={() => setMode('avoid')}><i aria-hidden="true">✕</i>Evito <b>{a.avoid.length}</b></button>
           </div>
-          <p className="qz-legend"><span className="love">{a.love.length} que você ama</span><span className="avoid">{a.avoid.length} que você evita</span></p>
+          <div className="qz-groups">
+            {groupNotes(notes).map(g => (
+              <section key={g.id} className="qz-group" style={{ '--g': g.color } as CSSProperties}>
+                <h3>{g.label}</h3>
+                <div className="qz-notes">
+                  {g.notes.map(n => {
+                    const st = a.love.includes(n) ? 'love' : a.avoid.includes(n) ? 'avoid' : ''
+                    return (
+                      <button key={n} type="button" className={`qz-note ${st}`} aria-pressed={!!st} onClick={() => markNote(n)} aria-label={`${n}${st === 'love' ? ', amo' : st === 'avoid' ? ', evito' : ''}`}>
+                        <span className="qz-tick" aria-hidden="true">{st === 'love' ? '♥' : st === 'avoid' ? '✕' : '+'}</span>{n}
+                      </button>
+                    )
+                  })}
+                </div>
+              </section>
+            ))}
+          </div>
           {nextBtn(4, a.love.length || a.avoid.length ? 'Continuar' : 'Pular esta etapa')}
         </>)}
 
@@ -187,7 +201,7 @@ export default function Quiz() {
           {head(5, 'Quanto ele deve aparecer?', 'A intensidade do rastro que fica por onde você passa.')}
           <div className="qz-power">
             {POWER.map(([v, t, d]) => (
-              <button key={v} type="button" className={a.power === v ? 'qz-pw on' : 'qz-pw'} aria-pressed={a.power === v} onClick={() => { set({ power: v }); window.setTimeout(() => go(6), 380) }}>
+              <button key={v} type="button" className={a.power === v ? 'qz-pw on' : 'qz-pw'} aria-pressed={a.power === v} onClick={() => set({ power: v })}>
                 <span className="qz-waves" aria-hidden="true">{Array.from({ length: v * 2 + 1 }, (_, i) => <i key={i} style={{ '--i': i } as CSSProperties} />)}</span>
                 <b>{t}</b><small>{d}</small>
               </button>
