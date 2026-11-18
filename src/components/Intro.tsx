@@ -8,11 +8,14 @@ const HOLD = 3700       // ms: quando a cortina abre
 const PATH = 'M -650 620 C -300 640, 100 430, 340 285 C 460 212, 550 154, 667.5 65'
 const BASE_HEADING = -38 // direção do avião no recorte da logo (graus)
 
+// Abre sempre que a pessoa entra no site pela página inicial (nova aba, link, recarregar).
+// Só pula quando ela já viu nos últimos 2 minutos (ex.: voltou da página de pagamento).
 function seen() {
-  try { return sessionStorage.getItem(KEY) === '1' } catch { return false }
+  if (typeof window === 'undefined' || window.location.pathname !== '/') return true
+  try { return Date.now() - Number(sessionStorage.getItem(KEY) || 0) < 120000 } catch { return false }
 }
 function markSeen() {
-  try { sessionStorage.setItem(KEY, '1') } catch { /* navegação privada: só não lembra */ }
+  try { sessionStorage.setItem(KEY, String(Date.now())) } catch { /* navegação privada: só não lembra */ }
 }
 const clamp = (v: number) => Math.min(1, Math.max(0, v))
 const inOut = (x: number) => (x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2)
@@ -31,7 +34,7 @@ export default function Intro() {
   useEffect(() => {
     if (phase !== 'on') return
     markSeen()
-    const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+    const reduced = false
     const prev = document.documentElement.style.overflow
     document.documentElement.style.overflow = 'hidden'
     const skip = () => setPhase('out')

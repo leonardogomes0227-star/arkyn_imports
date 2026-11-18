@@ -56,7 +56,7 @@ export default function GlobeHero() {
 
     const resize = () => {
       const r = el.getBoundingClientRect()
-      dpr = Math.min(window.devicePixelRatio || 1, r.width < 700 ? 1.5 : 1.75); W = r.width; H = r.height
+      dpr = Math.min(window.devicePixelRatio || 1, r.width < 700 ? 1.5 : 1.25); W = r.width; H = r.height
       canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr)
       if (W > 1000) { R = Math.min(H * 0.39, W * 0.27); cx = W * 0.7; cy = H * 0.5 }
       else { R = Math.min(W * 0.36, H * 0.22); cx = W * 0.5; cy = H * 0.24 }
@@ -83,7 +83,7 @@ export default function GlobeHero() {
     const frame = (now: number) => {
       raf = 0
       // enquanto a pessoa rola, o globo espera (a rolagem fica com o processador); no celular desenha a 30 quadros
-      if (!reduced && (now - scrolling < 140 || (W < 700 && (skip = (skip + 1) % 2) === 1))) { if (visible && !document.hidden) raf = requestAnimationFrame(frame); return }
+      if (!reduced && (now - scrolling < 140 || (skip = (skip + 1) % 2) === 1)) { if (visible && !document.hidden) raf = requestAnimationFrame(frame); return }
       const time = now - t0
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
       ctx.clearRect(0, 0, W, H)
@@ -113,17 +113,19 @@ export default function GlobeHero() {
       if (land) {
         const cl = Math.cos(lon0), sl = Math.sin(lon0), cp = Math.cos(lat0), sp = Math.sin(lat0)
         const base = Math.max(1, R / 230)
+        // pontos agrupados em 4 faixas de brilho: 4 desenhos por quadro em vez de milhares
+        const B = 4, paths = Array.from({ length: B }, () => new Path2D())
         for (let i = 0; i < land.length; i += 3) {
           const X = land[i], Y = land[i + 1], Z = land[i + 2]
           const x1 = X * cl - Z * sl, z1 = X * sl + Z * cl
           const z = Y * sp + z1 * cp
           if (z <= 0.02) continue
           const y = Y * cp - z1 * sp
-          ctx.globalAlpha = 0.2 + 0.8 * Math.pow(z, 0.7)
-          ctx.fillStyle = '#a9a9ae'
           const s = base * (0.7 + 0.8 * z)
-          ctx.fillRect(cx + x1 * R - s / 2, cy - y * R - s / 2, s, s)
+          paths[Math.min(B - 1, (z * B) | 0)].rect(cx + x1 * R - s / 2, cy - y * R - s / 2, s, s)
         }
+        ctx.fillStyle = '#a9a9ae'
+        for (let k = 0; k < B; k++) { ctx.globalAlpha = 0.2 + 0.8 * Math.pow((k + 0.5) / B, 0.7); ctx.fill(paths[k]) }
         ctx.globalAlpha = 1
       }
 
@@ -135,8 +137,8 @@ export default function GlobeHero() {
       const pts: ([number, number] | null)[] = []
       for (let i = 0; i <= N; i++) { const r = rot(arcPoint(i / N, 0.3), lon0, lat0); pts.push(hidden(r) ? null : P(r)) }
       ctx.lineCap = 'round'
-      for (const [w, a, col, sh, lift] of [[2.6, 0.95, '199,244,1', 16, 0.3], [1.1, 0.55, '222,255,120', 0, 0.3]] as const) {
-        ctx.lineWidth = w * Math.max(1, R / 300); ctx.shadowColor = 'rgba(199,244,1,.9)'; ctx.shadowBlur = sh
+      for (const [w, a, col, sh, lift] of [[8, 0.16, '199,244,1', 0, 0.3], [2.6, 0.95, '199,244,1', 0, 0.3], [1.1, 0.55, '222,255,120', 0, 0.3]] as const) {
+        ctx.lineWidth = w * Math.max(1, R / 300); ctx.shadowBlur = 0; void sh
         for (let i = 1; i <= upto; i++) {
           const p0 = pts[i - 1], p1 = pts[i]; if (!p0 || !p1) continue
           const k = 0.25 + 0.75 * (i / N)
@@ -150,7 +152,7 @@ export default function GlobeHero() {
       // ao pousar, a rota se espalha do centro-oeste para as capitais do país
       const spread = reduced ? 1 : ease(clamp((c - 4100) / 1300))
       if (spread > 0) {
-        ctx.lineWidth = 1.4 * Math.max(1, R / 300); ctx.shadowColor = 'rgba(199,244,1,.8)'; ctx.shadowBlur = 8
+        ctx.lineWidth = 1.4 * Math.max(1, R / 300); ctx.shadowBlur = 0
         cityV.forEach((v, ci) => {
           const g = clamp(spread * 1.25 - ci * 0.025), M = 22, up = Math.round(M * g)
           let prev: [number, number] | null = null
@@ -190,7 +192,7 @@ export default function GlobeHero() {
           const ang = Math.atan2(yb - ya, xb - xa) - BASE_HEADING
           const w = Math.max(54, R * 0.3), h = w * (plane.naturalHeight / plane.naturalWidth)
           ctx.save(); ctx.translate(x, y); ctx.rotate(ang)
-          ctx.shadowColor = 'rgba(0,0,0,.7)'; ctx.shadowBlur = 14; ctx.shadowOffsetY = 8
+          
           ctx.drawImage(plane, -w / 2, -h / 2, w, h); ctx.restore()
         }
       }
