@@ -74,4 +74,17 @@ export const DEFAULT_SETTINGS: Settings = {
   installments: 1, // ex.: 3 para exibir/permitir até 3x no cartão
   freeShippingFrom: 0, // 0 = sem frete grátis. Ajuste quando definir o valor.
   shipping: [{ city: 'Coxim', price: 0 }], // TODO: confirmar cidades e valores
+  originCep: '79400000', // Coxim - MS
+  freeShippingOutsideFrom: 0,
+  shipHandlingFee: 0,
+  itemWeightG: 450,
+  // Valores de referência (1 kg, a partir de MS). Ajuste no painel > Configurações.
+  shipRegions: [
+    { key: 'MS', label: 'Mato Grosso do Sul', price: 22, days: 4 },
+    { key: 'CO', label: 'Centro-Oeste (GO, MT, DF)', price: 28, days: 5 },
+    { key: 'SE', label: 'Sudeste', price: 32, days: 6 },
+    { key: 'S', label: 'Sul', price: 34, days: 7 },
+    { key: 'NE', label: 'Nordeste', price: 42, days: 9 },
+    { key: 'N', label: 'Norte', price: 48, days: 11 },
+  ],
 }

@@ -1,9 +1,11 @@
 import SizedImg from '../components/SizedImg'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useToast } from '../components/Toast'
 import { usePageMeta } from '../lib/seo'
 import { brl, useStore } from '../lib/store'
+import { emptyAddress, fetchQuote, maskCep, savedCep, saveCep } from '../lib/shipping'
+import type { ShipAddress, ShipQuote } from '../lib/types'
 
 const maskPhone = (v: string) => {
   const d = v.replace(/\D/g, '').slice(0, 11)
@@ -27,12 +29,44 @@ export default function Cart() {
   const [cpErr, setCpErr] = useState('')
   const [cpBusy, setCpBusy] = useState(false)
   const [err, setErr] = useState('')
+  const [addr, setAddr] = useState<ShipAddress>({ ...emptyAddress, cep: maskCep(savedCep()) })
+  const [quote, setQuote] = useState<ShipQuote | null>(null)
+  const [quoting, setQuoting] = useState(false)
+  const [shipId, setShipId] = useState('')
+  const [triedPay, setTriedPay] = useState(false)
+  const setA = (patch: Partial<ShipAddress>) => setAddr(a => ({ ...a, ...patch }))
 
   const lines = cart.flatMap(i => { const p = products.find(x => x.id === i.id); return p ? [{ p, qty: i.qty }] : [] })
   const subtotal = lines.reduce((s, l) => s + l.p.price * l.qty, 0)
   const city = settings.shipping.find(s => s.city === method)
   const free = settings.freeShippingFrom > 0 && subtotal >= settings.freeShippingFrom
-  const shipping = method === 'pickup' || free ? 0 : city?.price ?? 0
+  const shipOpt = method === 'ship' ? quote?.options?.find(o => o.id === shipId) : undefined
+  const shipping = method === 'pickup' ? 0 : method === 'ship' ? shipOpt?.price ?? 0 : free ? 0 : city?.price ?? 0
+  const needShip = method === 'ship' && !shipOpt
+  const freeOutLeft = (settings.freeShippingOutsideFrom ?? 0) - subtotal
+  const cartKey = cart.map(i => `${i.id}:${i.qty}`).join(',')
+
+  // consulta o frete assim que o CEP estiver completo (e de novo se a sacola mudar)
+  useEffect(() => {
+    const digits = addr.cep.replace(/\D/g, '')
+    if (method !== 'ship' || digits.length !== 8 || !cart.length) { setQuote(null); return }
+    let alive = true
+    setQuoting(true)
+    const t = window.setTimeout(async () => {
+      const q = await fetchQuote(digits, cart)
+      if (!alive) return
+      setQuote(q); setQuoting(false); saveCep(digits)
+      if (q.ok && q.options?.length) {
+        setShipId(cur => (q.options!.some(o => o.id === cur) ? cur : q.options![0].id))
+        setAddr(a => ({ ...a, street: a.street || q.address?.street || '', district: a.district || q.address?.district || '', city: q.address?.city || a.city, uf: q.address?.uf || a.uf }))
+      }
+    }, 250)
+    return () => { alive = false; window.clearTimeout(t) }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [method, addr.cep, cartKey])
+
+  const needAddr = method !== 'pickup'
+  const addrErr = needAddr && (!addr.street.trim() || !addr.number.trim() || !addr.district.trim()) ? 'Preencha rua, número e bairro.' : ''
   const discount = cp ? Math.min(cp.discount, subtotal) : 0
   const total = subtotal - discount + shipping
 
@@ -47,8 +81,9 @@ export default function Cart() {
     </section>
   )
 
+  const addrLine = needAddr ? `${addr.street}, ${addr.number}${addr.complement ? ' ' + addr.complement : ''} - ${addr.district}${addr.city ? ` - ${addr.city}/${addr.uf}` : ''}${addr.cep ? ` - CEP ${addr.cep}` : ''}` : ''
   const summary = lines.map(l => `${l.qty}x ${l.p.brand} ${l.p.name}`).join('\n')
-  const wa = `https://wa.me/${settings.whatsapp}?text=${encodeURIComponent(`Olá! Quero comprar:\n${summary}\nTotal: ${brl(total)}\nEntrega: ${method === 'pickup' ? 'Retirada' : method}\nNome: ${name}`)}`
+  const wa = `https://wa.me/${settings.whatsapp}?text=${encodeURIComponent(`Olá! Quero comprar:\n${summary}\nTotal: ${brl(total)}\nEntrega: ${method === 'pickup' ? 'Retirada' : method === 'ship' ? `${shipOpt?.label ?? 'Envio'} (${shipOpt ? brl(shipOpt.price) : 'a calcular'})` : method}${addrLine ? `\nEndereço: ${addrLine}` : ''}\nNome: ${name}`)}`
 
   async function applyCoupon() {
     setCpErr(''); setCpBusy(true)
@@ -61,13 +96,15 @@ export default function Cart() {
   }
 
   async function pay() {
-    setTouched({ name: true, phone: true })
+    setTouched({ name: true, phone: true }); setTriedPay(true)
     if (nameErr || phoneErr) return setErr('Confira os dados destacados para continuar.')
+    if (method === 'ship' && !shipOpt) return setErr('Informe o CEP e escolha uma opção de frete.')
+    if (addrErr) return setErr(addrErr)
     setErr(''); setBusy(true)
     try {
       const r = await fetch('/api/checkout', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ items: cart, name, phone, method, coupon: cp?.code }),
+        body: JSON.stringify({ items: cart, name, phone, method, coupon: cp?.code, address: needAddr ? { ...addr, cep: addr.cep.replace(/\D/g, '') } : undefined, shippingId: method === 'ship' ? shipId : undefined }),
       })
       const d = await r.json()
       if (!r.ok || !d.url) throw new Error(d.error || 'Falha ao iniciar pagamento')
@@ -108,9 +145,57 @@ export default function Cart() {
             {settings.shipping.map(s => (
               <label key={s.city} className={method === s.city ? 'ck-opt on' : 'ck-opt'}>
                 <input type="radio" name="method" checked={method === s.city} onChange={() => setMethod(s.city)} />
-                <span><b>Entrega em {s.city}</b></span><em>{free || s.price === 0 ? 'Grátis' : brl(s.price)}</em>
+                <span><b>Entrega em {s.city}</b><small>Receba em casa</small></span><em>{free || s.price === 0 ? 'Grátis' : brl(s.price)}</em>
               </label>
             ))}
+            <label className={method === 'ship' ? 'ck-opt on' : 'ck-opt'}>
+              <input type="radio" name="method" checked={method === 'ship'} onChange={() => setMethod('ship')} />
+              <span><b>Enviar para outra cidade ou estado</b><small>Correios / transportadora, calculado pelo CEP{freeOutLeft > 0 && (settings.freeShippingOutsideFrom ?? 0) > 0 ? ` · frete grátis acima de ${brl(settings.freeShippingOutsideFrom!)}` : ''}</small></span><em>{shipOpt ? (shipOpt.price ? brl(shipOpt.price) : 'Grátis') : 'Por CEP'}</em>
+            </label>
+
+            {needAddr && (
+              <div className="ck-addr">
+                {method === 'ship' && (
+                  <label className="ck-f ck-cep">CEP
+                    <input value={addr.cep} inputMode="numeric" autoComplete="postal-code" placeholder="00000-000" onChange={e => setA({ cep: maskCep(e.target.value) })} />
+                    <span className="ck-hint">{quoting ? 'Calculando o frete…' : <a href="https://buscacepinter.correios.com.br/app/endereco/index.php" target="_blank" rel="noreferrer">Não sei meu CEP</a>}</span>
+                  </label>
+                )}
+                {method === 'ship' && quote && !quote.ok && <p className="ck-err" role="alert">{quote.error}</p>}
+                {method === 'ship' && quote?.ok && quote.local && (
+                  <p className="ck-coupon-ok">Esse CEP é de {quote.local}. <button type="button" className="link" onClick={() => setMethod(quote.local!)}>Usar entrega em {quote.local}</button></p>
+                )}
+                {method === 'ship' && quote?.ok && quote.options && (
+                  <div className="ck-ship-opts" role="radiogroup" aria-label="Opções de frete">
+                    {quote.options.map(o => (
+                      <label key={o.id} className={shipId === o.id ? 'ck-opt on' : 'ck-opt'}>
+                        <input type="radio" name="shipopt" checked={shipId === o.id} onChange={() => setShipId(o.id)} />
+                        <span><b>{o.label}</b>{o.days > 0 && <small>{quote.estimated ? 'Prazo estimado: ' : 'Chega em '}{o.days} {o.days === 1 ? 'dia útil' : 'dias úteis'} após a postagem</small>}</span>
+                        <em>{o.price ? brl(o.price) : 'Grátis'}</em>
+                      </label>
+                    ))}
+                    {quote.estimated && <p className="ck-hint">Valor estimado para a sua região. Se houver diferença, avisamos antes de enviar.</p>}
+                  </div>
+                )}
+                {(method !== 'ship' || quote?.ok) && !quote?.local && (
+                  <div className="ck-addr-grid">
+                    <label className="ck-f ck-span">Rua / Avenida
+                      <input value={addr.street} autoComplete="address-line1" onChange={e => setA({ street: e.target.value })} aria-invalid={triedPay && !addr.street.trim()} />
+                    </label>
+                    <label className="ck-f">Número
+                      <input value={addr.number} inputMode="numeric" autoComplete="off" onChange={e => setA({ number: e.target.value })} aria-invalid={triedPay && !addr.number.trim()} placeholder="S/N se não houver" />
+                    </label>
+                    <label className="ck-f">Complemento
+                      <input value={addr.complement} autoComplete="address-line2" onChange={e => setA({ complement: e.target.value })} placeholder="Apto, bloco (opcional)" />
+                    </label>
+                    <label className="ck-f ck-span">Bairro
+                      <input value={addr.district} onChange={e => setA({ district: e.target.value })} aria-invalid={triedPay && !addr.district.trim()} />
+                    </label>
+                    {method === 'ship' && addr.city && <p className="ck-hint ck-span">Entrega em <b>{addr.city}/{addr.uf}</b></p>}
+                  </div>
+                )}
+              </div>
+            )}
           </fieldset>
 
           <fieldset className="ck-card">
@@ -152,11 +237,11 @@ export default function Cart() {
           <dl className="ck-totals">
             <div><dt>Subtotal</dt><dd>{brl(subtotal)}</dd></div>
             {discount > 0 && <div><dt>Desconto</dt><dd>−{brl(discount)}</dd></div>}
-            <div><dt>Frete</dt><dd>{shipping ? brl(shipping) : 'Grátis'}</dd></div>
+            <div><dt>Frete</dt><dd>{needShip ? 'Informe o CEP' : shipping ? brl(shipping) : 'Grátis'}</dd></div>
             <div className="ck-total"><dt>Total</dt><dd>{brl(total)}</dd></div>
           </dl>
           {err && <p className="ck-err ck-err-box" role="alert">{err}</p>}
-          <button type="button" className={busy ? 'btn block is-busy' : 'btn block'} disabled={busy} onClick={pay}>{busy ? 'Aguarde…' : 'Pagar com Pix ou cartão'}</button>
+          <button type="button" className={busy ? 'btn block is-busy' : 'btn block'} disabled={busy || needShip} onClick={pay}>{busy ? 'Aguarde…' : 'Pagar com Pix ou cartão'}</button>
           <a className="btn ghost block" href={wa} target="_blank" rel="noreferrer">Finalizar pelo WhatsApp</a>
           <p className="ck-secure">Pagamento seguro pelo Mercado Pago. Você será levado ao ambiente deles para concluir.</p>
         </aside>

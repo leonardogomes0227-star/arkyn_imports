@@ -1,7 +1,9 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import SizedImg from './SizedImg'
 import { brl, useStore } from '../lib/store'
+import { fetchQuote, maskCep, savedCep, saveCep } from '../lib/shipping'
+import type { ShipQuote } from '../lib/types'
 
 const FOCUSABLE = 'a[href],button:not([disabled]),input,select,[tabindex]:not([tabindex="-1"])'
 
@@ -14,6 +16,14 @@ export default function CartDrawer() {
   const items = lines.reduce((s, l) => s + l.qty, 0)
   const goal = settings.freeShippingFrom
   const close = () => setOpen(false)
+  const [cep, setCep] = useState(() => maskCep(savedCep()))
+  const [q, setQ] = useState<ShipQuote | null>(null)
+  const [calc, setCalc] = useState(false)
+  const quote = async () => {
+    const d = cep.replace(/\D/g, '')
+    if (d.length !== 8) return setQ({ ok: false, error: 'Informe um CEP com 8 números.' })
+    setCalc(true); const r = await fetchQuote(d, cart); setQ(r); setCalc(false); if (r.ok) saveCep(d)
+  }
   // sugestões: mesma marca ou perfil dos itens da sacola, só com estoque
   const inCart = new Set(lines.map(l => l.p.id))
   const tags = new Set(lines.flatMap(l => l.p.tags ?? []))
@@ -111,7 +121,17 @@ export default function CartDrawer() {
         {!!lines.length && (
           <div className="ax-drawer-foot">
             <div className="ax-tot"><span>Subtotal</span><b>{brl(subtotal)}</b></div>
-            <p className="ax-note">Frete e cupom são calculados na finalização.</p>
+            <div className="ax-cep">
+              <input value={cep} inputMode="numeric" autoComplete="postal-code" placeholder="Calcule o frete: seu CEP" aria-label="CEP para calcular o frete" tabIndex={open ? 0 : -1}
+                onChange={e => { setCep(maskCep(e.target.value)); setQ(null) }} onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); quote() } }} />
+              <button type="button" className={calc ? 'btn ghost is-busy' : 'btn ghost'} onClick={quote} disabled={calc} tabIndex={open ? 0 : -1}>{calc ? '…' : 'Calcular'}</button>
+            </div>
+            <p className="ax-cep-res" role="status">
+              {q && !q.ok && q.error}
+              {q?.ok && q.local && <>Entrega em <b>{q.local}</b>: veja o valor na finalização.</>}
+              {q?.ok && q.options && <>{q.address?.city}/{q.address?.uf}: {[...q.options].sort((a, b) => a.price - b.price).slice(0, 2).map(o => <span key={o.id}><b>{o.price ? brl(o.price) : 'Grátis'}</b>{o.days ? ` em ~${o.days} dias úteis` : ''}{' '}</span>)}</>}
+              {!q && 'Cupom e frete exato são fechados na finalização.'}
+            </p>
             <Link to="/carrinho" className="btn block" onClick={close} tabIndex={open ? 0 : -1}>Finalizar compra</Link>
             <button type="button" className="btn ghost block" onClick={close} tabIndex={open ? 0 : -1}>Continuar comprando</button>
           </div>
