@@ -1,5 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 
+import { tooMany } from './_rate.js'
+
 const SB = process.env.SUPABASE_URL
 const SK = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY
 const PAID = ['paid', 'separating', 'shipped', 'delivered']
@@ -7,6 +9,7 @@ const PAID = ['paid', 'separating', 'shipped', 'delivered']
 // Só quem comprou avalia: número do pedido + final do telefone, e o pedido precisa ter o produto. Fica pendente até aprovar no painel.
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') return res.status(405).json({ ok: false, error: 'Método inválido' })
+  if (tooMany(req, 'review', 10)) return res.status(429).json({ ok: false, error: 'Muitas tentativas. Tente de novo mais tarde.' })
   if (!SB || !SK) return res.json({ ok: false, error: 'Avaliações indisponíveis no momento.' })
   const b = (req.body ?? {}) as Record<string, unknown>
   const productId = String(b.productId ?? '').slice(0, 100)

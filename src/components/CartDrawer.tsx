@@ -87,7 +87,7 @@ export default function CartDrawer() {
             <ul className="ax-lines">
               {lines.map(({ p, qty }) => (
                 <li key={p.id}>
-                  <Link to={`/produto/${p.id}`} className="ax-line-img" onClick={close} tabIndex={open ? 0 : -1}>{photoOf(p) ? <SizedImg src={photoOf(p)!} size={480} alt="" width={160} height={160} /> : null}</Link>
+                  <Link to={`/produto/${p.id}`} className="ax-line-img" aria-label={`${p.brand} ${p.name}`} onClick={close} tabIndex={open ? 0 : -1}>{photoOf(p) ? <SizedImg src={photoOf(p)!} size={480} alt="" width={160} height={160} /> : null}</Link>
                   <div className="ax-line-t">
                     <small>{p.brand}</small>
                     <Link to={`/produto/${p.id}`} onClick={close} tabIndex={open ? 0 : -1}>{p.name}</Link>

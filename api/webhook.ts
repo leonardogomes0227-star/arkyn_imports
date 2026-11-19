@@ -11,9 +11,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (pay.status === 'approved' && pay.external_reference) {
     const h = { apikey: key, Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' }
     const ref = encodeURIComponent(pay.external_reference)
-    const [order] = await (await fetch(`${url}/rest/v1/orders?id=eq.${ref}&select=items,coupon,status`, { headers: h })).json()
+    const [order] = await (await fetch(`${url}/rest/v1/orders?id=eq.${ref}&select=items,coupon,status,total`, { headers: h })).json()
     // idempotência: o Mercado Pago pode notificar várias vezes; só processa se ainda estiver pendente
     if (!order || order.status !== 'pending') return res.status(200).end()
+    // só dá baixa se o valor pago bate com o pedido (evita pagamento de outro valor marcar o pedido como pago)
+    if (order.total != null && Math.abs(Number(pay.transaction_amount) - Number(order.total)) > 0.05) return res.status(200).end()
 
     await fetch(`${url}/rest/v1/orders?id=eq.${ref}`, { method: 'PATCH', headers: h, body: JSON.stringify({ status: 'paid' }) })
     if (order.coupon) {

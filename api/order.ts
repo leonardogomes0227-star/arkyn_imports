@@ -1,5 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { loadCatalog } from './shipping.js'
+import { tooMany } from './_rate.js'
 
 const SB = process.env.SUPABASE_URL
 const SK = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -7,6 +8,7 @@ const SK = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_SERVICE_ROLE
 // Consulta do pedido pelo cliente: número + final do telefone. Não devolve endereço nem telefone completo.
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') return res.status(405).json({ ok: false, error: 'Método inválido' })
+  if (tooMany(req, 'order')) return res.status(429).json({ ok: false, error: 'Muitas tentativas. Aguarde alguns minutos ou fale pelo WhatsApp.' })
   if (!SB || !SK) return res.json({ ok: false, error: 'A consulta de pedidos ainda não está disponível. Fale com a gente pelo WhatsApp.' })
   const id = String(req.body?.id ?? '').replace(/\D/g, '').slice(0, 12)
   const last4 = String(req.body?.phone ?? '').replace(/\D/g, '').slice(-4)
