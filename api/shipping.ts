@@ -25,7 +25,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const { products, settings } = await loadCatalog()
   const lines = (items || []).flatMap(i => {
     const p = products.find(x => x.id === i.id)
-    return p && i.qty > 0 ? [{ p, qty: Math.min(i.qty, p.stock || i.qty) }] : []
+    return p && p.active !== false && i.qty > 0 ? [{ p, qty: Math.min(i.qty, p.stock || i.qty) }] : []
   })
   res.json(await quoteShipping(cep, lines, settings))
 }

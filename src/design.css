@@ -443,3 +443,9 @@ html { -webkit-text-size-adjust:100%; text-size-adjust:100% }
 @media (max-width:900px) { .ck-bar { position:fixed; left:0; right:0; bottom:0; z-index:40; display:flex; align-items:center; justify-content:space-between; gap:14px; padding:12px 16px calc(12px + env(safe-area-inset-bottom)); background:var(--bg,#fff); border-top:1px solid var(--line) } .ck-bar small { display:block; color:var(--mute); font-size:var(--fs-xs) } .ck-bar b { font-family:var(--display); font-size:1.5rem; line-height:1 } .ck-bar .btn { min-width:150px } .ck { padding-bottom:96px !important } }
 .shipcalc { display:grid; gap:6px; margin:18px 0 6px } .shipcalc b { font-size:var(--fs-sm); font-weight:600 } .pdp-trust { justify-content:flex-start; margin-bottom:6px }
 .off.feat { background:var(--ink); color:#fff }
+
+/* ---------- avaliações ---------- */
+.stars { color:var(--gold-ink,#b08a2e); letter-spacing:2px } .stars i { color:var(--line); font-style:normal }
+.reviews { margin-top:clamp(28px,4vw,56px) } .rv-avg { display:flex; align-items:center; gap:8px; margin:0 0 14px }
+.rv-list { list-style:none; margin:0 0 18px; padding:0; display:grid; gap:14px } .rv-list li { padding-bottom:14px; border-bottom:1px solid var(--line) } .rv-list small { color:var(--mute); margin-left:6px } .rv-list p { margin:6px 0 0; line-height:1.6 }
+.rv-form { max-width:520px } .rv-pick { display:flex; gap:4px } .rv-pick button { background:none; border:0; font-size:2rem; line-height:1; color:var(--line); cursor:pointer; padding:4px; min-width:44px; min-height:44px } .rv-pick button.on { color:var(--gold-ink,#b08a2e) }

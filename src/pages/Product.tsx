@@ -1,3 +1,4 @@
+import Reviews from '../components/Reviews'
 import ShipCalc from '../components/ShipCalc'
 import { getRecent, pushRecent } from '../lib/recent'
 import { track } from '../lib/analytics'
@@ -26,6 +27,7 @@ export default function Product() {
   const [pic, setPic] = useState(0)
   const [bar, setBar] = useState(false)
   const buyRef = useRef<HTMLButtonElement>(null)
+  const [rv, setRv] = useState({ count: 0, avg: 0 })
   const p = products.find(x => x.id === id)
   const origin = typeof window !== 'undefined' ? window.location.origin : ''
   const abs = (s?: string) => (s ? (s.startsWith('http') ? s : origin + s) : undefined)
@@ -34,6 +36,7 @@ export default function Product() {
     description: p.description || `${p.brand} ${p.name}${p.notes?.length ? `, com notas de ${p.notes.slice(0, 4).join(', ').toLowerCase()}` : ''}. Pix ou cartão de crédito e retirada em Coxim – MS.`,
     path: `/produto/${p.id}`, image: p.image, type: 'product',
     jsonLd: { '@context': 'https://schema.org', '@type': 'Product', name: `${p.brand} ${p.name}`, sku: p.id, brand: { '@type': 'Brand', name: p.brand }, category: CAT_LABEL[p.category],
+      ...(rv.count > 0 ? { aggregateRating: { '@type': 'AggregateRating', ratingValue: rv.avg.toFixed(1), reviewCount: rv.count } } : {}),
       ...(p.image ? { image: [abs(p.image)] } : {}), ...(p.description ? { description: p.description } : {}),
       offers: { '@type': 'Offer', url: `${origin}/produto/${p.id}`, priceCurrency: 'BRL', price: p.price.toFixed(2), availability: p.stock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock' } },
   } : { title: 'Perfume não encontrado | Arkyn Imports', description: 'Este produto não está disponível.', noindex: true })
@@ -166,9 +169,11 @@ export default function Product() {
         <div className="grid shelf">{ready ? related.map(r => <ProductCard key={r.id} p={r} />) : <ProductSkeleton />}</div>
       </>}
 
-      {(() => { const rv = recent.map(r => products.find(x => x.id === r)).filter((x): x is NonNullable<typeof x> => !!x && x.stock > 0).slice(0, 4); return rv.length > 0 && <>
+      <Reviews productId={p.id} onStats={(count, avg) => setRv({ count, avg })} />
+
+      {(() => { const rvd = recent.map(r => products.find(x => x.id === r)).filter((x): x is NonNullable<typeof x> => !!x && x.stock > 0).slice(0, 4); return rvd.length > 0 && <>
         <div className="ax-sec-head pdp-rel"><div><h2>Vistos recentemente</h2></div></div>
-        <div className="grid shelf">{rv.map(r => <ProductCard key={r.id} p={r} />)}</div>
+        <div className="grid shelf">{rvd.map(r => <ProductCard key={r.id} p={r} />)}</div>
       </> })()}
 
       {!out && (

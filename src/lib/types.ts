@@ -32,6 +32,7 @@ export interface Settings {
   // Envio para fora da cidade (Correios/transportadora)
   bundleMinQty?: number // leve N itens... (0 = desligado)
   bundlePercent?: number // ...e ganhe X% de desconto
+  welcomeCoupon?: string // código de primeira compra mostrado no checkout (o cupom é criado na aba Cupons)
   cnpj?: string // aparece no rodapé quando preenchido
   businessAddress?: string
   originCep?: string // CEP de onde sai o pedido

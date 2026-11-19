@@ -12,7 +12,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const raw = Array.isArray(req.body?.items) ? req.body.items.slice(0, 30) : []
   if (phone.length < 10) return res.status(204).end()
   const { products } = await loadCatalog()
-  const items = raw.flatMap((i: { id: string; qty: number }) => products.some(p => p.id === i.id) && Number.isInteger(i.qty) && i.qty > 0 ? [{ id: i.id, qty: i.qty }] : [])
+  const items = raw.flatMap((i: { id: string; qty: number }) => products.some(p => p.id === i.id && p.active !== false) && Number.isInteger(i.qty) && i.qty > 0 ? [{ id: i.id, qty: i.qty }] : [])
   const h = { apikey: SK, Authorization: `Bearer ${SK}`, 'Content-Type': 'application/json' }
   if (!items.length) { await fetch(`${SB}/rest/v1/leads?phone=eq.${phone}`, { method: 'DELETE', headers: h }).catch(() => null); return res.status(204).end() }
   const total = items.reduce((s: number, i: { id: string; qty: number }) => s + (products.find(p => p.id === i.id)?.price ?? 0) * i.qty, 0)
