@@ -1,3 +1,5 @@
+import ShipCalc from '../components/ShipCalc'
+import { getRecent, pushRecent } from '../lib/recent'
 import { track } from '../lib/analytics'
 import { useEffect, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
@@ -37,6 +39,8 @@ export default function Product() {
   } : { title: 'Perfume não encontrado | Arkyn Imports', description: 'Este produto não está disponível.', noindex: true })
 
   useEffect(() => { setQty(1); setPic(0) }, [id])
+  const [recent, setRecent] = useState<string[]>([])
+  useEffect(() => { setRecent(getRecent().filter(x => x !== id)); if (id) pushRecent(id) }, [id])
   useEffect(() => { const x = products.find(q => q.id === id); if (x) track.viewItem({ id: x.id, name: x.name, brand: x.brand, price: x.price }) }, [id, products])
   // barra de compra fixa no celular, quando o botão principal sai da tela
   useEffect(() => {
@@ -131,8 +135,11 @@ export default function Product() {
 
           <ul className="pdp-ship">
             <li><b>Retirada em Coxim</b><span>Sem custo de frete · {settings.pickupAddress}</span></li>
-            <li><b>Entrega</b><span>{settings.freeShippingFrom > 0 ? `Frete grátis acima de ${brl(settings.freeShippingFrom)}. ` : ''}Consulte a sua cidade pelo WhatsApp</span></li>
+            <li><b>Entrega</b><span>{settings.freeShippingFrom > 0 ? `Frete grátis acima de ${brl(settings.freeShippingFrom)}. ` : ''}Para todo o Brasil, calcule abaixo</span></li>
+            {(settings.bundleMinQty ?? 0) >= 2 && (settings.bundlePercent ?? 0) > 0 && <li><b>Leve {settings.bundleMinQty}, ganhe {settings.bundlePercent}%</b><span>Desconto automático na sacola ao levar {settings.bundleMinQty} ou mais itens</span></li>}
           </ul>
+          {!out && <ShipCalc items={[{ id: p.id, qty }]} />}
+          <ul className="ck-trust pdp-trust"><li>Pagamento seguro</li><li><Link to="/politica/trocas">Troca e devolução</Link></li><li><Link to="/politica/envio">Envio e entrega</Link></li></ul>
 
           <div className="pdp-acc">
             {!!p.notes?.length && (
@@ -158,6 +165,11 @@ export default function Product() {
         <div className="ax-sec-head pdp-rel"><div><h2>Do mesmo estilo</h2></div></div>
         <div className="grid shelf">{ready ? related.map(r => <ProductCard key={r.id} p={r} />) : <ProductSkeleton />}</div>
       </>}
+
+      {(() => { const rv = recent.map(r => products.find(x => x.id === r)).filter((x): x is NonNullable<typeof x> => !!x && x.stock > 0).slice(0, 4); return rv.length > 0 && <>
+        <div className="ax-sec-head pdp-rel"><div><h2>Vistos recentemente</h2></div></div>
+        <div className="grid shelf">{rv.map(r => <ProductCard key={r.id} p={r} />)}</div>
+      </> })()}
 
       {!out && (
         <div className={bar ? 'pdp-bar on' : 'pdp-bar'} aria-hidden={!bar}>

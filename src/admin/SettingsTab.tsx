@@ -25,6 +25,11 @@ export default function SettingsTab() {
       <label>Endereço de retirada<input value={s.pickupAddress} onChange={e => setS({ ...s, pickupAddress: e.target.value })} /></label>
       <label>Frete grátis a partir de R$ (0 = desativado)<input type="number" min="0" step="0.01" value={s.freeShippingFrom} onChange={e => setS({ ...s, freeShippingFrom: Number(e.target.value) })} /></label>
       <label>Parcelas máximas no cartão (1 = sem parcelamento)<input type="number" min="1" max="12" value={s.installments} onChange={e => setS({ ...s, installments: Number(e.target.value) || 1 })} /></label>
+      <h4>Desconto por quantidade</h4>
+      <div className="adm-row">
+        <label>Leve a partir de (itens, 0 = desligado)<input type="number" min="0" value={s.bundleMinQty ?? 0} onChange={e => setS({ ...s, bundleMinQty: Number(e.target.value) })} /></label>
+        <label>Desconto (%)<input type="number" min="0" max="50" value={s.bundlePercent ?? 0} onChange={e => setS({ ...s, bundlePercent: Number(e.target.value) })} /></label>
+      </div>
       <h4>Entrega por cidade</h4>
       {s.shipping.map((x, i) => (
         <div className="adm-row" key={i}>
