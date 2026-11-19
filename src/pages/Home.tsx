@@ -2,6 +2,8 @@ import type { CSSProperties } from 'react'
 import { Link } from 'react-router-dom'
 import GlobeHero from '../components/GlobeHero'
 import RouteSpine from '../components/RouteSpine'
+import CollectionBanners from '../components/CollectionBanners'
+import Faq, { faqItems } from '../components/Faq'
 import ScentExplorer from '../components/ScentExplorer'
 import { ChristmasBand } from '../components/Festive'
 import ProductCard from '../components/ProductCard'
@@ -12,7 +14,7 @@ import { brl, useStore } from '../lib/store'
 import { SEASON } from '../lib/season'
 import { cutoutFor } from '../lib/cutouts'
 import { usePageMeta } from '../lib/seo'
-import type { Category, Product } from '../lib/types'
+import type { Product } from '../lib/types'
 
 
 
@@ -46,6 +48,7 @@ export default function Home() {
       { '@context': 'https://schema.org', '@type': 'Organization', name: 'Arkyn Imports', url: origin, logo: `${origin}/brand/logo-sm.webp`, sameAs: ['https://instagram.com/arkyn_imports'],
         address: { '@type': 'PostalAddress', addressLocality: 'Coxim', addressRegion: 'MS', addressCountry: 'BR' }, telephone: `+${settings.whatsapp}` },
       { '@context': 'https://schema.org', '@type': 'WebSite', name: 'Arkyn Imports', url: origin, potentialAction: { '@type': 'SearchAction', target: `${origin}/catalogo?q={search_term_string}`, 'query-input': 'required name=search_term_string' } },
+      { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faqItems(settings.installments, settings.freeShippingFrom).map(x => ({ '@type': 'Question', name: x.q, acceptedAnswer: { '@type': 'Answer', text: x.a } })) },
     ],
   })
   const live = products.filter(p => p.stock > 0)
@@ -59,8 +62,6 @@ export default function Home() {
     return { name, count: list.length, pics: list.map(cutoutFor).filter((x): x is string => !!x).slice(0, 3) }
   }).filter(b => b.pics.length).sort((a, b) => b.count - a.count || a.name.localeCompare(b.name))
 
-  const count = (c: Category) => products.filter(p => p.category === c).length
-  const hasCut = (id: string) => products.some(p => p.id === id)
 
 
   return (
@@ -68,6 +69,14 @@ export default function Home() {
       <GlobeHero />
       {SEASON === 'natal' && <ChristmasBand whatsapp={settings.whatsapp} />}
       <RouteSpine>
+
+      <Reveal as="section" className="hm-info" aria-label="Como comprar">
+        <div><IconCard size={24} /><b>{settings.installments > 1 ? `Pix ou até ${settings.installments}x` : 'Pix ou cartão'}</b><span>Pelo Mercado Pago</span></div>
+        <div><IconStore size={24} /><b>Retirada grátis</b><span>Na loja em Coxim – MS</span></div>
+        <div><IconTruck size={24} /><b>Todo o Brasil</b><span>{settings.freeShippingFrom > 0 ? `Frete grátis acima de ${brl(settings.freeShippingFrom)}` : 'Enviamos para a sua cidade'}</span></div>
+        <a href={`https://wa.me/${settings.whatsapp}`} target="_blank" rel="noreferrer"><IconChat size={24} /><b>WhatsApp</b><span>Tire dúvidas antes de comprar</span></a>
+      </Reveal>
+
 
       {brandCards.length > 0 && (
         <section className="hm-br" aria-labelledby="br-t">
@@ -91,28 +100,14 @@ export default function Home() {
         <div className="grid shelf hm-four">{featured.map(p => <ProductCard key={p.id} p={p} />)}</div>
       </Reveal>
 
-      <Reveal as="section" className="hm-cols" aria-label="Compre por coleção">
-        {([
-          ['Para ele', 'Masculinos', 'Amadeirados e especiados, do dia a dia à noite.', '/catalogo?cat=masculino', 'french-avenue-vulcan-feu-100ml', count('masculino')],
-          ['Para ela', 'Femininos', 'Doces e florais, do dia à noite.', '/catalogo?cat=feminino', 'armaf-club-de-nuit-maleka-105ml', count('feminino')],
-        ] as [string, string, string, string, string, number][]).filter(c => hasCut(c[4])).map(([k, t, d, to, img, c]) => (
-          <Link key={to} to={to} className="hm-col">
-            <span className="hm-col-txt"><small>{k}</small><b>{t}</b><em>{d}</em><i>{c} {c === 1 ? 'perfume' : 'perfumes'} <span aria-hidden="true">→</span></i></span>
-            <img src={`/hero/${img}.webp?v=4`} width="560" height="560" alt="" loading="lazy" decoding="async" />
-          </Link>
-        ))}
-      </Reveal>
+      <CollectionBanners />
 
 
       <ScentExplorer />
 
       <Shelf title="Ofertas" to="/catalogo" items={offers} />
-      <Reveal as="section" className="hm-info" aria-label="Como comprar">
-        <div><IconCard size={24} /><b>{settings.installments > 1 ? `Pix ou até ${settings.installments}x` : 'Pix ou cartão'}</b><span>Pelo Mercado Pago</span></div>
-        <div><IconStore size={24} /><b>Retirada grátis</b><span>Na loja em Coxim – MS</span></div>
-        <div><IconTruck size={24} /><b>Todo o Brasil</b><span>{settings.freeShippingFrom > 0 ? `Frete grátis acima de ${brl(settings.freeShippingFrom)}` : 'Enviamos para a sua cidade'}</span></div>
-        <a href={`https://wa.me/${settings.whatsapp}`} target="_blank" rel="noreferrer"><IconChat size={24} /><b>WhatsApp</b><span>Tire dúvidas antes de comprar</span></a>
-      </Reveal>
+
+      <Faq />
 
       </RouteSpine>
     </>
