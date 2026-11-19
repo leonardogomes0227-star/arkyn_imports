@@ -130,20 +130,6 @@ export default function Product() {
             </div>
           )}
           {!out && p.stock <= 3 && <p className="low">{p.stock === 1 ? 'Última unidade em estoque' : `Restam ${p.stock} unidades`}</p>}
-          <button type="button" className={favs.includes(p.id) ? 'btn ghost block pdp-fav on' : 'btn ghost block pdp-fav'} aria-pressed={favs.includes(p.id)} onClick={() => toggleFav(p.id)}><IconHeart size={18} filled={favs.includes(p.id)} /> {favs.includes(p.id) ? 'Nos seus favoritos' : 'Salvar nos favoritos'}</button>
-          {out && <a className="btn block" href={waAvise} target="_blank" rel="noreferrer">Avisar quando chegar</a>}
-          <button type="button" className={comparing ? 'btn ghost block on' : 'btn ghost block'} aria-pressed={comparing} onClick={() => { if (!toggleCompare(p.id)) window.alert('Compare até 3 perfumes por vez') }}>{comparing ? 'Na comparação ✓' : 'Comparar com outro perfume'}</button>
-          <a className="btn ghost block" href={wa} target="_blank" rel="noreferrer">Tirar dúvida no WhatsApp</a>
-          <button type="button" className="btn ghost block" onClick={share}>Enviar para alguém</button>
-
-          <ul className="pdp-ship">
-            <li><b>Retirada em Coxim</b><span>Sem custo de frete · {settings.pickupAddress}</span></li>
-            <li><b>Entrega</b><span>{settings.freeShippingFrom > 0 ? `Frete grátis acima de ${brl(settings.freeShippingFrom)}. ` : ''}Para todo o Brasil, calcule abaixo</span></li>
-            {(settings.bundleMinQty ?? 0) >= 2 && (settings.bundlePercent ?? 0) > 0 && <li><b>Leve {settings.bundleMinQty}, ganhe {settings.bundlePercent}%</b><span>Desconto automático na sacola ao levar {settings.bundleMinQty} ou mais itens</span></li>}
-          </ul>
-          {!out && <ShipCalc items={[{ id: p.id, qty }]} />}
-          <ul className="ck-trust pdp-trust"><li>Pagamento seguro</li><li><Link to="/politica/trocas">Troca e devolução</Link></li><li><Link to="/politica/envio">Envio e entrega</Link></li></ul>
-
           <div className="pdp-acc">
             {!!p.notes?.length && (
               <details open>
@@ -160,6 +146,22 @@ export default function Product() {
                 {!!when.length && <div><dt>Ocasião</dt><dd>{when.map(cap).join(' · ')}</dd></div>}
               </dl>
             </details>
+          </div>
+          <div className="pdp-more">
+          <button type="button" className={favs.includes(p.id) ? 'btn ghost block pdp-fav on' : 'btn ghost block pdp-fav'} aria-pressed={favs.includes(p.id)} onClick={() => toggleFav(p.id)}><IconHeart size={18} filled={favs.includes(p.id)} /> {favs.includes(p.id) ? 'Nos seus favoritos' : 'Salvar nos favoritos'}</button>
+          {out && <a className="btn block" href={waAvise} target="_blank" rel="noreferrer">Avisar quando chegar</a>}
+          <button type="button" className={comparing ? 'btn ghost block on' : 'btn ghost block'} aria-pressed={comparing} onClick={() => { if (!toggleCompare(p.id)) window.alert('Compare até 3 perfumes por vez') }}>{comparing ? 'Na comparação ✓' : 'Comparar com outro perfume'}</button>
+          <a className="btn ghost block" href={wa} target="_blank" rel="noreferrer">Tirar dúvida no WhatsApp</a>
+          <button type="button" className="btn ghost block" onClick={share}>Enviar para alguém</button>
+
+          <ul className="pdp-ship">
+            <li><b>Retirada em Coxim</b><span>Sem custo de frete · {settings.pickupAddress}</span></li>
+            <li><b>Entrega</b><span>{settings.freeShippingFrom > 0 ? `Frete grátis acima de ${brl(settings.freeShippingFrom)}. ` : ''}Para todo o Brasil, calcule abaixo</span></li>
+            {(settings.bundleMinQty ?? 0) >= 2 && (settings.bundlePercent ?? 0) > 0 && <li><b>Leve {settings.bundleMinQty}, ganhe {settings.bundlePercent}%</b><span>Desconto automático na sacola ao levar {settings.bundleMinQty} ou mais itens</span></li>}
+          </ul>
+          {!out && <ShipCalc items={[{ id: p.id, qty }]} />}
+          <ul className="ck-trust pdp-trust"><li>Pagamento seguro</li><li><Link to="/politica/trocas">Troca e devolução</Link></li><li><Link to="/politica/envio">Envio e entrega</Link></li></ul>
+
           </div>
         </div>
       </div>

@@ -219,9 +219,9 @@ export default function GlobeHero() {
       <canvas ref={cv} className="gh-cv" aria-hidden="true" />
       <span className="gh-sparks" aria-hidden="true">{Array.from({ length: 14 }, (_, i) => <i key={i} style={{ '--i': i } as CSSProperties} />)}</span>
       <div className="gh-copy">
-        <p className="gh-eyebrow">Arkyn Imports · Envio para todo o Brasil</p>
-        <h1 className="gh-title"><span>Perfumes árabes</span><span>e importados,</span><span>para todo o <em>Brasil.</em></span></h1>
-        {top.length > 0 && <p className="gh-sub">{top.join(', ')} e outras marcas. Enviamos para todo o país, e em Coxim – MS você retira na loja sem frete.</p>}
+        <p className="gh-eyebrow">Arkyn Imports</p>
+        <h1 className="gh-title"><span>Perfumes árabes</span><span>e importados</span></h1>
+        {top.length > 0 && <p className="gh-sub">{top.join(', ')} e mais. Enviamos para todo o Brasil. Em Coxim, retirada grátis na loja.</p>}
         <div className="gh-cta">
           <Link to="/catalogo" className="hx-btn">Ver os perfumes<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg></Link>
           <Link to="/quiz" className="hx-btn hx-btn--ghost">Qual é o seu cheiro?</Link>
