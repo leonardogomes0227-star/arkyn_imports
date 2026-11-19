@@ -28,11 +28,25 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (name.length < 2 || phone.replace(/\D/g, '').length < 10) return res.status(400).json({ error: 'Confira nome e telefone' })
   const { products, settings } = await loadCatalog()
 
+  // estoque "segurado" por pedidos de outros clientes ainda aguardando pagamento (30 min), para não vender o mesmo frasco duas vezes
+  const held: Record<string, number> = {}
+  if (SB && SK) {
+    const since = new Date(Date.now() - 30 * 60 * 1000).toISOString()
+    const pend = await (await sb(`orders?status=eq.pending&created_at=gte.${since}&select=items,phone`)).json().catch(() => [])
+    const mine = phone.replace(/\D/g, '')
+    for (const o of Array.isArray(pend) ? pend : []) {
+      if (String(o.phone ?? '').replace(/\D/g, '') === mine) continue // tentativa anterior do próprio cliente não conta
+      for (const it of o.items ?? []) held[it.id] = (held[it.id] ?? 0) + Number(it.qty || 0)
+    }
+  }
+  let blockedByHold = false
   const lines = items.flatMap(i => {
     const p = products.find(x => x.id === i.id)
-    return p && p.active !== false && Number.isInteger(i.qty) && i.qty > 0 && i.qty <= p.stock ? [{ p, qty: i.qty }] : []
+    if (!p || p.active === false || !Number.isInteger(i.qty) || i.qty <= 0 || i.qty > p.stock) return []
+    if (i.qty > p.stock - (held[p.id] ?? 0)) { blockedByHold = true; return [] }
+    return [{ p, qty: i.qty }]
   })
-  if (!lines.length) return res.status(400).json({ error: 'Carrinho inválido ou sem estoque' })
+  if (!lines.length) return res.status(400).json({ error: blockedByHold ? 'Esse perfume está reservado por outro cliente que ainda não concluiu o pagamento. Tente de novo em alguns minutos.' : 'Carrinho inválido ou sem estoque' })
 
   const subtotal = lines.reduce((s, l) => s + l.p.price * l.qty, 0)
   // frete sempre recalculado aqui: o valor que a tela mostra nunca é confiado
