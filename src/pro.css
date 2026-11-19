@@ -1,0 +1,17 @@
+/* =====================================================================
+   ACABAMENTO PROFISSIONAL — mantém a identidade (preto e verde-limão) e tira o que distrai.
+   Carrega por último. Para voltar ao visual anterior, é só apagar este arquivo e o import em main.tsx.
+   ===================================================================== */
+/* sem avião e linha pontilhada acompanhando a rolagem, sem faíscas no globo */
+body.ax .fp, body.ax .gh-sparks, body.ax .gh-hint { display:none !important }
+
+/* botões retos e limpos (sem canto cortado) */
+body.ax .btn, body.ax .pdp-cta, body.ax .card-add, body.ax .ax-suggest button, body.ax .ax-menu-wa, body.ax .btn-gold, body.ax .ch-btn, body.ax .hx-btn {
+  clip-path:none !important; border-radius:2px; letter-spacing:.12em }
+
+@media (max-width:900px) {
+  /* barra de baixo: todos os atalhos iguais, sem o botão redondo de avião */
+  body.ax .mbar-quiz i { width:auto; height:auto; margin-top:0; border-radius:0; background:none; box-shadow:none }
+  body.ax .mbar-quiz img { width:24px; filter:brightness(0) invert(1); opacity:.85; transform:none }
+  body.ax .mbar-quiz.active i, body.ax .mbar-quiz:active i { transform:none }
+}
