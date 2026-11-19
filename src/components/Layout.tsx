@@ -1,3 +1,4 @@
+import { POLICY_LINKS } from '../pages/Policy'
 import { useEffect, useState, type ReactNode } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import CartDrawer from './CartDrawer'
@@ -133,10 +134,15 @@ export default function Layout({ children }: { children: ReactNode }) {
             {NAV.map(([label, to]) => <Link key={to} to={to}>{label}</Link>)}
             <Link to="/quiz">Quiz</Link>
           </nav>
+          <nav className="ft-nav ft-pol" aria-label="Políticas e ajuda">
+            {POLICY_LINKS.map(([label, to]) => <Link key={to} to={to}>{label}</Link>)}
+          </nav>
           <div className="ft-contact">
             <a href={wa} target="_blank" rel="noreferrer">WhatsApp {phone(settings.whatsapp)}</a>
             <a href="https://instagram.com/arkyn_imports" target="_blank" rel="noreferrer">@arkyn_imports</a>
             <span>Retirada na loja em Coxim – MS</span>
+            {settings.businessAddress && <span>{settings.businessAddress}</span>}
+            {settings.cnpj && <span>CNPJ {settings.cnpj}</span>}
           </div>
         </div>
         <p className="ax-copy"><span>© {new Date().getFullYear()} Arkyn Imports · Coxim – MS</span><Link to="/admin">Área do lojista</Link></p>

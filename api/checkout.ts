@@ -92,12 +92,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({
       items: mpItems, external_reference: orderId, payer: { name },
-      back_urls: { success: site, failure: `${site}/carrinho`, pending: site }, auto_return: 'approved',
+      back_urls: { success: `${site}/pedido`, failure: `${site}/carrinho`, pending: `${site}/pedido` }, auto_return: 'approved',
       payment_methods: settings.installments > 1 ? { installments: settings.installments } : undefined,
       notification_url: `${site}/api/webhook`,
     }),
   })
   const pref = await mp.json()
   if (!mp.ok) return res.status(502).json({ error: pref.message || 'Erro no Mercado Pago' })
-  res.json({ url: pref.init_point })
+  if (SB && SK) fetch(`${SB}/rest/v1/leads?phone=eq.${phone.replace(/\D/g, '')}`, { method: 'DELETE', headers: { apikey: SK, Authorization: `Bearer ${SK}` } }).catch(() => null)
+  res.json({ url: pref.init_point, orderId })
 }

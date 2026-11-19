@@ -16,7 +16,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     } catch { /* usa os de exemplo */ }
   }
   const site = process.env.SITE_URL || `https://${req.headers.host}`
-  const urls = ['/', '/catalogo', '/quiz', ...products.filter(p => p.active !== false).map(p => `/produto/${encodeURIComponent(p.id)}`)]
+  const urls = ['/', '/catalogo', '/quiz', '/politica/trocas', '/politica/envio', '/politica/privacidade', ...products.filter(p => p.active !== false).map(p => `/produto/${encodeURIComponent(p.id)}`)]
   const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map(u => `  <url><loc>${site}${u}</loc></url>`).join('\n')}\n</urlset>\n`
   res.setHeader('Content-Type', 'application/xml; charset=utf-8')
   res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate=86400')

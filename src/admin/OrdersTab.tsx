@@ -72,7 +72,7 @@ export default function OrdersTab() {
                   ['Confirmar pedido', `Olá ${o.customer_name}! Recebemos o seu pedido #${o.id} na Arkyn Imports (${brl(Number(o.total))}). Já estamos separando. Obrigado!`],
                   ['Cobrar pagamento', `Olá ${o.customer_name}! Seu pedido #${o.id} (${brl(Number(o.total))}) está aguardando o pagamento. Posso te ajudar a finalizar?`],
                   ['Pronto p/ retirada', `Olá ${o.customer_name}! Seu pedido #${o.id} já está pronto para retirada. Pode vir buscar quando quiser!`],
-                  ['Saiu para entrega', `Olá ${o.customer_name}! Seu pedido #${o.id} saiu para entrega${o.tracking ? ` (rastreio: ${o.tracking})` : ''}.`],
+                  ['Saiu para entrega', `Olá ${o.customer_name}! Seu pedido #${o.id} saiu para entrega${o.tracking ? ` (rastreio: ${o.tracking})` : ''}. Acompanhe em ${location.origin}/pedido (número ${o.id} e seu telefone).`],
                 ] as const).map(([l, t]) => <a key={l} className="btn ghost" style={{ padding: '6px 10px', fontSize: 11 }} href={waLink(o.phone, t)} target="_blank" rel="noreferrer">{l}</a>)}
                 <button className="btn ghost" style={{ padding: '6px 10px', fontSize: 11 }} onClick={() => printOrder(o)}>IMPRIMIR</button>
               </div>

@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { useToast } from '../components/Toast'
 import { usePageMeta } from '../lib/seo'
 import { brl, useStore } from '../lib/store'
+import { track } from '../lib/analytics'
 import { emptyAddress, fetchQuote, maskCep, savedCep, saveCep } from '../lib/shipping'
 import type { ShipAddress, ShipQuote } from '../lib/types'
 import { photoOf } from '../lib/cutouts'
@@ -66,6 +67,15 @@ export default function Cart() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [method, addr.cep, cartKey])
 
+  useEffect(() => { track.beginCheckout(lines.map(l => ({ id: l.p.id, name: l.p.name, brand: l.p.brand, price: l.p.price, qty: l.qty }))) /* eslint-disable-next-line react-hooks/exhaustive-deps */ }, [])
+
+  // guarda o carrinho de quem já informou o telefone (a loja pode chamar no WhatsApp se não finalizar)
+  useEffect(() => {
+    if (phone.replace(/\D/g, '').length < 10 || !cart.length) return
+    const t = window.setTimeout(() => { fetch('/api/lead', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, phone, items: cart }) }).catch(() => null) }, 1500)
+    return () => window.clearTimeout(t)
+  }, [phone, name, cartKey]) // eslint-disable-line react-hooks/exhaustive-deps
+
   const needAddr = method !== 'pickup'
   const addrErr = needAddr && (!addr.street.trim() || !addr.number.trim() || !addr.district.trim()) ? 'Preencha rua, número e bairro.' : ''
   const discount = cp ? Math.min(cp.discount, subtotal) : 0
@@ -109,6 +119,7 @@ export default function Cart() {
       })
       const d = await r.json()
       if (!r.ok || !d.url) throw new Error(d.error || 'Falha ao iniciar pagamento')
+      try { localStorage.setItem('lastOrder', JSON.stringify({ id: d.orderId, phone })) } catch { /* ignore */ }
       clear(); window.location.href = d.url
     } catch (e) {
       const msg = (e as Error).message
@@ -244,6 +255,9 @@ export default function Cart() {
           {err && <p className="ck-err ck-err-box" role="alert">{err}</p>}
           <button type="button" className={busy ? 'btn block is-busy' : 'btn block'} disabled={busy || needShip} onClick={pay}>{busy ? 'Aguarde…' : 'Pagar com Pix ou cartão'}</button>
           <a className="btn ghost block" href={wa} target="_blank" rel="noreferrer">Finalizar pelo WhatsApp</a>
+          <ul className="ck-trust">
+            <li>Pagamento seguro</li><li>Envio para todo o Brasil</li><li><Link to="/politica/trocas">Troca e devolução</Link></li>
+          </ul>
           <p className="ck-secure">Pagamento seguro pelo Mercado Pago. Você será levado ao ambiente deles para concluir.</p>
         </aside>
       </div>

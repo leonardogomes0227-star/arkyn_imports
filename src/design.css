@@ -428,3 +428,9 @@ html { -webkit-text-size-adjust:100%; text-size-adjust:100% }
 @media (max-width:480px) { .ck-addr-grid { grid-template-columns:1fr } .ck-cep input { max-width:none } }
 .ax-cep { display:flex; gap:8px; margin:2px 0 4px } .ax-cep input { flex:1 1 0; width:0; min-width:0 } .ax-cep .btn { min-height:auto; padding:0 18px }
 .ax-cep-res { margin:0 0 4px; font-size:var(--fs-xs); color:var(--mute); line-height:1.5 } .ax-cep-res b { color:var(--ink) }
+
+/* ---------- pedido, políticas, confiança ---------- */
+.ck-trust { list-style:none; margin:0; padding:0; display:flex; flex-wrap:wrap; justify-content:center; gap:6px 16px; font-size:var(--fs-xs); color:var(--mute) } .ck-trust li::before { content:"✓ "; color:var(--ink) } .ck-trust a { color:inherit; text-decoration:underline }
+.ord-steps { list-style:none; margin:0; padding:0; display:grid; gap:10px } .ord-steps li { padding-left:26px; position:relative; color:var(--mute) } .ord-steps li::before { content:""; position:absolute; left:0; top:.25em; width:14px; height:14px; border-radius:50%; border:2px solid var(--line) } .ord-steps li.on { color:var(--ink); font-weight:500 } .ord-steps li.on::before { background:var(--ink); border-color:var(--ink) }
+.order-page .ck-card, .policy { max-width:640px } .pol-block h2 { font-family:var(--display); font-size:1.4rem; margin:26px 0 6px } .pol-block p { margin:0; line-height:1.7 }
+.ft-pol { margin-top:6px; opacity:.8 }

@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
 import { key, url } from './env'
 import { DEFAULT_SETTINGS, SEED_PRODUCTS } from './seed'
+import { track } from './analytics'
 import type { CartItem, Product, Settings } from './types'
 
 interface Ctx {
@@ -54,7 +55,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     open, setOpen,
     add: (id, openCart = true, qty = 1) => {
       if (openCart) setOpen(true)
-      const max = products.find(p => p.id === id)?.stock ?? Infinity
+      const prod = products.find(p => p.id === id)
+      if (prod) track.addToCart({ id, name: prod.name, brand: prod.brand, price: prod.price, qty })
+      const max = prod?.stock ?? Infinity
       setCart(c => c.some(i => i.id === id) ? c.map(i => i.id === id ? { ...i, qty: Math.min(i.qty + qty, max) } : i) : [...c, { id, qty: Math.min(qty, max) }])
     },
     ready,

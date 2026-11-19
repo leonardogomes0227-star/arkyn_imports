@@ -2,6 +2,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import App from './App'
+import { initAnalytics } from './lib/analytics'
 import { StoreProvider } from './lib/store'
 import { ToastProvider } from './components/Toast'
 import './fonts.css'
@@ -21,6 +22,8 @@ import './anim.css'
 import './type.css'
 import './notes.css'
 import './pyramid.css'
+
+initAnalytics()
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode><BrowserRouter><StoreProvider><ToastProvider><App /></ToastProvider></StoreProvider></BrowserRouter></StrictMode>,
