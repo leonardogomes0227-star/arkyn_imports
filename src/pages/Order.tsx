@@ -30,7 +30,7 @@ export default function Order() {
     } catch { setErr('Não foi possível consultar agora. Tente de novo ou fale pelo WhatsApp.') }
     setBusy(false)
   }
-  useEffect(() => { if (mp === 'approved') clear(); if (id && phone.replace(/\D/g, '').length >= 10) find() /* eslint-disable-next-line react-hooks/exhaustive-deps */ }, [])
+  useEffect(() => { if (mp === 'approved' || mp === 'pending' || mp === 'in_process') clear(); if (id && phone.replace(/\D/g, '').length >= 10) find() /* eslint-disable-next-line react-hooks/exhaustive-deps */ }, [])
 
   const idx = o ? STEPS.findIndex(s => s[0] === o.status) : -1
   const wa = `https://wa.me/${settings.whatsapp}?text=${encodeURIComponent(`Olá! Quero falar sobre o pedido${id ? ' #' + id : ''}.`)}`

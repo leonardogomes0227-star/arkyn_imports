@@ -19,7 +19,7 @@ const maskPhone = (v: string) => {
 }
 
 export default function Cart() {
-  const { cart, products, settings, setQty, clear } = useStore()
+  const { cart, products, settings, setQty } = useStore()
   const { toast } = useToast()
   usePageMeta({ title: 'Finalizar compra | Arkyn Imports', description: 'Finalize sua compra com Pix ou cartão de crédito.', noindex: true })
   const [name, setName] = useState('')
@@ -125,7 +125,7 @@ export default function Cart() {
       const d = await r.json()
       if (!r.ok || !d.url) throw new Error(d.error || 'Falha ao iniciar pagamento')
       try { localStorage.setItem('lastOrder', JSON.stringify({ id: d.orderId, phone })) } catch { /* ignore */ }
-      clear(); window.location.href = d.url
+      window.location.href = d.url // a sacola só esvazia quando o pagamento volta aprovado/pendente (veja /pedido)
     } catch (e) {
       const msg = (e as Error).message
       // erro de configuração do pagamento: não mostra texto técnico ao cliente
