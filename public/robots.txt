@@ -2,6 +2,7 @@ User-agent: *
 Allow: /
 Disallow: /admin
 Disallow: /carrinho
+Disallow: /pedido
 Disallow: /favoritos
 Disallow: /comparar
 Disallow: /api/

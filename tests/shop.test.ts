@@ -3,6 +3,7 @@ import assert from 'node:assert/strict'
 import { bundleDiscount } from '../src/lib/pricing'
 import { quoteShipping } from '../api/_shipping'
 import checkout from '../api/checkout'
+import webhook from '../api/webhook'
 import { DEFAULT_SETTINGS, SEED_PRODUCTS } from '../src/lib/seed'
 
 const CEPS: Record<string, object> = {
@@ -66,4 +67,23 @@ test('checkout: recusa frete inventado, endereço faltando e CEP de entrega loca
 test('checkout: recusa nome/telefone inválidos e quantidade acima do estoque', async () => {
   assert.equal((await call({ ...base, name: 'A', method: 'pickup' })).status, 400)
   assert.equal((await call({ ...base, items: [{ id: prod.id, qty: prod.stock + 1 }], method: 'pickup' })).status, 400)
+})
+
+test('webhook: só confirma o pedido se o valor pago bate com o total', async () => {
+  const patches: string[] = []
+  const run = async (paid: number) => {
+    process.env.SUPABASE_URL = 'https://sb.test'; process.env.SUPABASE_SERVICE_KEY = 'k'
+    const prev = globalThis.fetch
+    globalThis.fetch = (async (u: string, init?: { method?: string; body?: string }) => {
+      const url = String(u)
+      if (url.includes('/v1/payments/')) return { ok: true, json: async () => ({ status: 'approved', external_reference: '7', transaction_amount: paid }) }
+      if (url.includes('/rest/v1/orders?id=eq.7') && init?.method === 'PATCH') { patches.push(init.body!); return { ok: true, json: async () => [] } }
+      if (url.includes('/rest/v1/orders')) return { ok: true, json: async () => [{ items: [], coupon: null, status: 'pending', total: 100 }] }
+      return { ok: true, json: async () => [] }
+    }) as unknown as typeof fetch
+    await webhook({ method: 'POST', body: { data: { id: '1' } }, query: {} } as any, { status() { return { end() {} } } } as any)
+    globalThis.fetch = prev
+  }
+  await run(40); assert.equal(patches.length, 0)
+  await run(100); assert.equal(patches.length, 1)
 })
