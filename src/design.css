@@ -434,3 +434,12 @@ html { -webkit-text-size-adjust:100%; text-size-adjust:100% }
 .ord-steps { list-style:none; margin:0; padding:0; display:grid; gap:10px } .ord-steps li { padding-left:26px; position:relative; color:var(--mute) } .ord-steps li::before { content:""; position:absolute; left:0; top:.25em; width:14px; height:14px; border-radius:50%; border:2px solid var(--line) } .ord-steps li.on { color:var(--ink); font-weight:500 } .ord-steps li.on::before { background:var(--ink); border-color:var(--ink) }
 .order-page .ck-card, .policy { max-width:640px } .pol-block h2 { font-family:var(--display); font-size:1.4rem; margin:26px 0 6px } .pol-block p { margin:0; line-height:1.7 }
 .ft-pol { margin-top:6px; opacity:.8 }
+
+/* ---------- etapas, presente, barra de pagamento, frete no produto ---------- */
+.ck-steps { list-style:none; margin:-8px 0 24px; padding:0; display:flex; gap:8px; counter-reset:s } .ck-steps li { counter-increment:s; flex:1; padding-top:10px; border-top:3px solid var(--line); font-size:var(--fs-xs); letter-spacing:.08em; text-transform:uppercase; color:var(--mute) } .ck-steps li::before { content:counter(s) ". " } .ck-steps li.on { border-color:var(--ink); color:var(--ink); font-weight:700 } .ck-steps li.done { border-color:var(--ink); color:var(--ink) } .ck-steps li.done::before { content:"✓ " }
+.ck-gift { display:flex; gap:10px; align-items:center; font-size:var(--fs-sm); cursor:pointer } .ck-gift input { width:18px; height:18px; padding:0; accent-color:var(--ink) }
+.ck-f textarea { width:100%; font-weight:400; resize:vertical }
+.ck-bar { display:none }
+@media (max-width:900px) { .ck-bar { position:fixed; left:0; right:0; bottom:0; z-index:40; display:flex; align-items:center; justify-content:space-between; gap:14px; padding:12px 16px calc(12px + env(safe-area-inset-bottom)); background:var(--bg,#fff); border-top:1px solid var(--line) } .ck-bar small { display:block; color:var(--mute); font-size:var(--fs-xs) } .ck-bar b { font-family:var(--display); font-size:1.5rem; line-height:1 } .ck-bar .btn { min-width:150px } .ck { padding-bottom:96px !important } }
+.shipcalc { display:grid; gap:6px; margin:18px 0 6px } .shipcalc b { font-size:var(--fs-sm); font-weight:600 } .pdp-trust { justify-content:flex-start; margin-bottom:6px }
+.off.feat { background:var(--ink); color:#fff }

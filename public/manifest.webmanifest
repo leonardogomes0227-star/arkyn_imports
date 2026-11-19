@@ -1,0 +1,22 @@
+{
+  "name": "Arkyn Imports",
+  "short_name": "Arkyn",
+  "description": "Perfumes árabes e importados",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000002",
+  "theme_color": "#000002",
+  "lang": "pt-BR",
+  "icons": [
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

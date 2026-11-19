@@ -2,6 +2,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node'
 import type { ShipAddress } from '../src/lib/types'
 import { validateCoupon } from './coupon.js'
 import { loadCatalog } from './shipping.js'
+import { bundleDiscount } from '../src/lib/pricing.js'
 import { onlyDigits, quoteShipping } from './_shipping.js'
 
 const SB = process.env.SUPABASE_URL
@@ -14,7 +15,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const token = process.env.MP_ACCESS_TOKEN
   if (!token) return res.status(500).json({ error: 'MP_ACCESS_TOKEN não configurado' })
 
-  const body = (req.body ?? {}) as { items?: { id: string; qty: number }[]; name?: string; phone?: string; method?: string; coupon?: string; address?: Partial<ShipAddress>; shippingId?: string }
+  const body = (req.body ?? {}) as { items?: { id: string; qty: number }[]; name?: string; phone?: string; method?: string; coupon?: string; address?: Partial<ShipAddress>; shippingId?: string; gift?: string }
   // entrada do navegador: corta tamanhos e ignora o que não for válido (preço e total são sempre recalculados aqui)
   const items = Array.isArray(body.items) ? body.items.slice(0, 50) : []
   const name = String(body.name ?? '').trim().slice(0, 80)
@@ -22,6 +23,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const method = String(body.method ?? '').slice(0, 60)
   const coupon = body.coupon ? String(body.coupon).slice(0, 40) : undefined
   const address = body.address && typeof body.address === 'object' ? body.address : undefined
+  const gift = body.gift ? String(body.gift).trim().slice(0, 200) : ''
   const shippingId = body.shippingId ? String(body.shippingId).slice(0, 40) : undefined
   if (name.length < 2 || phone.replace(/\D/g, '').length < 10) return res.status(400).json({ error: 'Confira nome e telefone' })
   const { products, settings } = await loadCatalog()
@@ -61,19 +63,21 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   const cp = coupon ? await validateCoupon(coupon, subtotal) : null
-  const discount = cp?.ok ? cp.discount : 0
+  const bundle = bundleDiscount(subtotal, lines.reduce((t, l) => t + l.qty, 0), settings)
+  const discount = Math.min(subtotal, Math.round(((cp?.ok ? cp.discount : 0) + bundle) * 100) / 100)
   const total = Math.round((subtotal - discount + shipping) * 100) / 100
 
   let orderId = `pedido-${Date.now()}`
   if (SB && SK) {
     const delivery = method === 'ship' ? `${addr!.city}/${addr!.uf}` : method
     const addrText = addr ? `${shipLabel} · ${addr.street}, ${addr.number}${addr.complement ? ' ' + addr.complement : ''} · ${addr.district} · ${addr.city}/${addr.uf} · CEP ${addr.cep}` : ''
+    const giftText = gift ? ` · PRESENTE: ${gift}` : ''
     const base = { customer_name: name, phone, delivery, items, total, status: 'pending' }
     const extra = { subtotal, shipping, discount, coupon: cp?.ok ? coupon!.trim().toUpperCase() : null }
-    let r = await sb('orders', { method: 'POST', body: JSON.stringify({ ...base, ...extra, address: addr, shipping_service: shipLabel }) })
+    let r = await sb('orders', { method: 'POST', body: JSON.stringify({ ...base, ...extra, address: addr, shipping_service: shipLabel, notes: giftText.replace(/^ · /, '') || null }) })
     // bancos sem a migração do frete (supabase/frete.sql): guarda o endereço em "notes"
-    if (!r.ok) r = await sb('orders', { method: 'POST', body: JSON.stringify({ ...base, ...extra, notes: addrText }) })
-    if (!r.ok) r = await sb('orders', { method: 'POST', body: JSON.stringify({ ...base, notes: addrText }) })
+    if (!r.ok) r = await sb('orders', { method: 'POST', body: JSON.stringify({ ...base, ...extra, notes: addrText + giftText }) })
+    if (!r.ok) r = await sb('orders', { method: 'POST', body: JSON.stringify({ ...base, notes: addrText + giftText }) })
     if (!r.ok) r = await sb('orders', { method: 'POST', body: JSON.stringify(base) })
     const o = await r.json()
     if (o?.[0]?.id) orderId = String(o[0].id)

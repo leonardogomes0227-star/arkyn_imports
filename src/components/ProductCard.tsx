@@ -61,6 +61,7 @@ export default function ProductCard({ p, priority = false }: { p: Product; prior
         {sale && <span className="off">-{Math.round((1 - p.price / p.old_price!) * 100)}%</span>}
         {shot ? <SizedImg ref={img} className="m" src={shot} size={480} responsive sizes="(max-width:560px) 45vw, (max-width:1100px) 30vw, 300px" width={800} height={800} alt={`${p.brand} ${p.name}`} loading={priority ? 'eager' : 'lazy'} {...(priority ? { fetchpriority: 'high' } : {})} decoding="async" onLoad={() => setLoaded(true)} /> : <Placeholder brand={p.brand} />}
         {second && <SizedImg className="alt" src={second} size={480} width={800} height={800} alt="" loading="lazy" decoding="async" />}
+        {p.featured && !out && !sale && <span className="off feat">Destaque</span>}
         {out && <span className="sold">Esgotado</span>}
         {!!p.notes?.length && !out && (
           <span className={showPyr ? 'notes on' : 'notes'} aria-hidden="true"><NotePyramid p={p} compact /></span>

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import SizedImg from './SizedImg'
 import { brl, useStore } from '../lib/store'
+import { bundleDiscount } from '../lib/pricing'
 import { fetchQuote, maskCep, savedCep, saveCep } from '../lib/shipping'
 import type { ShipQuote } from '../lib/types'
 import { photoOf } from '../lib/cutouts'
@@ -16,6 +17,8 @@ export default function CartDrawer() {
   const subtotal = lines.reduce((s, l) => s + l.p.price * l.qty, 0)
   const items = lines.reduce((s, l) => s + l.qty, 0)
   const goal = settings.freeShippingFrom
+  const bMin = settings.bundleMinQty ?? 0
+  const bundle = bundleDiscount(subtotal, items, settings)
   const close = () => setOpen(false)
   const [cep, setCep] = useState(() => maskCep(savedCep()))
   const [q, setQ] = useState<ShipQuote | null>(null)
@@ -121,7 +124,8 @@ export default function CartDrawer() {
 
         {!!lines.length && (
           <div className="ax-drawer-foot">
-            <div className="ax-tot"><span>Subtotal</span><b>{brl(subtotal)}</b></div>
+            {bMin >= 2 && (settings.bundlePercent ?? 0) > 0 && <p className="ax-note">{bundle > 0 ? `Desconto de ${settings.bundlePercent}% por quantidade: −${brl(bundle)}` : `Leve ${bMin} itens e ganhe ${settings.bundlePercent}% de desconto.`}</p>}
+            <div className="ax-tot"><span>Subtotal</span><b>{brl(subtotal - bundle)}</b></div>
             <div className="ax-cep">
               <input value={cep} inputMode="numeric" autoComplete="postal-code" placeholder="Calcule o frete: seu CEP" aria-label="CEP para calcular o frete" tabIndex={open ? 0 : -1}
                 onChange={e => { setCep(maskCep(e.target.value)); setQ(null) }} onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); quote() } }} />
