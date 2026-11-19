@@ -101,12 +101,12 @@ export default function Cart() {
   const summary = lines.map(l => `${l.qty}x ${l.p.brand} ${l.p.name}`).join('\n')
   const wa = `https://wa.me/${settings.whatsapp}?text=${encodeURIComponent(`Olá! Quero comprar:\n${summary}\nTotal: ${brl(total)}\nEntrega: ${method === 'pickup' ? 'Retirada' : method === 'ship' ? `${shipOpt?.label ?? 'Envio'} (${shipOpt ? brl(shipOpt.price) : 'a calcular'})` : method}${addrLine ? `\nEndereço: ${addrLine}` : ''}\n${isGift ? `\nPresente: ${gift || 'sim'}` : ''}\nNome: ${name}`)}`
 
-  async function applyCoupon() {
+  async function applyCoupon(c = code) {
     setCpErr(''); setCpBusy(true)
     try {
-      const r = await fetch('/api/coupon', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ code, subtotal }) })
+      const r = await fetch('/api/coupon', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ code: c, subtotal }) })
       const d = await r.json()
-      if (d.ok) { setCp({ code: code.trim().toUpperCase(), discount: d.discount, label: d.label }); toast(`Cupom ${code.trim().toUpperCase()} aplicado`) } else { setCp(null); setCpErr(d.error || 'Cupom inválido') }
+      if (d.ok) { setCp({ code: c.trim().toUpperCase(), discount: d.discount, label: d.label }); toast(`Cupom ${c.trim().toUpperCase()} aplicado`) } else { setCp(null); setCpErr(d.error || 'Cupom inválido') }
     } catch { setCpErr('Não foi possível validar o cupom agora.') }
     setCpBusy(false)
   }
@@ -232,9 +232,10 @@ export default function Cart() {
             ) : (
               <div className="ck-coupon">
                 <input placeholder="Digite o código" value={code} onChange={e => setCode(e.target.value)} onKeyDown={e => { if (e.key === 'Enter' && code.trim()) { e.preventDefault(); applyCoupon() } }} aria-label="Código do cupom" autoCapitalize="characters" />
-                <button type="button" className={cpBusy ? 'btn ghost is-busy' : 'btn ghost'} onClick={applyCoupon} disabled={!code.trim()}>{cpBusy ? 'Validando…' : 'Aplicar'}</button>
+                <button type="button" className={cpBusy ? 'btn ghost is-busy' : 'btn ghost'} onClick={() => applyCoupon()} disabled={!code.trim()}>{cpBusy ? 'Validando…' : 'Aplicar'}</button>
               </div>
             )}
+            {!cp && settings.welcomeCoupon && <p className="ck-hint">Primeira compra? Use o cupom <b>{settings.welcomeCoupon}</b>. <button type="button" className="link" onClick={() => { setCode(settings.welcomeCoupon!); applyCoupon(settings.welcomeCoupon!) }}>Aplicar</button></p>}
             {cpErr && <p className="ck-err" role="alert">{cpErr}</p>}
           </fieldset>
         </div>

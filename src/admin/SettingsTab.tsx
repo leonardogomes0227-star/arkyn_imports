@@ -25,6 +25,7 @@ export default function SettingsTab() {
       <label>Endereço de retirada<input value={s.pickupAddress} onChange={e => setS({ ...s, pickupAddress: e.target.value })} /></label>
       <label>Frete grátis a partir de R$ (0 = desativado)<input type="number" min="0" step="0.01" value={s.freeShippingFrom} onChange={e => setS({ ...s, freeShippingFrom: Number(e.target.value) })} /></label>
       <label>Parcelas máximas no cartão (1 = sem parcelamento)<input type="number" min="1" max="12" value={s.installments} onChange={e => setS({ ...s, installments: Number(e.target.value) || 1 })} /></label>
+      <label>Cupom de primeira compra (código, mostrado no checkout; crie o cupom na aba Cupons)<input value={s.welcomeCoupon ?? ''} onChange={e => setS({ ...s, welcomeCoupon: e.target.value.toUpperCase() })} /></label>
       <h4>Desconto por quantidade</h4>
       <div className="adm-row">
         <label>Leve a partir de (itens, 0 = desligado)<input type="number" min="0" value={s.bundleMinQty ?? 0} onChange={e => setS({ ...s, bundleMinQty: Number(e.target.value) })} /></label>
