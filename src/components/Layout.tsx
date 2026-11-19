@@ -7,7 +7,6 @@ import MobileBar from './MobileBar'
 import { ScrollBar } from './Festive'
 import Feel from './Feel'
 import Motion from './Motion'
-import FlightPath from './FlightPath'
 import Intro from './Intro'
 import SearchOverlay from './SearchOverlay'
 import { IconBag, IconHeart, IconSearch } from './Icons'
@@ -77,7 +76,6 @@ export default function Layout({ children }: { children: ReactNode }) {
       <Intro />
       <Feel />
       <Motion />
-      <FlightPath />
       <ScrollBar />
       <header className={scrolled ? 'ax-header is-scrolled' : 'ax-header'}>
         <div className="ax-topbar sc-top" aria-label="Avisos da loja">
@@ -118,7 +116,7 @@ export default function Layout({ children }: { children: ReactNode }) {
         <a className="btn ax-menu-wa" href={wa} target="_blank" rel="noreferrer" tabIndex={menu ? 0 : -1}>Falar no WhatsApp</a>
       </aside>
 
-      <main id="conteudo" key={loc.pathname} className="ax-page">{children}</main>
+      <main id="conteudo" key={loc.pathname} className={loc.pathname === '/' || loc.pathname === '/quiz' ? 'ax-page' : 'ax-page lt-page'}>{children}</main>
       <CartDrawer />
       <CompareBar />
       <MobileBar onSearch={() => setSearch(true)} />

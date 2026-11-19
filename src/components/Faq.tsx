@@ -16,12 +16,12 @@ export default function Faq() {
   const { settings } = useStore()
   const items = faqItems(settings.installments, settings.freeShippingFrom)
   return (
-    <section className="faq" aria-labelledby="faq-t">
+    <section className="faq lt" aria-labelledby="faq-t"><div className="faq-in">
       <div className="hm-head"><div><p className="hm-eyebrow">Dúvidas</p><h2 id="faq-t">Perguntas frequentes</h2></div></div>
       <div className="faq-list">
         {items.map(x => <details key={x.q}><summary>{x.q}</summary><p>{x.a}</p></details>)}
       </div>
       <p className="faq-more">Ainda com dúvida? <Link to="/politica/trocas">Trocas e devoluções</Link> · <Link to="/politica/envio">Envio e entrega</Link> · <Link to="/pedido">Acompanhar pedido</Link></p>
-    </section>
+    </div></section>
   )
 }

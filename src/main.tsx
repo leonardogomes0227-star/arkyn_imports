@@ -23,7 +23,7 @@ import './anim.css'
 import './type.css'
 import './notes.css'
 import './pyramid.css'
-import './pro.css'
+import './look.css'
 
 initAnalytics()
 

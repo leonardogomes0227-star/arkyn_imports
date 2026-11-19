@@ -1,7 +1,8 @@
 import type { CSSProperties } from 'react'
 import { Link } from 'react-router-dom'
-import GlobeHero from '../components/GlobeHero'
-import RouteSpine from '../components/RouteSpine'
+import Hero from '../components/Hero'
+import BrandBand from '../components/BrandBand'
+import IngredientStrip from '../components/IngredientStrip'
 import Faq, { faqItems } from '../components/Faq'
 import ScentExplorer from '../components/ScentExplorer'
 import { ChristmasBand } from '../components/Festive'
@@ -29,7 +30,7 @@ function SecHead({ eyebrow, title, to, link = 'Ver todos' }: { eyebrow?: string;
 function Shelf({ eyebrow, title, to, items }: { eyebrow?: string; title: string; to: string; items: Product[] }) {
   if (!items.length) return null
   return (
-    <Reveal as="section" className="hm-sec">
+    <Reveal as="section" className="hm-sec lt">
       <SecHead eyebrow={eyebrow} title={title} to={to} />
       <div className="grid shelf">{items.map(p => <ProductCard key={p.id} p={p} />)}</div>
     </Reveal>
@@ -67,9 +68,9 @@ export default function Home() {
 
   return (
     <>
-      <GlobeHero />
+      <Hero />
+      <BrandBand />
       {SEASON === 'natal' && <ChristmasBand whatsapp={settings.whatsapp} />}
-      <RouteSpine>
 
       <Reveal as="section" className="hm-info" aria-label="Como comprar">
         <div><IconCard size={24} /><b>{settings.installments > 1 ? `Pix ou até ${settings.installments}x` : 'Pix ou cartão'}</b><span>Pelo Mercado Pago</span></div>
@@ -79,8 +80,10 @@ export default function Home() {
       </Reveal>
 
 
+      <IngredientStrip />
+
       {brandCards.length > 0 && (
-        <section className="hm-br" aria-labelledby="br-t">
+        <section className="hm-br lt" aria-labelledby="br-t">
           <div className="hm-head"><h2 id="br-t">Marcas da loja</h2><Link to="/catalogo" className="hm-link">Ver todos <span aria-hidden="true">→</span></Link></div>
           <div className="hm-br-row">
             <div className="hm-br-track">
@@ -96,7 +99,7 @@ export default function Home() {
         </section>
       )}
 
-      <Reveal as="section" className="hm-sec hm-feat">
+      <Reveal as="section" className="hm-sec hm-feat lt">
         <SecHead title="Os destaques da Arkyn" to="/catalogo" />
         <div className="grid shelf hm-four">{featured.map(p => <ProductCard key={p.id} p={p} />)}</div>
       </Reveal>
@@ -120,7 +123,6 @@ export default function Home() {
 
       <Faq />
 
-      </RouteSpine>
     </>
   )
 }

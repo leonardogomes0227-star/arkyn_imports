@@ -1,0 +1,139 @@
+/* =====================================================================
+   VISUAL ARKYN — mesclado: preto (topo, destaque, rodapé), verde-limão (campos e faixas) e creme (miolo da loja).
+   Sem degradê decorativo: peças grandes, cores cheias e fotos reais (frascos e ingredientes).
+   Carrega por último.
+   ===================================================================== */
+body.ax { background:#000002 }
+
+/* botões retos, sem canto cortado */
+body.ax .btn, body.ax .pdp-cta, body.ax .card-add, body.ax .ax-suggest button, body.ax .ax-menu-wa, body.ax .btn-gold, body.ax .ch-btn { clip-path:none !important; border-radius:2px; letter-spacing:.12em }
+
+/* ---------- HERO: título grande à esquerda, campo verde-limão com frasco e ingredientes à direita ---------- */
+.hx { display:grid; grid-template-columns:1.1fr .9fr; min-height:min(780px,calc(100vh - 118px)); background:#000002 }
+.hx-l { padding:clamp(48px,6vw,96px) var(--gutter,48px); display:flex; flex-direction:column; justify-content:center; gap:30px }
+.hx h1 { font:500 clamp(3.6rem,8vw,8.4rem)/.9 'Bodoni Moda',var(--display); letter-spacing:-.02em; color:#fff; margin:0 }
+.hx h1 em { font-style:italic; color:var(--lime,#C7F401) }
+.hx p { max-width:470px; font-size:1.125rem; line-height:1.6; color:#d4d4d8; margin:0 }
+.hx-cta { display:flex; gap:14px; flex-wrap:wrap }
+body.ax .hx-b { display:inline-block; background:#C7F401; color:#000; padding:18px 32px; font-weight:800; font-size:.8125rem; letter-spacing:.14em; text-transform:uppercase; text-decoration:none; transition:background .2s }
+body.ax .hx-b { color:#000 } body.ax .hx-b:hover { background:#DEFF78; color:#000 } body.ax .hx-b--o { background:none; color:#fff; box-shadow:inset 0 0 0 1.5px #fff } body.ax .hx-b--o:hover { background:#fff; color:#000 }
+.hx-r { background:#C7F401; position:relative; display:grid; place-items:center; padding:clamp(24px,3vw,48px); overflow:hidden }
+
+/* palco do frasco: disco creme, frasco e fotos redondas dos ingredientes */
+.bs { position:relative; width:min(100%,520px); aspect-ratio:1/1.12 }
+.bs-disc { position:absolute; inset:7% 8% 4%; border-radius:50%; background:#f2eee6 }
+.bs-bottle { position:absolute; left:50%; bottom:0; height:100%; width:auto; transform:translateX(-50%); filter:drop-shadow(0 26px 24px rgba(0,0,0,.28)) }
+body.ax .bs-ing { position:absolute; width:26%; aspect-ratio:1; text-decoration:none; color:#000 }
+.bs-ing img { width:100%; height:100%; border-radius:50%; object-fit:cover; box-shadow:0 0 0 5px #C7F401 }
+.bs-ing span { position:absolute; top:calc(100% + 10px); left:0; white-space:nowrap; font:800 .6875rem/1 var(--sans); letter-spacing:.16em; text-transform:uppercase }
+.bs-i0 { left:0; top:6% } .bs-i1 { right:0; top:36% } .bs-i1 span { left:auto; right:0 } .bs-i2 { left:3%; bottom:14% }
+.bs-ing:hover img { box-shadow:0 0 0 5px #000 }
+
+/* faixa branca com as marcas */
+.bband { background:#fff; color:#000; overflow:hidden; border-bottom:1px solid #e4e4e7 }
+.bband-t { display:flex; width:max-content; animation:bband 46s linear infinite }
+.bband p { display:flex; margin:0; padding:20px 0; font:800 .9375rem/1 var(--sans); letter-spacing:.22em; text-transform:uppercase; white-space:nowrap }
+.bband span { margin:0 26px } .bband i { font-style:normal; margin-left:52px; color:#7f6119 }
+@keyframes bband { to { transform:translateX(-50%) } } @media (prefers-reduced-motion:reduce) { .bband-t { animation:none } }
+
+/* benefícios: faixa cheia de verde-limão, de ponta a ponta */
+body.ax .hm-info { max-width:none; margin:0; background:#C7F401; color:#000; border:0; gap:0; padding:0 max(var(--gutter,20px),calc((100% - 1360px)/2 + var(--gutter,20px))) }
+body.ax .hm-info > * { background:transparent; border:0; border-right:1px solid rgba(0,0,0,.2); color:#000; padding:clamp(20px,2.6vw,34px) clamp(14px,2vw,28px) } body.ax .hm-info > *:last-child { border-right:0 }
+body.ax .hm-info b { color:#000 } body.ax .hm-info span { color:#1c2400 } body.ax .hm-info svg { color:#000 } body.ax .hm-info a:hover { background:rgba(0,0,0,.07) }
+
+/* ---------- seções claras (creme): vitrines, marcas, perguntas ---------- */
+body.ax .hm-sec.lt { max-width:none; margin:0; padding:clamp(56px,7vw,100px) max(var(--gutter,20px),calc((100% - 1360px)/2 + var(--gutter,20px))) }
+body.ax .lt, body.ax .lt-page { --bg:#f2eee6; --surface:#fff; --ink:#0b0b0c; --ink-2:#3a372f; --mute:#6a655a; --muted:#6a655a; --line:#ddd6c8; --stone:#6a655a; background:#f2eee6; color:#0b0b0c }
+body.ax :is(.lt,.lt-page) h1, body.ax :is(.lt,.lt-page) h2, body.ax :is(.lt,.lt-page) h3, body.ax :is(.lt,.lt-page) .hm-head h2, body.ax :is(.lt,.lt-page) b, body.ax :is(.lt,.lt-page) strong { color:#0b0b0c }
+body.ax :is(.lt,.lt-page) .hm-eyebrow, body.ax :is(.lt,.lt-page) .ax-eyebrow { color:#4d5c00 }
+body.ax :is(.lt,.lt-page) .hm-link { color:#0b0b0c; border-color:#0b0b0c }
+body.ax :is(.lt,.lt-page) .card { background:#fff; box-shadow:0 0 0 1px #e4ddcf; color:#0b0b0c; border:0 }
+body.ax :is(.lt,.lt-page) .card .thumb, body.ax :is(.lt,.lt-page) .card .thumb-wrap { background:#fff }
+body.ax :is(.lt,.lt-page) .card .info { border-top-color:#cfc7b6 } body.ax :is(.lt,.lt-page) .card .info::before, body.ax :is(.lt,.lt-page) .card .info::after { border-color:#e4ddcf }
+body.ax :is(.lt,.lt-page) .card .info small, body.ax :is(.lt,.lt-page) .card .info .inst, body.ax :is(.lt,.lt-page) .ing-dots em { color:#6a655a }
+body.ax :is(.lt,.lt-page) .card h3, body.ax :is(.lt,.lt-page) .card .pr strong { color:#0b0b0c }
+body.ax :is(.lt,.lt-page) .card-add { background:transparent; color:#0b0b0c; box-shadow:inset 0 0 0 1.5px #0b0b0c } body.ax :is(.lt,.lt-page) .card-add:hover { background:#C7F401; box-shadow:none; color:#000 }
+body.ax :is(.lt,.lt-page) .card .cmp, body.ax :is(.lt,.lt-page) .card .pyr-btn, body.ax :is(.lt,.lt-page) .card .fav { background:#fff; color:#0b0b0c; box-shadow:inset 0 0 0 1px #cfc7b6 }
+body.ax :is(.lt,.lt-page) .hm-br-c { background:#fff; box-shadow:0 0 0 1px #e4ddcf; color:#0b0b0c } body.ax :is(.lt,.lt-page) .hm-br-c small { color:#6a655a }
+
+/* ---------- escolha pelo ingrediente (fundo preto, fotos redondas) ---------- */
+.istrip { background:#000002; padding:clamp(48px,6vw,88px) var(--gutter,48px) }
+.istrip ul { list-style:none; margin:0; padding:6px 0; display:flex; gap:clamp(18px,2.4vw,34px); overflow-x:auto; scrollbar-width:none }
+.istrip ul::-webkit-scrollbar { display:none }
+.istrip li { flex:0 0 auto } .istrip a { display:grid; justify-items:center; gap:8px; text-decoration:none; color:#fff; width:132px }
+.istrip img { width:116px; height:116px; border-radius:50%; object-fit:cover; box-shadow:0 0 0 4px #000002,0 0 0 6px #C7F401; transition:transform .25s }
+.istrip a:hover img { transform:scale(1.06) } .istrip b { font-weight:700; font-size:1rem } .istrip small { color:#9d9da0; font-size:.75rem }
+
+/* bolinhas de ingredientes no card e faixa na página do produto */
+.ing-dots { display:flex; align-items:center; gap:0; margin:2px 0 6px } .ing-dots img { width:24px; height:24px; border-radius:50%; object-fit:cover; margin-left:-6px; box-shadow:0 0 0 2px #fff } .ing-dots img:first-child { margin-left:0 }
+body.ax .card .ing-dots img { box-shadow:0 0 0 2px #111113 } body.ax :is(.lt,.lt-page) .card .ing-dots img { box-shadow:0 0 0 2px #fff }
+.ing-dots em { font-style:normal; font-size:.6875rem; color:#9d9da0; margin-left:8px; line-height:1.2 }
+.ing-row { margin:18px 0 0; padding:16px 0 4px; border-top:1px solid var(--line) } .ing-row p { margin:0 0 12px; font-weight:800; font-size:.75rem; letter-spacing:.18em; text-transform:uppercase }
+.ing-row ul { list-style:none; margin:0; padding:0; display:flex; gap:16px; flex-wrap:wrap } .ing-row a { display:grid; justify-items:center; gap:6px; text-decoration:none; color:inherit; font-size:.8125rem; font-weight:600 } .ing-row img { width:64px; height:64px; border-radius:50%; object-fit:cover }
+
+/* perguntas frequentes */
+.faq { padding:clamp(56px,7vw,110px) var(--gutter,24px) } .faq-in { max-width:860px; margin:0 auto }
+.faq-list { display:grid; gap:0; margin-top:10px; border-top:1px solid #0b0b0c }
+.faq-list details { border-bottom:1px solid #0b0b0c }
+.faq-list summary { list-style:none; cursor:pointer; display:flex; justify-content:space-between; align-items:center; gap:16px; padding:22px 4px; min-height:56px; font-weight:700; font-size:1.0625rem }
+.faq-list summary::-webkit-details-marker { display:none } .faq-list summary::after { content:'+'; font-size:1.8rem; font-weight:300; line-height:1 } .faq-list details[open] summary::after { content:'−' }
+.faq-list p { margin:0; padding:0 4px 24px; line-height:1.7; color:#3a372f; max-width:680px }
+.faq-more { margin:24px 0 0; color:#6a655a; font-size:.9375rem } .faq-more a { color:#0b0b0c; text-decoration:underline }
+
+/* títulos de seção maiores */
+body.ax .hm-head h2 { font-size:clamp(2.4rem,5vw,4.6rem); line-height:.98 }
+
+@media (max-width:900px) {
+  .hx { grid-template-columns:1fr; min-height:0 }
+  .hx-l { padding:40px 20px 36px } .hx h1 { font-size:clamp(3.2rem,15vw,5rem) }
+  .hx-r { padding:30px 20px 56px } .bs { width:min(100%,380px) } .bs-ing span { font-size:.625rem; letter-spacing:.12em }
+  .istrip a { width:104px } .istrip img { width:92px; height:92px }
+}
+
+/* coleções (Masculinos / Femininos): faixa creme com os cartões escuros */
+body.ax .hm-cols { max-width:none; margin:0; background:#f2eee6; padding:clamp(48px,6vw,88px) max(var(--gutter,20px),calc((100% - 1360px)/2 + var(--gutter,20px))) }
+
+/* =====================================================================
+   PÁGINAS INTERNAS em creme (catálogo, produto, checkout, pedido, políticas)
+   ===================================================================== */
+body.ax .lt-page { padding-bottom:clamp(48px,6vw,96px) }
+body.ax .lt-page :is(h1,h2,h3,h4,p,li,dt,dd,label,legend,summary,small,output,span,b,strong,em,div,details,dl,ul,ol,section,nav,form,fieldset,aside,article,button,a):not(:where(.np,.np *,.btn,.btn *,.pdp-cta,.card-add,.ck-bar,.ck-bar *,.bs,.bs *)) { color:inherit }
+body.ax .lt-page { color:#0b0b0c }
+body.ax .lt-page :is(.ax-eyebrow,.pdp-brand,.hm-eyebrow) { color:#4d5c00 }
+body.ax .lt-page :is(.muted,.crumbs,.crumbs a,.pdp-pay,.ck-hint,.ck-secure) { color:#6a655a }
+body.ax .lt-page .crumbs [aria-current] { color:#0b0b0c }
+body.ax .lt-page :is(input,select,textarea) { background:#fff; color:#0b0b0c; border:1px solid #cfc7b6; border-radius:2px }
+body.ax .lt-page :is(input,textarea)::placeholder { color:#9a9484 }
+body.ax .lt-page :is(input,select,textarea):focus { border-color:#0b0b0c; box-shadow:0 0 0 3px rgba(199,244,1,.5) }
+body.ax .lt-page .btn.ghost { color:#0b0b0c; box-shadow:inset 0 0 0 1.5px #0b0b0c; background:transparent } body.ax .lt-page .btn.ghost:hover { background:#0b0b0c; color:#fff }
+body.ax .lt-page :is(.ck-card,.ck-sum,.ck-opt,.filters,.adm-card) { background:#fff; box-shadow:0 0 0 1px #e4ddcf; border:0 }
+body.ax .lt-page .ck-opt { border:1px solid #d9d2c3; box-shadow:none } body.ax .lt-page .ck-opt.on { background:#f7ffd0; border-color:#0b0b0c; box-shadow:0 0 0 1px #0b0b0c }
+body.ax .lt-page .ck-card legend i { background:#0b0b0c; color:#fff }
+body.ax .lt-page .ck-coupon-ok { background:#f2eee6 }
+/* foto do produto sobre fundo claro */
+body.ax .lt-page .pdp-img { background:#fff; box-shadow:0 0 0 1px #e4ddcf } body.ax .lt-page .pdp-word { color:rgba(0,0,0,.05); -webkit-text-stroke:0 }
+body.ax .lt-page .pdp-thumbs button { background:#fff; box-shadow:0 0 0 1px #d9d2c3 } body.ax .lt-page .pdp-thumbs button.on { box-shadow:0 0 0 2px #0b0b0c }
+body.ax .lt-page .pdp-qty { background:#fff; box-shadow:inset 0 0 0 1.5px #0b0b0c } body.ax .lt-page .pdp-qty button, body.ax .lt-page .pdp-qty output { color:#0b0b0c }
+body.ax .lt-page .pdp-acc details, body.ax .lt-page .pdp-specs div { border-color:#d9d2c3 } body.ax .lt-page .pdp-acc summary::after { color:#0b0b0c }
+body.ax .lt-page .ck-trust li::before { color:#0b0b0c } body.ax .lt-page .shipcalc b { color:#0b0b0c }
+body.ax .lt-page .ing-row { border-color:#d9d2c3 }
+/* catálogo */
+body.ax .lt-page .filters-btn { color:#0b0b0c }
+body.ax .lt-page .side { background:#fff; box-shadow:0 0 0 1px #e4ddcf }
+
+/* pirâmide de notas em versão clara (mesmo tom da página) */
+body.ax .lt-page .np-title { color:#0b0b0c } body.ax .lt-page .np-head small, body.ax .lt-page .np-legend small { color:#6a655a }
+body.ax .lt-page .np-legend b { color:#4d5c00 } body.ax .lt-page .np-legend span { color:#0b0b0c }
+body.ax .lt-page .np-lead { border-top-color:#9a9484 } body.ax .lt-page .np-lead::before { background:#0b0b0c }
+body.ax .lt-page .np-fill { background:#e6dfd0 } body.ax .lt-page .np-fill::after { background:linear-gradient(0deg,rgba(11,11,12,.55) 0 1.5px,transparent 1.5px) }
+body.ax .lt-page .np-fill--none { background:color-mix(in srgb,var(--g) 38%,#f2eee6) } body.ax .lt-page .np-fill--none span { color:#0b0b0c }
+body.ax .lt-page .np-row.on .np-legend b { color:#0b0b0c } body.ax .lt-page .np-row.on .np-lead { border-top-color:#0b0b0c } body.ax .lt-page .np-row.on .np-lead::before { background:#C7F401; box-shadow:0 0 0 2px #0b0b0c }
+body.ax .lt-page .pdp-img { border:0 }
+/* catálogo: contagem e ordenação */
+body.ax .lt-page .toolbar :is(.total,label,b) { color:#0b0b0c }
+/* checkout e sacola em fundo claro */
+body.ax .lt-page .ax-step { background:#fff; box-shadow:inset 0 0 0 1.5px #0b0b0c } body.ax .lt-page .ax-step :is(button,output) { color:#0b0b0c; background:none }
+body.ax .lt-page .ck-img, body.ax .lt-page .ax-line-img { background:#f2eee6 }
+body.ax .lt-page input:is([type=checkbox],[type=radio]) { background:initial; border:0; accent-color:#0b0b0c }
+body.ax .lt-page .ck-opt em, body.ax .lt-page .ck-total dd { color:#0b0b0c }
+@media (max-width:700px) { .ing-dots em { display:none } }

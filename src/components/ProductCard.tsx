@@ -1,3 +1,4 @@
+import { IngredientDots } from './BottleStage'
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Placeholder from './Placeholder'
@@ -74,6 +75,7 @@ export default function ProductCard({ p, priority = false }: { p: Product; prior
       <div className="info">
         <small>{p.brand}</small>
         <Link to={`/produto/${p.id}`}><h3>{p.name}</h3></Link>
+        {!out && <IngredientDots p={p} />}
         {!out && p.stock <= 3 && <span className="low">{p.stock === 1 ? 'Última unidade' : `Restam ${p.stock} unidades`}</span>}
         <div className="pr">
           {!out ? <>

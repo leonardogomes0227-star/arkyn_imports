@@ -1,3 +1,4 @@
+import { IngredientRow } from '../components/BottleStage'
 import Reviews from '../components/Reviews'
 import ShipCalc from '../components/ShipCalc'
 import { getRecent, pushRecent } from '../lib/recent'
