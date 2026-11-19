@@ -19,6 +19,8 @@ export default function SettingsTab() {
       <label>Faixa do topo (aviso)<input placeholder="Pix e cartão de crédito | Atendimento em Coxim - MS" value={s.announcement ?? ''} onChange={e => setS({ ...s, announcement: e.target.value })} /></label>
       <label>Título da Home<input placeholder="Seu cheiro, do jeito que você quer ser lembrado." value={s.heroTitle ?? ''} onChange={e => setS({ ...s, heroTitle: e.target.value })} /></label>
       <label>WhatsApp (com DDI e DDD)<input value={s.whatsapp} onChange={e => setS({ ...s, whatsapp: e.target.value })} /></label>
+      <label>CNPJ (aparece no rodapé, deixe vazio para não mostrar)<input value={s.cnpj ?? ''} onChange={e => setS({ ...s, cnpj: e.target.value })} /></label>
+      <label>Endereço da loja (rodapé)<input value={s.businessAddress ?? ''} onChange={e => setS({ ...s, businessAddress: e.target.value })} /></label>
       <h3>Entrega e pagamento</h3>
       <label>Endereço de retirada<input value={s.pickupAddress} onChange={e => setS({ ...s, pickupAddress: e.target.value })} /></label>
       <label>Frete grátis a partir de R$ (0 = desativado)<input type="number" min="0" step="0.01" value={s.freeShippingFrom} onChange={e => setS({ ...s, freeShippingFrom: Number(e.target.value) })} /></label>

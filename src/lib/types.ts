@@ -30,6 +30,8 @@ export interface Settings {
   installments: number // parcelas máximas no cartão (1 = sem parcelamento)
   shipping: { city: string; price: number }[]
   // Envio para fora da cidade (Correios/transportadora)
+  cnpj?: string // aparece no rodapé quando preenchido
+  businessAddress?: string
   originCep?: string // CEP de onde sai o pedido
   freeShippingOutsideFrom?: number // 0 = sem frete grátis para fora
   shipHandlingFee?: number // embalagem/manuseio somado ao frete (R$)

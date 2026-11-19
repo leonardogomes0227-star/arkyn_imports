@@ -1,3 +1,4 @@
+import { track } from '../lib/analytics'
 import { useEffect, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { IconHeart } from '../components/Icons'
@@ -36,6 +37,7 @@ export default function Product() {
   } : { title: 'Perfume não encontrado | Arkyn Imports', description: 'Este produto não está disponível.', noindex: true })
 
   useEffect(() => { setQty(1); setPic(0) }, [id])
+  useEffect(() => { const x = products.find(q => q.id === id); if (x) track.viewItem({ id: x.id, name: x.name, brand: x.brand, price: x.price }) }, [id, products])
   // barra de compra fixa no celular, quando o botão principal sai da tela
   useEffect(() => {
     const el = buyRef.current
