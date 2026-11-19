@@ -70,34 +70,8 @@ body.ax .ax-footer { background:radial-gradient(900px 260px at 50% 0,rgba(199,24
 @media (prefers-reduced-motion:reduce) { body.ax .btn, body.ax .card { transition:none } }
 
 /* =====================================================================
-   VITRINE DE COLEÇÕES (imagens de campanha) e PERGUNTAS FREQUENTES
+   PERGUNTAS FREQUENTES
    ===================================================================== */
-.cb { position:relative; margin:clamp(36px,5vw,76px) var(--gutter,20px) }
-.cb-track { display:flex; overflow-x:auto; scroll-snap-type:x mandatory; scrollbar-width:none; border-radius:4px; box-shadow:0 30px 70px -34px #000,0 0 0 1px rgba(255,255,255,.08) }
-.cb-track::-webkit-scrollbar { display:none }
-.cb-slide { position:relative; flex:0 0 100%; scroll-snap-align:start; display:block; color:#fff; text-decoration:none }
-.cb-slide img { width:100%; height:auto; display:block; aspect-ratio:8/3; object-fit:cover; transition:transform 1.4s cubic-bezier(.16,1,.3,1) }
-@media (hover:hover) { .cb-slide:hover img { transform:scale(1.025) } .cb-track { overflow-y:hidden } }
-.cb-slide::after { content:''; position:absolute; inset:0; background:linear-gradient(90deg,rgba(0,0,2,.55),transparent 55%); pointer-events:none }
-.cb-txt { position:absolute; z-index:2; left:clamp(24px,5vw,84px); top:50%; transform:translateY(-50%); max-width:min(440px,42%); display:grid; gap:12px; justify-items:start }
-.cb-txt small { font-size:.75rem; letter-spacing:.3em; text-transform:uppercase; color:var(--lime,#C7F401); font-weight:700 }
-.cb-txt b { font:600 clamp(2.4rem,4.6vw,4.6rem)/.95 var(--display); color:#fff; text-shadow:0 4px 30px rgba(0,0,0,.45) }
-.cb-txt em { font-style:normal; color:#e4e4e7; line-height:1.55; font-size:1.0625rem }
-.cb-btn { font-style:normal; margin-top:6px; display:inline-flex; gap:10px; align-items:center; padding:14px 24px; background:var(--lime-grad,#C7F401); color:#000; font-weight:700; font-size:.8125rem; letter-spacing:.12em; text-transform:uppercase; border-radius:2px; box-shadow:0 12px 28px -12px rgba(199,244,1,.6) }
-.cb-nav { position:absolute; top:50%; transform:translateY(-50%); z-index:3; width:48px; height:48px; border-radius:50%; border:1px solid rgba(255,255,255,.25); background:rgba(0,0,2,.55); -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px); color:#fff; font-size:1.7rem; line-height:1; cursor:pointer; transition:background .25s,border-color .25s }
-.cb-nav:hover { background:rgba(199,244,1,.9); color:#000; border-color:transparent }
-.cb-prev { left:14px } .cb-next { right:14px }
-.cb-dots { position:absolute; left:0; right:0; bottom:16px; z-index:3; display:flex; justify-content:center; gap:4px }
-.cb-dots button { width:34px; height:24px; padding:0; border:0; background:none; cursor:pointer; position:relative } .cb-dots button::after { content:''; position:absolute; left:4px; right:4px; top:11px; height:3px; border-radius:3px; background:rgba(255,255,255,.35); transition:background .3s }
-.cb-dots button.on::after { background:var(--lime,#C7F401); box-shadow:0 0 10px rgba(199,244,1,.7) }
-@media (max-width:700px) {
-  .cb { margin-inline:16px }
-  .cb-slide img { aspect-ratio:4/5 }
-  .cb-slide::after { background:linear-gradient(180deg,rgba(0,0,2,.6),transparent 55%) }
-  .cb-txt { top:26px; left:22px; right:22px; transform:none; max-width:none }
-  .cb-nav { display:none }
-}
-
 .faq { max-width:860px; margin:clamp(48px,6vw,96px) auto; padding:0 var(--gutter,20px) }
 .faq-list { display:grid; gap:10px; margin-top:8px }
 .faq-list details { background:var(--panel,#0c0c0d); border-radius:4px; box-shadow:0 0 0 1px rgba(255,255,255,.07) }

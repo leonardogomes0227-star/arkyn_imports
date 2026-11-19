@@ -2,7 +2,6 @@ import type { CSSProperties } from 'react'
 import { Link } from 'react-router-dom'
 import GlobeHero from '../components/GlobeHero'
 import RouteSpine from '../components/RouteSpine'
-import CollectionBanners from '../components/CollectionBanners'
 import Faq, { faqItems } from '../components/Faq'
 import ScentExplorer from '../components/ScentExplorer'
 import { ChristmasBand } from '../components/Festive'
@@ -14,7 +13,7 @@ import { brl, useStore } from '../lib/store'
 import { SEASON } from '../lib/season'
 import { cutoutFor } from '../lib/cutouts'
 import { usePageMeta } from '../lib/seo'
-import type { Product } from '../lib/types'
+import type { Category, Product } from '../lib/types'
 
 
 
@@ -52,6 +51,8 @@ export default function Home() {
     ],
   })
   const live = products.filter(p => p.stock > 0)
+  const count = (c: Category) => products.filter(p => p.category === c).length
+  const hasCut = (id: string) => products.some(p => p.id === id)
 
   // Vitrines: só aparecem quando os dados sustentam (sem "mais vendidos" ou "novidades" inventados).
   const flagged = live.filter(p => p.featured)
@@ -100,7 +101,17 @@ export default function Home() {
         <div className="grid shelf hm-four">{featured.map(p => <ProductCard key={p.id} p={p} />)}</div>
       </Reveal>
 
-      <CollectionBanners />
+      <Reveal as="section" className="hm-cols" aria-label="Compre por coleção">
+        {([
+          ['Para ele', 'Masculinos', 'Amadeirados e especiados, do dia a dia à noite.', '/catalogo?cat=masculino', 'french-avenue-vulcan-feu-100ml', count('masculino')],
+          ['Para ela', 'Femininos', 'Doces e florais, do dia à noite.', '/catalogo?cat=feminino', 'armaf-club-de-nuit-maleka-105ml', count('feminino')],
+        ] as [string, string, string, string, string, number][]).filter(c => hasCut(c[4])).map(([k, t, d, to, img, c]) => (
+          <Link key={to} to={to} className="hm-col">
+            <span className="hm-col-txt"><small>{k}</small><b>{t}</b><em>{d}</em><i>{c} {c === 1 ? 'perfume' : 'perfumes'} <span aria-hidden="true">→</span></i></span>
+            <img src={`/hero/${img}.webp?v=4`} width="560" height="560" alt="" loading="lazy" decoding="async" />
+          </Link>
+        ))}
+      </Reveal>
 
 
       <ScentExplorer />
