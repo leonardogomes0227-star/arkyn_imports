@@ -1,7 +1,9 @@
 import type { CSSProperties } from 'react'
 import { Link } from 'react-router-dom'
-import GlobeHero from '../components/GlobeHero'
-import RouteSpine from '../components/RouteSpine'
+import Hero from '../components/Hero'
+import BrandBand from '../components/BrandBand'
+import IngredientStrip from '../components/IngredientStrip'
+import Faq, { faqItems } from '../components/Faq'
 import ScentExplorer from '../components/ScentExplorer'
 import { ChristmasBand } from '../components/Festive'
 import ProductCard from '../components/ProductCard'
@@ -28,7 +30,7 @@ function SecHead({ eyebrow, title, to, link = 'Ver todos' }: { eyebrow?: string;
 function Shelf({ eyebrow, title, to, items }: { eyebrow?: string; title: string; to: string; items: Product[] }) {
   if (!items.length) return null
   return (
-    <Reveal as="section" className="hm-sec">
+    <Reveal as="section" className="hm-sec lt">
       <SecHead eyebrow={eyebrow} title={title} to={to} />
       <div className="grid shelf">{items.map(p => <ProductCard key={p.id} p={p} />)}</div>
     </Reveal>
@@ -46,9 +48,12 @@ export default function Home() {
       { '@context': 'https://schema.org', '@type': 'Organization', name: 'Arkyn Imports', url: origin, logo: `${origin}/brand/logo-sm.webp`, sameAs: ['https://instagram.com/arkyn_imports'],
         address: { '@type': 'PostalAddress', addressLocality: 'Coxim', addressRegion: 'MS', addressCountry: 'BR' }, telephone: `+${settings.whatsapp}` },
       { '@context': 'https://schema.org', '@type': 'WebSite', name: 'Arkyn Imports', url: origin, potentialAction: { '@type': 'SearchAction', target: `${origin}/catalogo?q={search_term_string}`, 'query-input': 'required name=search_term_string' } },
+      { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faqItems(settings.installments, settings.freeShippingFrom).map(x => ({ '@type': 'Question', name: x.q, acceptedAnswer: { '@type': 'Answer', text: x.a } })) },
     ],
   })
   const live = products.filter(p => p.stock > 0)
+  const count = (c: Category) => products.filter(p => p.category === c).length
+  const hasCut = (id: string) => products.some(p => p.id === id)
 
   // Vitrines: só aparecem quando os dados sustentam (sem "mais vendidos" ou "novidades" inventados).
   const flagged = live.filter(p => p.featured)
@@ -59,18 +64,26 @@ export default function Home() {
     return { name, count: list.length, pics: list.map(cutoutFor).filter((x): x is string => !!x).slice(0, 3) }
   }).filter(b => b.pics.length).sort((a, b) => b.count - a.count || a.name.localeCompare(b.name))
 
-  const count = (c: Category) => products.filter(p => p.category === c).length
-  const hasCut = (id: string) => products.some(p => p.id === id)
 
 
   return (
     <>
-      <GlobeHero />
+      <Hero />
+      <BrandBand />
       {SEASON === 'natal' && <ChristmasBand whatsapp={settings.whatsapp} />}
-      <RouteSpine>
+
+      <Reveal as="section" className="hm-info" aria-label="Como comprar">
+        <div><IconCard size={24} /><b>{settings.installments > 1 ? `Pix ou até ${settings.installments}x` : 'Pix ou cartão'}</b><span>Pelo Mercado Pago</span></div>
+        <div><IconStore size={24} /><b>Retirada grátis</b><span>Na loja em Coxim – MS</span></div>
+        <div><IconTruck size={24} /><b>Todo o Brasil</b><span>{settings.freeShippingFrom > 0 ? `Frete grátis acima de ${brl(settings.freeShippingFrom)}` : 'Enviamos para a sua cidade'}</span></div>
+        <a href={`https://wa.me/${settings.whatsapp}`} target="_blank" rel="noreferrer"><IconChat size={24} /><b>WhatsApp</b><span>Tire dúvidas antes de comprar</span></a>
+      </Reveal>
+
+
+      <IngredientStrip />
 
       {brandCards.length > 0 && (
-        <section className="hm-br" aria-labelledby="br-t">
+        <section className="hm-br lt" aria-labelledby="br-t">
           <div className="hm-head"><h2 id="br-t">Marcas da loja</h2><Link to="/catalogo" className="hm-link">Ver todos <span aria-hidden="true">→</span></Link></div>
           <div className="hm-br-row">
             <div className="hm-br-track">
@@ -86,7 +99,7 @@ export default function Home() {
         </section>
       )}
 
-      <Reveal as="section" className="hm-sec hm-feat">
+      <Reveal as="section" className="hm-sec hm-feat lt">
         <SecHead title="Os destaques da Arkyn" to="/catalogo" />
         <div className="grid shelf hm-four">{featured.map(p => <ProductCard key={p.id} p={p} />)}</div>
       </Reveal>
@@ -107,14 +120,9 @@ export default function Home() {
       <ScentExplorer />
 
       <Shelf title="Ofertas" to="/catalogo" items={offers} />
-      <Reveal as="section" className="hm-info" aria-label="Como comprar">
-        <div><IconCard size={24} /><b>{settings.installments > 1 ? `Pix ou até ${settings.installments}x` : 'Pix ou cartão'}</b><span>Pelo Mercado Pago</span></div>
-        <div><IconStore size={24} /><b>Retirada grátis</b><span>Na loja em Coxim – MS</span></div>
-        <div><IconTruck size={24} /><b>Todo o Brasil</b><span>{settings.freeShippingFrom > 0 ? `Frete grátis acima de ${brl(settings.freeShippingFrom)}` : 'Enviamos para a sua cidade'}</span></div>
-        <a href={`https://wa.me/${settings.whatsapp}`} target="_blank" rel="noreferrer"><IconChat size={24} /><b>WhatsApp</b><span>Tire dúvidas antes de comprar</span></a>
-      </Reveal>
 
-      </RouteSpine>
+      <Faq />
+
     </>
   )
 }

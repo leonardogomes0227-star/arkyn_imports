@@ -1,3 +1,4 @@
+import './env'
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { bundleDiscount } from '../src/lib/pricing'
@@ -72,7 +73,6 @@ test('checkout: recusa nome/telefone inválidos e quantidade acima do estoque', 
 test('webhook: só confirma o pedido se o valor pago bate com o total', async () => {
   const patches: string[] = []
   const run = async (paid: number) => {
-    process.env.SUPABASE_URL = 'https://sb.test'; process.env.SUPABASE_SERVICE_KEY = 'k'
     const prev = globalThis.fetch
     globalThis.fetch = (async (u: string, init?: { method?: string; body?: string }) => {
       const url = String(u)
@@ -86,4 +86,27 @@ test('webhook: só confirma o pedido se o valor pago bate com o total', async ()
   }
   await run(40); assert.equal(patches.length, 0)
   await run(100); assert.equal(patches.length, 1)
+})
+
+test('checkout: estoque segurado por pedido pendente de outro cliente (e não do próprio)', async () => {
+  const one = { ...prod, stock: 1 }
+  let pending: { items: { id: string; qty: number }[]; phone: string }[] = [{ items: [{ id: one.id, qty: 1 }], phone: '(67) 98888-0000' }]
+  const prev = globalThis.fetch
+  globalThis.fetch = (async (u: string, init?: { method?: string; body?: string }) => {
+    const url = String(u)
+    if (url.includes('/rest/v1/products')) return { ok: true, json: async () => [one] }
+    if (url.includes('/rest/v1/settings')) return { ok: true, json: async () => [] }
+    if (url.includes('status=eq.pending')) return { ok: true, json: async () => pending }
+    if (url.includes('/rest/v1/orders') && init?.method === 'POST') return { ok: true, json: async () => [{ id: 9 }] }
+    if (url.includes('mercadopago')) return { ok: true, json: async () => ({ init_point: 'https://mp.test/pay' }) }
+    return { ok: true, json: async () => [] }
+  }) as unknown as typeof fetch
+  try {
+    const other = await call({ items: [{ id: one.id, qty: 1 }], name: 'Outro Cliente', phone: '67977770000', method: 'pickup' })
+    assert.equal(other.status, 400); assert.match(other.out.error, /reservado/)
+    const same = await call({ items: [{ id: one.id, qty: 1 }], name: 'Mesmo Cliente', phone: '(67) 98888-0000', method: 'pickup' })
+    assert.equal(same.status, 200)
+    pending = []
+    assert.equal((await call({ items: [{ id: one.id, qty: 1 }], name: 'Outro Cliente', phone: '67977770000', method: 'pickup' })).status, 200)
+  } finally { globalThis.fetch = prev }
 })

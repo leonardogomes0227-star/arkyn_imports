@@ -449,3 +449,7 @@ html { -webkit-text-size-adjust:100%; text-size-adjust:100% }
 .reviews { margin-top:clamp(28px,4vw,56px) } .rv-avg { display:flex; align-items:center; gap:8px; margin:0 0 14px }
 .rv-list { list-style:none; margin:0 0 18px; padding:0; display:grid; gap:14px } .rv-list li { padding-bottom:14px; border-bottom:1px solid var(--line) } .rv-list small { color:var(--mute); margin-left:6px } .rv-list p { margin:6px 0 0; line-height:1.6 }
 .rv-form { max-width:520px } .rv-pick { display:flex; gap:4px } .rv-pick button { background:none; border:0; font-size:2rem; line-height:1; color:var(--line); cursor:pointer; padding:4px; min-width:44px; min-height:44px } .rv-pick button.on { color:var(--gold-ink,#b08a2e) }
+
+/* produto: a pirâmide de notas fica logo abaixo do botão de comprar (antes ficava no fim da página) */
+.pdp-more { display:contents }
+.pdp-acc { margin-top:8px }
