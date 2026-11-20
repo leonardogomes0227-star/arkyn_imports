@@ -22,7 +22,7 @@ export function tiersOf(p: Pick<Product, 'id' | 'notes'>): [string[], string[], 
 
 // Fotos dos ingredientes (public/notas). Nota sem foto entra só pelo nome.
 const slug = (n: string) => n.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
-const ALIAS: Record<string, string> = { 'madeira-ambar': 'ambar', 'limao-siciliano': 'limao', 'praline': 'pralina' }
+const ALIAS: Record<string, string> = { 'madeira-ambar': 'ambar', 'limao-siciliano': 'limao', 'praline': 'pralina', 'flores-brancas': 'jasmim' }
 const NOTE_IMGS = new Set<string>(NOTE_FILES)
 export const noteImg = (n: string) => { const s = ALIAS[slug(n)] ?? slug(n); return NOTE_IMGS.has(s) ? `/notas/${s}.webp` : undefined }
 

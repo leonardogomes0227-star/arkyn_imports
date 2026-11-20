@@ -38,6 +38,10 @@ const NOTES: Record<string, string[]> = {
   'lattafa-atheeri-100ml': ['Maracujá', 'Orquídea', 'Jasmim', 'Baunilha', 'Madeira âmbar'],
   'lattafa-eclaire-100ml': ['Caramelo', 'Leite', 'Mel', 'Baunilha', 'Praliné', 'Almíscar'],
   'lattafa-afeef-100ml': ['Bergamota', 'Pimenta rosa', 'Pêssego', 'Jasmim', 'Sândalo', 'Âmbar'],
+  // notas tiradas da própria descrição do produto
+  'lattafa-tharwah-gold-100ml': ['Lavanda', 'Flor de laranjeira', 'Jasmim', 'Baunilha'],
+  'paris-corner-marshmallow-blush-100ml': ['Morango', 'Framboesa', 'Chantilly', 'Marshmallow'],
+  'lattafa-body-splash-yara-tous': ['Manga', 'Coco', 'Flores brancas'],
 }
 
 const p = (id: string, brand: string, name: string, price: number, category: Category, gender: Gender, description: string): Product =>
