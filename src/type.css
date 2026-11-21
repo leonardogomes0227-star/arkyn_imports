@@ -73,3 +73,6 @@ body.ax .ck-card input::placeholder { text-transform:none; letter-spacing:0 }
 body.ax .hx-btn:not(.hx-btn--ghost), body.ax .hx-btn:not(.hx-btn--ghost):hover, body.ax .hx-btn:not(.hx-btn--ghost):visited { color:#000 }
 .cmp-empty .hx-btn, .cmp .hx-btn { margin-top:22px }
 .ax-empty-page .hx-btn { margin-top:22px }
+
+/* cartões estreitos no celular: "Adicionar à sacola" cabe com folga dentro do botão */
+@media (max-width:640px) { body.ax .card .card-add.card-add { font-size:.625rem; letter-spacing:.02em; padding-left:4px; padding-right:4px; white-space:nowrap } }
