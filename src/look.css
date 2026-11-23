@@ -97,7 +97,7 @@ body.ax .hm-cols { max-width:none; margin:0; background:#f2eee6; padding:clamp(4
    PÁGINAS INTERNAS em creme (catálogo, produto, checkout, pedido, políticas)
    ===================================================================== */
 body.ax .lt-page { padding-bottom:clamp(48px,6vw,96px) }
-body.ax .lt-page :is(h1,h2,h3,h4,p,li,dt,dd,label,legend,summary,small,output,span,b,strong,em,div,details,dl,ul,ol,section,nav,form,fieldset,aside,article,button,a):not(:where(.np,.np *,.btn,.btn *,.pdp-cta,.card-add,.ck-bar,.ck-bar *,.bs,.bs *)) { color:inherit }
+body.ax .lt-page :is(h1,h2,h3,h4,p,li,dt,dd,label,legend,summary,small,output,span,b,strong,em,div,details,dl,ul,ol,section,nav,form,fieldset,aside,article,button,a):not(:where(.eb-board,.eb-board *,.np,.np *.btn,.btn *,.pdp-cta,.card-add,.ck-bar,.ck-bar *,.bs,.bs *)) { color:inherit }
 body.ax .lt-page { color:#0b0b0c }
 body.ax .lt-page :is(.ax-eyebrow,.pdp-brand,.hm-eyebrow) { color:#4d5c00 }
 body.ax .lt-page :is(.muted,.crumbs,.crumbs a,.pdp-pay,.ck-hint,.ck-secure) { color:#6a655a }

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
-import ProductCard, { ProductSkeleton } from '../components/ProductCard'
+import { ProductSkeleton } from '../components/ProductCard'
+import { DepartureBoard } from '../components/eb/Departures'
 import { CAT_LABEL, matchProduct } from '../lib/search'
 import { usePageMeta } from '../lib/seo'
 import { useStore } from '../lib/store'
@@ -94,7 +95,7 @@ export default function Catalog() {
           )}
 
           {!ready ? <div className="grid"><ProductSkeleton n={6} /></div> : list.length > 0 ? (
-            <><h2 className="sr-only">Produtos</h2><div className="grid">{list.map((p, i) => <ProductCard key={p.id} p={p} priority={i < 3} />)}</div></>
+            <><h2 className="sr-only">Produtos</h2><DepartureBoard items={list} /></>
           ) : (
             <div className="ax-empty-results">
               <p className="ax-eyebrow">Sem resultados</p>

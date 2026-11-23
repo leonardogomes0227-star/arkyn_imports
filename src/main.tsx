@@ -24,6 +24,7 @@ import './type.css'
 import './notes.css'
 import './pyramid.css'
 import './look.css'
+import './embarque.css'
 
 initAnalytics()
 
