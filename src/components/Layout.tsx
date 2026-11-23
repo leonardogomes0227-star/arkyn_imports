@@ -120,11 +120,6 @@ export default function Layout({ children }: { children: ReactNode }) {
             <p>Perfumaria árabe e importada. De Coxim – MS para todo o Brasil.</p>
             <a className="eb-btn eb-btn-lime" href={wa} target="_blank" rel="noreferrer">Falar no WhatsApp</a>
           </div>
-          <nav className="eb-foot-nav" aria-label="Rodapé">
-            <b>Loja</b>
-            {NAV.map(([label, to]) => <Link key={to} to={to}>{label}</Link>)}
-            <Link to="/quiz">Check-in olfativo</Link>
-          </nav>
           <nav className="eb-foot-nav" aria-label="Políticas e ajuda">
             <b>Ajuda</b>
             {POLICY_LINKS.map(([label, to]) => <Link key={to} to={to}>{label}</Link>)}

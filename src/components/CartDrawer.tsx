@@ -1,14 +1,14 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import SizedImg from './SizedImg'
 import { brl, useStore } from '../lib/store'
 import { bundleDiscount } from '../lib/pricing'
-import { fetchQuote, maskCep, savedCep, saveCep } from '../lib/shipping'
-import type { ShipQuote } from '../lib/types'
 import { photoOf } from '../lib/cutouts'
 
-const FOCUSABLE = 'a[href],button:not([disabled]),input,select,[tabindex]:not([tabindex="-1"])'
+const FOCUSABLE = 'a[href],button:not([disabled]),input,[tabindex]:not([tabindex="-1"])'
+const short = (n: string) => n.replace(/\s?\d+\s?ml$/i, '')
 
+/** Sacola lateral no estilo bilhete: itens sempre visíveis, incentivo para levar mais e finalização em um toque. */
 export default function CartDrawer() {
   const { open, setOpen, cart, products, settings, setQty, add } = useStore()
   const box = useRef<HTMLElement>(null)
@@ -16,36 +16,35 @@ export default function CartDrawer() {
   const lines = cart.flatMap(i => { const p = products.find(x => x.id === i.id); return p ? [{ p, qty: i.qty }] : [] })
   const subtotal = lines.reduce((s, l) => s + l.p.price * l.qty, 0)
   const items = lines.reduce((s, l) => s + l.qty, 0)
-  const goal = settings.freeShippingFrom
-  const bMin = settings.bundleMinQty ?? 0
   const bundle = bundleDiscount(subtotal, items, settings)
   const close = () => setOpen(false)
-  const [cep, setCep] = useState(() => maskCep(savedCep()))
-  const [q, setQ] = useState<ShipQuote | null>(null)
-  const [calc, setCalc] = useState(false)
-  const quote = async () => {
-    const d = cep.replace(/\D/g, '')
-    if (d.length !== 8) return setQ({ ok: false, error: 'Informe um CEP com 8 números.' })
-    setCalc(true); const r = await fetchQuote(d, cart); setQ(r); setCalc(false); if (r.ok) saveCep(d)
-  }
-  // sugestões: mesma marca ou perfil dos itens da sacola, só com estoque
+
+  // incentivo para levar mais: a oferta que estiver ligada no painel (leve N e ganhe %, ou frete grátis)
+  const bMin = settings.bundleMinQty ?? 0, bPct = settings.bundlePercent ?? 0, goal = settings.freeShippingFrom
+  const perk = bMin >= 2 && bPct > 0
+    ? { done: items >= bMin, pct: Math.min(100, (items / bMin) * 100), text: items >= bMin ? <>Você ganhou <b>{bPct}% de desconto</b> por levar {bMin} ou mais.</> : <>Leve mais <b>{bMin - items} {bMin - items === 1 ? 'item' : 'itens'}</b> e ganhe <b>{bPct}% de desconto</b>.</> }
+    : goal > 0
+      ? { done: subtotal >= goal, pct: Math.min(100, (subtotal / goal) * 100), text: subtotal >= goal ? <>Você ganhou <b>frete grátis</b>.</> : <>Faltam <b>{brl(goal - subtotal)}</b> para ganhar <b>frete grátis</b>.</> }
+      : null
+
+  // "leve junto": perfumes que combinam com o que está na sacola (mesmo perfil ou mesma casa)
   const inCart = new Set(lines.map(l => l.p.id))
   const tags = new Set(lines.flatMap(l => l.p.tags ?? []))
   const brandsIn = new Set(lines.map(l => l.p.brand))
   const suggest = lines.length ? products
-    .filter(x => !inCart.has(x.id) && x.stock > 0 && !!x.image && (x.category === 'masculino' || x.category === 'feminino'))
-    .map(x => ({ x, s: (x.tags ?? []).filter(t => tags.has(t)).length + (brandsIn.has(x.brand) ? 1 : 0) }))
-    .sort((a, b) => b.s - a.s).slice(0, 3).map(r => r.x) : []
+    .filter(x => !inCart.has(x.id) && x.stock > 0 && !!photoOf(x) && x.category !== 'skincare')
+    .map(x => ({ x, s: (x.tags ?? []).filter(t => tags.has(t)).length + (brandsIn.has(x.brand) ? 1 : 0) + (x.category === 'splash' ? 0.5 : 0) }))
+    .sort((a, b) => b.s - a.s).slice(0, 2).map(r => r.x) : []
 
-  // acessibilidade: foco entra na sacola, Tab fica preso nela, Esc fecha, fundo não rola, foco volta ao fechar
   useEffect(() => {
     const el = box.current
     if (!el) return
     ;(el as HTMLElement & { inert: boolean }).inert = !open
+    document.body.classList.toggle('bag-open', open)
     if (!open) return
     lastFocus.current = document.activeElement as HTMLElement
     document.body.style.overflow = 'hidden'
-    const t = window.setTimeout(() => el.querySelector<HTMLElement>('.ax-drawer-x')?.focus(), 80)
+    const t = window.setTimeout(() => el.querySelector<HTMLElement>('.bg-x')?.focus(), 80)
     const key = (e: KeyboardEvent) => {
       if (e.key === 'Escape') return setOpen(false)
       if (e.key !== 'Tab') return
@@ -56,91 +55,76 @@ export default function CartDrawer() {
       else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus() }
     }
     window.addEventListener('keydown', key)
-    return () => { window.clearTimeout(t); window.removeEventListener('keydown', key); document.body.style.overflow = ''; lastFocus.current?.focus?.() }
+    return () => { window.clearTimeout(t); window.removeEventListener('keydown', key); document.body.style.overflow = ''; document.body.classList.remove('bag-open'); lastFocus.current?.focus?.() }
   }, [open, setOpen])
 
   return (
     <>
-      <div className={open ? 'scrim on' : 'scrim'} onClick={close} />
-      <aside ref={box} className={open ? 'ax-drawer on' : 'ax-drawer'} role="dialog" aria-modal="true" aria-label="Sua sacola" aria-hidden={!open}>
-        <div className="ax-drawer-head">
-          <h2>Sua sacola{items > 0 && <small>{items} {items === 1 ? 'item' : 'itens'}</small>}</h2>
-          <button type="button" className="ax-drawer-x" onClick={close} aria-label="Fechar sacola">✕</button>
-        </div>
+      <div className={open ? 'bg-scrim on' : 'bg-scrim'} onClick={close} />
+      <aside ref={box} className={open ? 'bg on' : 'bg'} role="dialog" aria-modal="true" aria-label="Sua sacola" aria-hidden={!open}>
+        <header className="bg-head">
+          <div><small>Sua bagagem</small><h2>Sacola{items > 0 && <span> · {items} {items === 1 ? 'item' : 'itens'}</span>}</h2></div>
+          <button type="button" className="bg-x" onClick={close} aria-label="Fechar sacola">✕</button>
+        </header>
 
-        {goal > 0 && lines.length > 0 && (
-          <div className="ax-ship">
-            <p>{subtotal >= goal ? 'Você ganhou frete grátis!' : <>Faltam <b>{brl(goal - subtotal)}</b> para ganhar frete grátis.</>}</p>
-            <div className="ax-ship-bar" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.min(100, Math.round((subtotal / goal) * 100))}><span style={{ width: `${Math.min(100, (subtotal / goal) * 100)}%` }} /></div>
+        {!lines.length ? (
+          <div className="bg-empty">
+            <img src="/intro/aviao.webp" alt="" />
+            <b>Sua sacola está vazia</b>
+            <p>Faça o check-in olfativo ou escolha um voo nas partidas.</p>
+            <Link to="/" className="bg-btn" onClick={close}>Ver os perfumes</Link>
           </div>
-        )}
-
-        <div className="ax-drawer-body">
-          {!lines.length ? (
-            <div className="ax-cart-empty">
-              <svg width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 8h14l-1 12H6L5 8z" /><path d="M9 8a3 3 0 0 1 6 0" /></svg>
-              <h3>Sua sacola está vazia</h3>
-              <p className="muted">Explore o catálogo e escolha o perfume ideal.</p>
-              <Link to="/catalogo" className="btn" onClick={close}>Explorar o catálogo</Link>
+        ) : <>
+          {perk && (
+            <div className={perk.done ? 'bg-perk done' : 'bg-perk'}>
+              <p>{perk.text}</p>
+              <div className="bg-perk-bar"><i style={{ width: `${perk.pct}%` }} /><img src="/intro/aviao.webp" alt="" style={{ left: `${perk.pct}%` }} /></div>
             </div>
-          ) : (
-            <ul className="ax-lines">
-              {lines.map(({ p, qty }) => (
-                <li key={p.id}>
-                  <Link to={`/produto/${p.id}`} className="ax-line-img" aria-label={`${p.brand} ${p.name}`} onClick={close} tabIndex={open ? 0 : -1}>{photoOf(p) ? <SizedImg src={photoOf(p)!} size={480} alt="" width={160} height={160} /> : null}</Link>
-                  <div className="ax-line-t">
-                    <small>{p.brand}</small>
-                    <Link to={`/produto/${p.id}`} onClick={close} tabIndex={open ? 0 : -1}>{p.name}</Link>
-                    <div className="ax-line-row">
-                      <div className="ax-step" role="group" aria-label={`Quantidade de ${p.name}`}>
-                        <button type="button" onClick={() => setQty(p.id, qty - 1)} aria-label="Diminuir" tabIndex={open ? 0 : -1}>−</button>
-                        <output>{qty}</output>
-                        <button type="button" onClick={() => setQty(p.id, Math.min(qty + 1, p.stock))} aria-label="Aumentar" disabled={qty >= p.stock} tabIndex={open ? 0 : -1}>+</button>
-                      </div>
-                      <b>{brl(p.price * qty)}</b>
-                    </div>
-                    <button type="button" className="ax-remove" onClick={() => setQty(p.id, 0)} tabIndex={open ? 0 : -1}>Remover</button>
-                  </div>
-                </li>
-              ))}
-            </ul>
           )}
-        </div>
 
-        {suggest.length > 0 && (
-          <div className="ax-suggest">
-            <p>Combina com o seu pedido</p>
-            <ul>
-              {suggest.map(x => (
-                <li key={x.id}>
-                  <SizedImg src={photoOf(x) ?? ""} size={160} alt="" width={72} height={72} loading="lazy" />
-                  <span><small>{x.brand}</small><b>{x.name}</b><em>{brl(x.price)}</em></span>
-                  <button type="button" aria-label={`Adicionar ${x.name}`} tabIndex={open ? 0 : -1} onClick={() => add(x.id, false)}>+</button>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+          <ul className="bg-list">
+            {lines.map(({ p, qty }) => (
+              <li key={p.id}>
+                <Link to={`/produto/${p.id}`} className="bg-img" onClick={close} tabIndex={open ? 0 : -1} aria-label={p.name}>{photoOf(p) && <SizedImg src={photoOf(p)!} size={160} alt="" width={160} height={160} />}</Link>
+                <div className="bg-info">
+                  <small>{p.brand}</small>
+                  <Link to={`/produto/${p.id}`} onClick={close} tabIndex={open ? 0 : -1}>{short(p.name)}</Link>
+                  <div className="bg-row">
+                    <div className="bg-step" role="group" aria-label={`Quantidade de ${p.name}`}>
+                      <button type="button" onClick={() => setQty(p.id, qty - 1)} aria-label={qty === 1 ? 'Remover' : 'Diminuir'} tabIndex={open ? 0 : -1}>{qty === 1 ? '×' : '−'}</button>
+                      <output>{qty}</output>
+                      <button type="button" onClick={() => setQty(p.id, Math.min(qty + 1, p.stock))} aria-label="Aumentar" disabled={qty >= p.stock} tabIndex={open ? 0 : -1}>+</button>
+                    </div>
+                    <b>{brl(p.price * qty)}</b>
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
 
-        {!!lines.length && (
-          <div className="ax-drawer-foot">
-            {bMin >= 2 && (settings.bundlePercent ?? 0) > 0 && <p className="ax-note">{bundle > 0 ? `Desconto de ${settings.bundlePercent}% por quantidade: −${brl(bundle)}` : `Leve ${bMin} itens e ganhe ${settings.bundlePercent}% de desconto.`}</p>}
-            <div className="ax-tot"><span>Subtotal</span><b>{brl(subtotal - bundle)}</b></div>
-            <div className="ax-cep">
-              <input value={cep} inputMode="numeric" autoComplete="postal-code" placeholder="Calcule o frete: seu CEP" aria-label="CEP para calcular o frete" tabIndex={open ? 0 : -1}
-                onChange={e => { setCep(maskCep(e.target.value)); setQ(null) }} onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); quote() } }} />
-              <button type="button" className={calc ? 'btn ghost is-busy' : 'btn ghost'} onClick={quote} disabled={calc} tabIndex={open ? 0 : -1}>{calc ? '…' : 'Calcular'}</button>
+          {suggest.length > 0 && (
+            <div className="bg-sug">
+              <p>Leve junto na viagem</p>
+              <div>
+                {suggest.map(x => (
+                  <button key={x.id} type="button" className="bg-sug-c" tabIndex={open ? 0 : -1} onClick={() => add(x.id, false)} aria-label={`Adicionar ${x.name}`}>
+                    {photoOf(x) && <SizedImg src={photoOf(x)!} size={160} alt="" width={80} height={80} loading="lazy" />}
+                    <span><b>{short(x.name)}</b><em>{brl(x.price)}</em></span>
+                    <i aria-hidden="true">+</i>
+                  </button>
+                ))}
+              </div>
             </div>
-            <p className="ax-cep-res" role="status">
-              {q && !q.ok && q.error}
-              {q?.ok && q.local && <>Entrega em <b>{q.local}</b>: veja o valor na finalização.</>}
-              {q?.ok && q.options && <>{q.address?.city}/{q.address?.uf}: {[...q.options].sort((a, b) => a.price - b.price).slice(0, 2).map(o => <span key={o.id}><b>{o.price ? brl(o.price) : 'Grátis'}</b>{o.days ? ` em ~${o.days} dias úteis` : ''}{' '}</span>)}</>}
-              {!q && 'Cupom e frete exato são fechados na finalização.'}
-            </p>
-            <Link to="/carrinho" className="btn block" onClick={close} tabIndex={open ? 0 : -1}>Finalizar compra</Link>
-            <button type="button" className="btn ghost block" onClick={close} tabIndex={open ? 0 : -1}>Continuar comprando</button>
-          </div>
-        )}
+          )}
+
+          <footer className="bg-foot">
+            {bundle > 0 && <div className="bg-tot sm"><span>Desconto</span><b>−{brl(bundle)}</b></div>}
+            <div className="bg-tot"><span>Subtotal</span><b>{brl(subtotal - bundle)}</b></div>
+            <small>Frete e cupom na próxima tela · Retirada grátis em Coxim</small>
+            <Link to="/carrinho" className="bg-btn" onClick={close} tabIndex={open ? 0 : -1}>Finalizar compra <span aria-hidden="true">→</span></Link>
+            <button type="button" className="bg-more" onClick={close} tabIndex={open ? 0 : -1}>Continuar comprando</button>
+          </footer>
+        </>}
       </aside>
     </>
   )

@@ -1,21 +1,21 @@
 import { IngredientRow } from '../components/BottleStage'
 import Reviews from '../components/Reviews'
 import ShipCalc from '../components/ShipCalc'
-import { getRecent, pushRecent } from '../lib/recent'
+import { pushRecent } from '../lib/recent'
 import { track } from '../lib/analytics'
 import { useEffect, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { IconHeart } from '../components/Icons'
 import Placeholder from '../components/Placeholder'
 import SizedImg from '../components/SizedImg'
-import ProductCard, { ProductSkeleton } from '../components/ProductCard'
+import { ProductSkeleton } from '../components/ProductCard'
+import { DepartureBoard } from '../components/eb/Departures'
 import NotePyramid from '../components/NotePyramid'
 import { CAT_LABEL } from '../lib/search'
 import { usePageMeta } from '../lib/seo'
 import { brl, useStore } from '../lib/store'
 import { cutoutFor } from '../lib/cutouts'
 import { flyToBag } from '../lib/fly'
-import { toggleCompare, useCompare } from '../lib/compare'
 
 const FAMILIES = ['doce', 'amadeirado', 'fresco', 'floral', 'especiado']
 const cap = (s: string) => s[0].toUpperCase() + s.slice(1)
@@ -23,7 +23,6 @@ const cap = (s: string) => s[0].toUpperCase() + s.slice(1)
 export default function Product() {
   const { id } = useParams()
   const { products, settings, add, ready, favs, toggleFav } = useStore()
-  const cmpIds = useCompare()
   const [qty, setQty] = useState(1)
   const [pic, setPic] = useState(0)
   const [bar, setBar] = useState(false)
@@ -43,8 +42,7 @@ export default function Product() {
   } : { title: 'Perfume não encontrado | Arkyn Imports', description: 'Este produto não está disponível.', noindex: true })
 
   useEffect(() => { setQty(1); setPic(0) }, [id])
-  const [recent, setRecent] = useState<string[]>([])
-  useEffect(() => { setRecent(getRecent().filter(x => x !== id)); if (id) pushRecent(id) }, [id])
+  useEffect(() => { if (id) pushRecent(id) }, [id])
   useEffect(() => { const x = products.find(q => q.id === id); if (x) track.viewItem({ id: x.id, name: x.name, brand: x.brand, price: x.price }) }, [id, products])
   // barra de compra fixa no celular, quando o botão principal sai da tela
   useEffect(() => {
@@ -63,7 +61,6 @@ export default function Product() {
   const n = settings.installments
   const cutImg = cutoutFor(p)
   const images = (cutImg ? [cutImg] : [p.image, ...(p.images ?? [])]).filter((x, i, a): x is string => !!x && a.indexOf(x) === i)
-  const word = (p.name.replace(/\s?\d+\s?ml$/i, '').split(' ').sort((a, b) => b.length - a.length)[0] ?? '').toUpperCase()
   const family = (p.tags ?? []).filter(t => FAMILIES.includes(t))
   const when = (p.tags ?? []).filter(t => t === 'dia' || t === 'noite')
   const volume = p.name.match(/(\d+)\s?ml/i)?.[1]
@@ -71,8 +68,9 @@ export default function Product() {
     .filter(x => x.id !== p.id && x.category === p.category && x.stock > 0)
     .map(x => ({ x, s: (x.tags ?? []).filter(t => (p.tags ?? []).includes(t)).length + (x.brand === p.brand ? 1 : 0) }))
     .sort((a, b) => b.s - a.s).slice(0, 4).map(r => r.x)
+  const pair = related.filter(x => cutoutFor(x)).sort((a, b) => a.price - b.price)[0]
+    ?? products.find(x => x.id !== p.id && x.category === 'splash' && x.stock > 0 && cutoutFor(x))
   const wa = `https://wa.me/${settings.whatsapp}?text=${encodeURIComponent(`Olá! Tenho interesse no ${p.brand} ${p.name}.`)}`
-  const comparing = cmpIds.includes(p.id)
   const share = async () => {
     const url = window.location.href, text = `${p.brand} ${p.name} por ${brl(p.price)} na Arkyn Imports`
     try { if (navigator.share) { await navigator.share({ title: p.name, text, url }); return } } catch { return }
@@ -100,7 +98,6 @@ export default function Product() {
             </div>
           )}
           <div className={`pdp-img${images[pic]?.includes('-net/') ? ' clean' : ''}${images[pic]?.startsWith('/hero/') ? ' cut' : ''}`} onMouseMove={zoom}>
-            <span className="pdp-word" aria-hidden="true" style={{ '--len': Math.max(5, word.length) } as React.CSSProperties}>{word}</span>
             {sale && <span className="off">-{Math.round((1 - p.price / p.old_price!) * 100)}%</span>}
             {images[pic] ? <img key={images[pic]} src={images[pic]} width={800} height={800} alt={`${p.brand} ${p.name}`} decoding="async" /> : <Placeholder brand={p.brand} />}
           </div>
@@ -109,6 +106,7 @@ export default function Product() {
         <div className="pdp-info">
           <p className="ax-eyebrow pdp-brand">{p.brand}{volume ? ` · ${volume} ml` : ''}</p>
           <h1>{p.name.replace(/\s?\d+\s?ml$/i, '')}</h1>
+          {(!!family.length || !!when.length) && <p className="pdp-prof">{[...family.map(cap), ...when.map(w => (w === 'dia' ? 'Para o dia' : 'Para a noite'))].join(' · ')}</p>}
 
           <div className="pdp-price">
             {!out ? <>
@@ -116,7 +114,7 @@ export default function Product() {
               {sale && <><span className="old">{brl(p.old_price!)}</span><span className="pdp-off">-{Math.round((1 - p.price / p.old_price!) * 100)}%</span></>}
             </> : <span className="pdp-now soldout">Indisponível no momento</span>}
           </div>
-          <p className="pdp-pay">{n > 1 ? `ou ${n}x de ${brl(p.price / n)} sem juros no cartão · ` : ''}Pix ou cartão de crédito, pelo Mercado Pago</p>
+          {n > 1 && <p className="pdp-pay">ou {n}x de {brl(p.price / n)} sem juros</p>}
 
           {p.description && <p className="pdp-desc">{p.description}</p>}
 
@@ -130,54 +128,42 @@ export default function Product() {
               <button ref={buyRef} type="button" className="btn pdp-cta" onClick={buy}>Adicionar à sacola</button>
             </div>
           )}
+          {!out && pair && (
+            <div className="pdp-pair">
+              <p>Leve junto</p>
+              <div>
+                <Link to={`/produto/${pair.id}`} className="pdp-pair-img">{cutoutFor(pair) && <img src={cutoutFor(pair)} alt="" />}</Link>
+                <span><small>{pair.brand}</small><b>{pair.name.replace(/\s?\d+\s?ml$/i, '')}</b><em>+ {brl(pair.price)}</em></span>
+              </div>
+              <button type="button" onClick={() => { add(pair.id, false); buy() }}>Levar os dois · {brl(p.price * qty + pair.price)}</button>
+            </div>
+          )}
           {!out && p.stock <= 3 && <p className="low">{p.stock === 1 ? 'Última unidade em estoque' : `Restam ${p.stock} unidades`}</p>}
           <div className="pdp-acc">
             {!!p.notes?.length && (
-              <details open>
-                <summary>Notas olfativas</summary>
-                <NotePyramid p={p} />
-              </details>
+              <NotePyramid p={p} />
             )}
-            <details open>
-              <summary>Características</summary>
-              <dl className="pdp-specs">
-                <div><dt>Marca</dt><dd>{p.brand}</dd></div>
-                {volume && <div><dt>Volume</dt><dd>{volume} ml</dd></div>}
-                {!!family.length && <div><dt>Família olfativa</dt><dd>{family.map(cap).join(' · ')}</dd></div>}
-                {!!when.length && <div><dt>Ocasião</dt><dd>{when.map(cap).join(' · ')}</dd></div>}
-              </dl>
-            </details>
           </div>
           <div className="pdp-more">
-          <button type="button" className={favs.includes(p.id) ? 'btn ghost block pdp-fav on' : 'btn ghost block pdp-fav'} aria-pressed={favs.includes(p.id)} onClick={() => toggleFav(p.id)}><IconHeart size={18} filled={favs.includes(p.id)} /> {favs.includes(p.id) ? 'Nos seus favoritos' : 'Salvar nos favoritos'}</button>
-          {out && <a className="btn block" href={waAvise} target="_blank" rel="noreferrer">Avisar quando chegar</a>}
-          <button type="button" className={comparing ? 'btn ghost block on' : 'btn ghost block'} aria-pressed={comparing} onClick={() => { if (!toggleCompare(p.id)) window.alert('Compare até 3 perfumes por vez') }}>{comparing ? 'Na comparação ✓' : 'Comparar com outro perfume'}</button>
-          <a className="btn ghost block" href={wa} target="_blank" rel="noreferrer">Tirar dúvida no WhatsApp</a>
-          <button type="button" className="btn ghost block" onClick={share}>Enviar para alguém</button>
-
-          <ul className="pdp-ship">
-            <li><b>Retirada em Coxim</b><span>Sem custo de frete · {settings.pickupAddress}</span></li>
-            <li><b>Entrega</b><span>{settings.freeShippingFrom > 0 ? `Frete grátis acima de ${brl(settings.freeShippingFrom)}. ` : ''}Para todo o Brasil, calcule abaixo</span></li>
-            {(settings.bundleMinQty ?? 0) >= 2 && (settings.bundlePercent ?? 0) > 0 && <li><b>Leve {settings.bundleMinQty}, ganhe {settings.bundlePercent}%</b><span>Desconto automático na sacola ao levar {settings.bundleMinQty} ou mais itens</span></li>}
-          </ul>
-          {!out && <ShipCalc items={[{ id: p.id, qty }]} />}
-          <ul className="ck-trust pdp-trust"><li>Pagamento seguro</li><li><Link to="/politica/trocas">Troca e devolução</Link></li><li><Link to="/politica/envio">Envio e entrega</Link></li></ul>
-
+            {out && <a className="btn block" href={waAvise} target="_blank" rel="noreferrer">Avisar quando chegar</a>}
+            <div className="pdp-acts">
+              <button type="button" className={favs.includes(p.id) ? 'on' : ''} aria-pressed={favs.includes(p.id)} onClick={() => toggleFav(p.id)}><IconHeart size={18} filled={favs.includes(p.id)} /> {favs.includes(p.id) ? 'Salvo' : 'Favoritar'}</button>
+              <a href={wa} target="_blank" rel="noreferrer">Tirar dúvida</a>
+              <button type="button" onClick={share}>Enviar</button>
+            </div>
+            <p className="pdp-ship1"><b>Retirada grátis em Coxim</b> ou envio para todo o Brasil{settings.freeShippingFrom > 0 ? ` (grátis acima de ${brl(settings.freeShippingFrom)})` : ''}.</p>
+            {!out && <ShipCalc items={[{ id: p.id, qty }]} />}
           </div>
         </div>
       </div>
 
       {(!!related.length || !ready) && <>
-        <div className="ax-sec-head pdp-rel"><div><h2>Do mesmo estilo</h2></div></div>
-        <div className="grid shelf">{ready ? related.map(r => <ProductCard key={r.id} p={r} />) : <ProductSkeleton />}</div>
+        <div className="ax-sec-head pdp-rel"><div><h2>Quem leva este, também leva</h2></div></div>
+        {ready ? <DepartureBoard items={related} /> : <div className="grid"><ProductSkeleton /></div>}
       </>}
 
       <Reviews productId={p.id} onStats={(count, avg) => setRv({ count, avg })} />
 
-      {(() => { const rvd = recent.map(r => products.find(x => x.id === r)).filter((x): x is NonNullable<typeof x> => !!x && x.stock > 0).slice(0, 4); return rvd.length > 0 && <>
-        <div className="ax-sec-head pdp-rel"><div><h2>Vistos recentemente</h2></div></div>
-        <div className="grid shelf">{rvd.map(r => <ProductCard key={r.id} p={r} />)}</div>
-      </> })()}
 
       {!out && (
         <div className={bar ? 'pdp-bar on' : 'pdp-bar'} aria-hidden={!bar}>
