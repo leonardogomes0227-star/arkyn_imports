@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import CheckinHero from '../components/eb/CheckinHero'
+import FanHero from '../components/eb/FanHero'
 import { DepartureBoard, FlapTitle } from '../components/eb/Departures'
 import { CAT_LABEL } from '../lib/search'
 import { useStore } from '../lib/store'
@@ -33,6 +34,7 @@ export default function Home() {
 
   return (
     <>
+      <FanHero />
       <CheckinHero />
 
       <section className="eb-dep" id="partidas" aria-labelledby="partidas-t">

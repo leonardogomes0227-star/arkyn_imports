@@ -221,10 +221,10 @@ body.ax main.ax-page:has(.qz) :is(h1,h2,h3) { color:#fff }
 .oc { max-width:1320px; margin:0 auto; padding:30px 20px 10px; display:grid; gap:28px }
 .oc-kick { display:flex; align-items:center; gap:10px; margin:0; font:700 .625rem/1.3 var(--sans); letter-spacing:.2em; text-transform:uppercase; color:var(--mute) }
 .oc-kick::before { content:''; flex:none; width:22px; height:1.5px; background:var(--ink) }
-.oc h1 { margin:14px 0 0; font:500 clamp(2.45rem,10.5vw,4.4rem)/1.02 var(--display); letter-spacing:-.01em; color:var(--ink) }
-.oc h1 em { font-style:italic }
+.oc .oc-h { margin:14px 0 0; font:500 clamp(2.45rem,10.5vw,4.4rem)/1.02 var(--display); letter-spacing:-.01em; color:var(--ink) }
+.oc .oc-h em { font-style:italic }
 .oc-sub { margin:12px 0 0; max-width:30em; font:500 .9375rem/1.55 var(--sans); color:#4b463e }
-.oc h1, .oc-sub, .oc-kick { animation:eb-up .9s cubic-bezier(.16,1,.3,1) both } .oc-sub { animation-delay:.1s }
+.oc .oc-h, .oc-sub, .oc-kick { animation:eb-up .9s cubic-bezier(.16,1,.3,1) both } .oc-sub { animation-delay:.1s }
 /* rota com o avião andando a cada resposta */
 .oc-route { position:relative; height:52px; margin:24px 4px 4px }
 .oc-route svg { position:absolute; left:0; right:0; top:0; width:100%; height:34px; overflow:visible }
@@ -422,3 +422,68 @@ body.ax .pdp-bar small, body.ax .pdp-bar b { color:#fff !important } body.ax .pd
   body.ax .ck-sum .ck-items { display:none }
 }
 body.ax .ck-bar small { color:#a9a9ae !important } body.ax .ck-bar b { color:#fff !important }
+
+/* =====================================================================
+   COMEÇO DO SITE — faixa de partidas, leque de bilhetes, título
+   ===================================================================== */
+.fh { position:relative; overflow:hidden }
+.fh-tick { height:34px; overflow:hidden; background:#0b0b0c; border-top:1px solid #1d1d20 }
+.fh-tick-in { display:flex; width:max-content; height:100%; animation:fh-run calc(var(--n) * 4.5s) linear infinite }
+.fh-tick-in > span { display:flex; align-items:center; gap:28px; padding-right:28px }
+.fh-tick a { white-space:nowrap; font:800 .625rem/1 var(--sans); letter-spacing:.16em; color:#cfcfd3; text-decoration:none }
+.fh-tick a b { color:var(--lime) } .fh-tick a i { font-style:normal; color:var(--amber) }
+@keyframes fh-run { to { transform:translateX(-50%) } }
+.fh-in { max-width:1320px; margin:0 auto; display:grid }
+.fh-stage { position:relative; height:clamp(420px,118vw,520px); touch-action:pan-y; user-select:none; background:radial-gradient(60% 48% at 50% 58%,#fff 0,rgba(255,255,255,0) 72%) }
+.fh-kick { position:absolute; left:20px; top:20px; z-index:3; display:flex; align-items:center; gap:10px; margin:0; font:700 .625rem/1 var(--sans); letter-spacing:.2em; text-transform:uppercase; color:var(--mute) }
+.fh-kick::before { content:''; width:22px; height:1.5px; background:var(--ink) }
+.fh-route { position:absolute; left:0; right:0; top:30px; width:100%; height:62% }
+.fh-route path { fill:none; stroke:var(--ink); stroke-width:1.2; stroke-dasharray:3 5; vector-effect:non-scaling-stroke; animation:eb-dash 1.6s linear infinite }
+.fh-plane { position:absolute; top:44px; right:16%; width:40px; transform:rotate(-16deg); animation:fh-fly 6s ease-in-out infinite; filter:drop-shadow(0 6px 6px rgba(0,0,0,.15)) }
+@keyframes fh-fly { 50% { transform:translate(-14px,8px) rotate(-12deg) } }
+.fh-fan { position:absolute; left:50%; top:78px; width:0; height:0 }
+.fh-t { position:absolute; left:calc(var(--w) / -2); --w:clamp(176px,49vw,232px); width:var(--w); display:block; background:var(--card); border-radius:12px; overflow:hidden; color:var(--ink); text-decoration:none; transform-origin:50% 130%;
+  box-shadow:0 1px 0 rgba(0,0,0,.05), 0 26px 40px -22px rgba(60,40,10,.55); transition:transform .9s cubic-bezier(.2,.8,.2,1), opacity .6s, filter .6s }
+.fh-c { z-index:3; transform:none; animation:fh-in .9s cubic-bezier(.2,.8,.2,1) both }
+.fh-l { z-index:1; transform:rotate(-13deg) translateX(-34%); filter:saturate(.85) }
+.fh-r { z-index:2; transform:rotate(13deg) translateX(34%); filter:saturate(.85) }
+@keyframes fh-in { from { transform:translateY(24px) scale(.95); opacity:.4 } }
+.fh-h { display:flex; justify-content:space-between; padding:8px 10px; background:var(--ink); color:#fff; font:800 .5rem/1 var(--sans); letter-spacing:.16em; text-transform:uppercase } .fh-h b { color:var(--lime) }
+.fh-rt { display:flex; justify-content:space-between; padding:8px 10px 0; font:500 1.45rem/1 var(--display) }
+.fh-ph { position:relative; display:block; height:calc(var(--w) * .92) }
+.fh-ph img { position:absolute; left:50%; bottom:2px; height:94%; width:auto; max-width:92%; object-fit:contain; transform:translateX(-50%); filter:drop-shadow(0 12px 12px rgba(70,50,20,.3)) }
+.fh-stamp { position:absolute; right:8px; top:4px; width:58px; height:58px; border-radius:50%; background:var(--lime); border:1.5px solid var(--ink); display:grid; place-items:center; text-align:center; font:800 .4375rem/1.25 var(--sans); letter-spacing:.1em; text-transform:uppercase; font-style:normal; color:#000; transform:rotate(-12deg) }
+.fh-l .fh-stamp, .fh-r .fh-stamp { display:none }
+.fh-pf { display:block; border-top:2px dashed #cfc6b6; margin:0 8px }
+.fh-n { display:block; padding:8px 10px 10px } .fh-n b { display:block; font:500 1rem/1.15 var(--display) } .fh-n small { display:block; margin-top:3px; font:700 .5625rem/1 var(--sans); letter-spacing:.1em; text-transform:uppercase; color:var(--mute) }
+.fh-dots { position:absolute; left:0; right:0; bottom:8px; display:flex; justify-content:center; gap:5px }
+.fh-dots i { width:6px; height:6px; border-radius:3px; background:#cfc6b6; transition:width .4s, background .4s } .fh-dots i.on { width:20px; background:var(--ink) }
+.fh-txt { padding:6px 20px 0 }
+.fh-txt h1 { margin:0; font:500 clamp(2.2rem,9.4vw,4.4rem)/1.02 var(--display); letter-spacing:-.01em; color:var(--ink) }
+.fh-txt h1 em { font-style:italic; background:linear-gradient(transparent 62%,var(--lime) 62% 90%,transparent 90%); padding:0 .05em }
+.fh-cta { display:flex; gap:10px; margin-top:18px }
+.fh-cta > * { flex:1; height:52px; display:flex; align-items:center; justify-content:center; gap:8px; white-space:nowrap; border-radius:2px; font:800 .6875rem/1 var(--sans); letter-spacing:.14em; text-transform:uppercase; text-decoration:none; cursor:pointer; transition:transform .2s, background .2s }
+.fh-a { border:0; background:var(--ink); color:#fff } .fh-a span { color:var(--lime) } .fh-a:hover { background:#000 }
+.fh-b { border:1.5px solid var(--ink); color:var(--ink) !important; background:transparent } .fh-cta > *:active { transform:scale(.97) }
+.fh-trust { list-style:none; display:flex; justify-content:space-between; gap:8px; margin:18px 0 0; padding:14px 0 0; border-top:1px dashed #cfc6b6 }
+.fh-trust li { font:700 .6875rem/1 var(--sans); color:#4b463e } .fh-trust li::before { content:'✓ '; color:var(--ink) }
+.fh-txt h1, .fh-cta, .fh-trust { animation:eb-up .9s cubic-bezier(.16,1,.3,1) both } .fh-cta { animation-delay:.12s } .fh-trust { animation-delay:.22s }
+@media (min-width:980px) {
+  .fh-in { grid-template-columns:1fr 1.05fr; align-items:center; padding:0 32px }
+  .fh-txt { order:-1; padding:0 }
+  .fh-cta { max-width:460px } .fh-trust { max-width:460px }
+  .fh-stage { height:560px } .fh-fan { top:96px } .fh-t { --w:250px }
+}
+/* o check-in agora vem depois do leque */
+.oc { padding-top:46px }
+@media (prefers-reduced-motion:reduce) { .fh-tick-in, .fh-plane, .fh-route path { animation:none } }
+body.ax .fh-tick a { color:#d7d7da !important } body.ax .fh-tick a b { color:var(--lime) !important } body.ax .fh-tick a i { color:var(--amber) !important }
+@media (max-width:979px) {
+  .fh-stage { height:clamp(330px,92vw,420px) }
+  .fh-fan { top:62px } .fh-t { --w:clamp(150px,41vw,200px) }
+  .fh-rt { font-size:1.15rem } .fh-n b { font-size:.9375rem }
+  .fh-kick { top:16px } .fh-plane { top:34px; width:34px }
+  .fh-txt h1 { font-size:clamp(2rem,8.6vw,2.6rem) }
+  .fh-cta { margin-top:14px } .fh-cta > * { height:48px }
+}
+@media (max-width:979px) and (max-height:700px) { .fh-stage { height:300px } .fh-t { --w:136px } .fh-fan { top:54px } .fh-rt { font-size:1rem } .fh-n b { font-size:.8125rem } .fh-stamp { width:46px; height:46px } }

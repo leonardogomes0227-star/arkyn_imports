@@ -93,10 +93,10 @@ export default function CheckinHero() {
   const done = step === 2 && !!fam
 
   return (
-    <section className="oc" aria-labelledby="oc-t">
+    <section className="oc" id="checkin" aria-labelledby="oc-t">
       <div className="oc-left">
         <p className="oc-kick">Check-in olfativo · {pool.length} perfumes a bordo</p>
-        <h1 id="oc-t">Para onde o seu perfume vai <em>te levar?</em></h1>
+        <h2 id="oc-t" className="oc-h">Para onde o seu perfume vai <em>te levar?</em></h2>
         <p className="oc-sub">Três toques e a gente imprime o seu cartão de embarque com o perfume que combina com você.</p>
 
         <div className="oc-route" aria-hidden="true">
