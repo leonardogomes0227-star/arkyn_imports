@@ -1,42 +1,15 @@
-import type { CSSProperties } from 'react'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import Hero from '../components/Hero'
-import BrandBand from '../components/BrandBand'
-import IngredientStrip from '../components/IngredientStrip'
-import Faq, { faqItems } from '../components/Faq'
-import ScentExplorer from '../components/ScentExplorer'
-import { ChristmasBand } from '../components/Festive'
-import ProductCard from '../components/ProductCard'
-import Reveal from '../components/Reveal'
-import { IconCard, IconChat, IconStore, IconTruck } from '../components/Icons'
-import SizedImg from '../components/SizedImg'
-import { brl, useStore } from '../lib/store'
-import { SEASON } from '../lib/season'
+import BoardingHero from '../components/eb/BoardingHero'
+import { DepartureBoard, FlapTitle } from '../components/eb/Departures'
 import { cutoutFor } from '../lib/cutouts'
+import { CAT_LABEL } from '../lib/search'
+import { useStore } from '../lib/store'
 import { usePageMeta } from '../lib/seo'
-import type { Category, Product } from '../lib/types'
+import type { Category } from '../lib/types'
 
-
-
-function SecHead({ eyebrow, title, to, link = 'Ver todos' }: { eyebrow?: string; title: string; to?: string; link?: string }) {
-  return (
-    <div className="hm-head">
-      <div>{eyebrow && <p className="hm-eyebrow">{eyebrow}</p>}<h2>{title}</h2></div>
-      {to && <Link to={to} className="hm-link">{link} <span aria-hidden="true">→</span></Link>}
-    </div>
-  )
-}
-
-function Shelf({ eyebrow, title, to, items }: { eyebrow?: string; title: string; to: string; items: Product[] }) {
-  if (!items.length) return null
-  return (
-    <Reveal as="section" className="hm-sec lt">
-      <SecHead eyebrow={eyebrow} title={title} to={to} />
-      <div className="grid shelf">{items.map(p => <ProductCard key={p.id} p={p} />)}</div>
-    </Reveal>
-  )
-}
-
+// A página inteira é uma ideia só: cada perfume é um voo do Oriente para o Brasil.
+// 1) o cartão de embarque do destaque; 2) o painel de partidas com tudo o que há na loja; 3) o check-in olfativo.
 export default function Home() {
   const { products, settings } = useStore()
   const origin = typeof window !== 'undefined' ? window.location.origin : ''
@@ -48,81 +21,47 @@ export default function Home() {
       { '@context': 'https://schema.org', '@type': 'Organization', name: 'Arkyn Imports', url: origin, logo: `${origin}/brand/logo-sm.webp`, sameAs: ['https://instagram.com/arkyn_imports'],
         address: { '@type': 'PostalAddress', addressLocality: 'Coxim', addressRegion: 'MS', addressCountry: 'BR' }, telephone: `+${settings.whatsapp}` },
       { '@context': 'https://schema.org', '@type': 'WebSite', name: 'Arkyn Imports', url: origin, potentialAction: { '@type': 'SearchAction', target: `${origin}/catalogo?q={search_term_string}`, 'query-input': 'required name=search_term_string' } },
-      { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faqItems(settings.installments, settings.freeShippingFrom).map(x => ({ '@type': 'Question', name: x.q, acceptedAnswer: { '@type': 'Answer', text: x.a } })) },
     ],
   })
+
   const live = products.filter(p => p.stock > 0)
-  const count = (c: Category) => products.filter(p => p.category === c).length
-  const hasCut = (id: string) => products.some(p => p.id === id)
+  const flagged = live.filter(p => p.featured && cutoutFor(p))
+  const pool = live.filter(p => cutoutFor(p) && (p.category === 'masculino' || p.category === 'feminino'))
+  const hero = (flagged.length >= 3 ? flagged : [...flagged, ...pool.filter(p => !flagged.includes(p))]).slice(0, 5)
 
-  // Vitrines: só aparecem quando os dados sustentam (sem "mais vendidos" ou "novidades" inventados).
-  const flagged = live.filter(p => p.featured)
-  const featured = flagged.length >= 4 ? flagged.slice(0, 4) : [...flagged, ...live.filter(p => !!p.image && !flagged.includes(p))].slice(0, 4)
-  const offers = live.filter(p => !!p.old_price && p.old_price > p.price).slice(0, 8)
-  const brandCards = [...new Set(products.map(p => p.brand))].map(name => {
-    const list = products.filter(p => p.brand === name)
-    return { name, count: list.length, pics: list.map(cutoutFor).filter((x): x is string => !!x).slice(0, 3) }
-  }).filter(b => b.pics.length).sort((a, b) => b.count - a.count || a.name.localeCompare(b.name))
-
-
+  const cats = (Object.keys(CAT_LABEL) as Category[]).filter(c => products.some(p => p.category === c))
+  const [cat, setCat] = useState<Category | ''>('')
+  const board = products
+    .filter(p => !cat || p.category === cat)
+    .sort((a, b) => Number(b.stock > 0) - Number(a.stock > 0) || Number(!!b.featured) - Number(!!a.featured))
 
   return (
     <>
-      <Hero />
-      <BrandBand />
-      {SEASON === 'natal' && <ChristmasBand whatsapp={settings.whatsapp} />}
+      <BoardingHero items={hero} />
 
-      <Reveal as="section" className="hm-info" aria-label="Como comprar">
-        <div><IconCard size={24} /><b>{settings.installments > 1 ? `Pix ou até ${settings.installments}x` : 'Pix ou cartão'}</b><span>Pelo Mercado Pago</span></div>
-        <div><IconStore size={24} /><b>Retirada grátis</b><span>Na loja em Coxim – MS</span></div>
-        <div><IconTruck size={24} /><b>Todo o Brasil</b><span>{settings.freeShippingFrom > 0 ? `Frete grátis acima de ${brl(settings.freeShippingFrom)}` : 'Enviamos para a sua cidade'}</span></div>
-        <a href={`https://wa.me/${settings.whatsapp}`} target="_blank" rel="noreferrer"><IconChat size={24} /><b>WhatsApp</b><span>Tire dúvidas antes de comprar</span></a>
-      </Reveal>
+      <section className="eb-dep" id="partidas" aria-labelledby="partidas-t">
+        <div className="eb-dep-head">
+          <FlapTitle text="Partidas" id="partidas-t" />
+          <p>Todos os perfumes da loja, com preço e estoque de verdade.</p>
+        </div>
+        <div className="eb-gates" role="tablist" aria-label="Filtrar por portão">
+          <button type="button" role="tab" aria-selected={!cat} className={!cat ? 'on' : ''} onClick={() => setCat('')}>Todos <span>{products.length}</span></button>
+          {cats.map(c => {
+            const n = products.filter(p => p.category === c).length
+            return <button key={c} type="button" role="tab" aria-selected={cat === c} className={cat === c ? 'on' : ''} onClick={() => setCat(c)}>{(l => l[0].toUpperCase() + l.slice(1))(CAT_LABEL[c].replace('Perfumes ', ''))} <span>{n}</span></button>
+          })}
+        </div>
+        <DepartureBoard items={board} />
+      </section>
 
-
-      <IngredientStrip />
-
-      {brandCards.length > 0 && (
-        <section className="hm-br lt" aria-labelledby="br-t">
-          <div className="hm-head"><h2 id="br-t">Marcas da loja</h2><Link to="/catalogo" className="hm-link">Ver todos <span aria-hidden="true">→</span></Link></div>
-          <div className="hm-br-row">
-            <div className="hm-br-track">
-              {[0, 1].map(k => brandCards.map(b => (
-                <Link key={`${k}-${b.name}`} to={`/catalogo?brand=${encodeURIComponent(b.name)}`} className="hm-br-c" aria-hidden={k === 1 || undefined} tabIndex={k === 1 ? -1 : undefined}>
-                  <span className="hm-br-pics" aria-hidden="true">{b.pics.map((src, i) => <SizedImg key={src} src={src} size={160} width={160} height={160} alt="" loading="lazy" decoding="async" style={{ '--k': i - (b.pics.length - 1) / 2 } as CSSProperties} />)}</span>
-                  <b>{b.name}</b>
-                  <small>{b.count} {b.count === 1 ? 'produto' : 'produtos'}</small>
-                </Link>
-              )))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      <Reveal as="section" className="hm-sec hm-feat lt">
-        <SecHead title="Os destaques da Arkyn" to="/catalogo" />
-        <div className="grid shelf hm-four">{featured.map(p => <ProductCard key={p.id} p={p} />)}</div>
-      </Reveal>
-
-      <Reveal as="section" className="hm-cols" aria-label="Compre por coleção">
-        {([
-          ['Para ele', 'Masculinos', 'Amadeirados e especiados, do dia a dia à noite.', '/catalogo?cat=masculino', 'french-avenue-vulcan-feu-100ml', count('masculino')],
-          ['Para ela', 'Femininos', 'Doces e florais, do dia à noite.', '/catalogo?cat=feminino', 'armaf-club-de-nuit-maleka-105ml', count('feminino')],
-        ] as [string, string, string, string, string, number][]).filter(c => hasCut(c[4])).map(([k, t, d, to, img, c]) => (
-          <Link key={to} to={to} className="hm-col">
-            <span className="hm-col-txt"><small>{k}</small><b>{t}</b><em>{d}</em><i>{c} {c === 1 ? 'perfume' : 'perfumes'} <span aria-hidden="true">→</span></i></span>
-            <img src={`/hero/${img}.webp?v=4`} width="560" height="560" alt="" loading="lazy" decoding="async" />
-          </Link>
-        ))}
-      </Reveal>
-
-
-      <ScentExplorer />
-
-      <Shelf title="Ofertas" to="/catalogo" items={offers} />
-
-      <Faq />
-
+      <section className="eb-check" aria-labelledby="check-t">
+        <div>
+          <small>Check-in olfativo</small>
+          <h2 id="check-t">Não sabe para onde ir?</h2>
+          <p>Seis perguntas e você recebe o seu cartão de embarque com os perfumes que mais combinam com você.</p>
+        </div>
+        <Link to="/quiz" className="eb-btn">Fazer o check-in <span aria-hidden="true">→</span></Link>
+      </section>
     </>
   )
 }

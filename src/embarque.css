@@ -1,0 +1,216 @@
+/* =====================================================================
+   ARKYN — "Cartão de embarque"
+   Uma ideia só: cada perfume é um voo do Oriente para o Brasil.
+   Papel creme, tinta preta, verde-limão só como carimbo e ação.
+   ===================================================================== */
+body.ax {
+  --paper:#efe9df; --card:#fbf8f2; --ink:#111112; --mute:#6f685d; --line:#d9d0c1; --lime:#C7F401;
+  --board:#0f0f10; --amber:#f2a93b;
+  background:var(--paper); color:var(--ink)
+}
+body.ax main.ax-page:has(.qz) { background:var(--ink); color:#fff }
+
+/* ---------- botões ---------- */
+.eb-btn { display:inline-flex; align-items:center; justify-content:center; gap:14px; height:56px; padding:0 26px; background:var(--ink); color:var(--card) !important; font:800 .8125rem/1 var(--sans); letter-spacing:.14em; text-transform:uppercase; text-decoration:none; border:0; border-radius:2px; cursor:pointer; transition:transform .25s cubic-bezier(.2,.8,.2,1), background .25s }
+.eb-btn span { color:var(--lime); transition:transform .3s cubic-bezier(.2,.8,.2,1) }
+.eb-btn:hover { background:#000 } .eb-btn:hover span { transform:translateY(2px) }
+.eb-btn:active { transform:scale(.97) }
+.eb-btn-lime { background:var(--lime); color:#000 !important } .eb-btn-lime:hover { background:#d6ff2b }
+.eb-link { font:700 .875rem/1 var(--sans); color:var(--ink); text-decoration:underline; text-decoration-thickness:1.5px; text-underline-offset:5px }
+.eb-link:hover { text-decoration-color:var(--lime) }
+
+/* ---------- topo ---------- */
+.eb-top { position:sticky; top:0; z-index:60; background:var(--ink); color:#fff; transition:box-shadow .3s }
+.eb-top.is-scrolled { box-shadow:0 10px 30px -18px rgba(0,0,0,.7) }
+.eb-top-in { max-width:1320px; margin:0 auto; height:62px; padding:0 16px; display:grid; grid-template-columns:44px 1fr auto; align-items:center; gap:8px }
+.eb-burger { width:44px; height:44px; display:grid; place-content:center; gap:6px; background:none; border:0; cursor:pointer }
+.eb-burger span { display:block; width:22px; height:2px; background:#fff; transition:width .25s }
+.eb-burger span:last-child { width:14px } .eb-burger:hover span:last-child { width:22px }
+.eb-logo { justify-self:center; display:block } .eb-logo img { display:block; height:40px; width:auto }
+.eb-nav { display:none }
+.eb-acts { display:flex; align-items:center; gap:2px }
+.eb-ico { position:relative; width:42px; height:42px; display:grid; place-items:center; background:none; border:0; color:#fff; cursor:pointer; border-radius:50%; transition:background .2s }
+.eb-ico:hover { background:rgba(255,255,255,.08) }
+.eb-ico em { position:absolute; top:4px; right:2px; min-width:17px; height:17px; padding:0 4px; border-radius:9px; background:var(--lime); color:#000; font:800 .625rem/17px var(--sans); font-style:normal; text-align:center; animation:eb-pop .4s cubic-bezier(.2,.9,.3,1.5) }
+@keyframes eb-pop { from { transform:scale(.3) } }
+.eb-ico-fav { display:none }
+@media (min-width:980px) {
+  .eb-top-in { height:74px; grid-template-columns:auto 1fr auto; gap:40px; padding:0 32px }
+  .eb-burger { display:none }
+  .eb-logo { justify-self:start } .eb-logo img { height:46px }
+  .eb-nav { display:flex; gap:30px; justify-content:center }
+  .eb-nav a { position:relative; color:#d7d7da; font:600 .875rem/1 var(--sans); text-decoration:none; padding:8px 0; transition:color .2s }
+  .eb-nav a::after { content:''; position:absolute; left:0; right:0; bottom:0; height:2px; background:var(--lime); transform:scaleX(0); transform-origin:left; transition:transform .35s cubic-bezier(.2,.8,.2,1) }
+  .eb-nav a:hover, .eb-nav a[aria-current='page'] { color:#fff } .eb-nav a:hover::after, .eb-nav a[aria-current='page']::after { transform:none }
+  .eb-ico-fav { display:grid }
+}
+
+/* ---------- topo da página inicial ---------- */
+.eb-hero { max-width:1320px; margin:0 auto; padding:14px 0 10px; display:grid; gap:18px }
+.eb-hero-pass { order:-1; min-width:0 }
+.eb-hero-txt { padding:0 20px }
+.eb-hero h1 { margin:0; font:500 clamp(2.5rem,10.5vw,4.6rem)/1 var(--display); letter-spacing:-.015em; color:var(--ink) }
+.eb-hero h1 em { font-style:italic; background:linear-gradient(transparent 62%, var(--lime) 62% 90%, transparent 90%); padding:0 .06em }
+.eb-hero-txt p { margin:16px 0 0; max-width:34em; font:500 1rem/1.55 var(--sans); color:#4b463e }
+.eb-hero-cta { display:flex; align-items:center; gap:22px; flex-wrap:wrap; margin-top:26px }
+.eb-hero-cta .eb-btn { flex:1 1 auto; max-width:320px }
+@media (min-width:980px) {
+  .eb-hero { grid-template-columns:1.05fr 1fr; align-items:center; gap:56px; padding:56px 32px 40px }
+  .eb-hero-pass { order:0 }
+  .eb-hero-txt { padding:0 }
+  .eb-hero-txt p { font-size:1.125rem }
+}
+/* entrada: o título sobe, o cartão sai da "impressora" */
+.eb-hero h1, .eb-hero-txt p, .eb-hero-cta { animation:eb-up .9s cubic-bezier(.16,1,.3,1) both }
+.eb-hero-txt p { animation-delay:.12s } .eb-hero-cta { animation-delay:.22s }
+@keyframes eb-up { from { opacity:0; transform:translate3d(0,24px,0) } }
+
+/* carrossel de cartões */
+.eb-track { display:flex; gap:14px; overflow-x:auto; scroll-snap-type:x mandatory; padding:8px 7vw 26px; scrollbar-width:none; -webkit-overflow-scrolling:touch; overscroll-behavior-x:contain }
+.eb-track::-webkit-scrollbar { display:none }
+.eb-slide { flex:0 0 86vw; max-width:430px; scroll-snap-align:center; animation:eb-print 1s cubic-bezier(.16,1,.3,1) both; animation-delay:calc(.1s + var(--i) * .08s) }
+@keyframes eb-print { from { opacity:0; transform:translate3d(0,40px,0) rotate(-1.5deg) } }
+.eb-dots { display:flex; justify-content:center; gap:8px; margin-top:-8px }
+.eb-dots button { width:26px; height:4px; padding:0; border:0; border-radius:2px; background:#cfc6b6; cursor:pointer; transition:width .35s cubic-bezier(.2,.8,.2,1), background .3s }
+.eb-dots button.on { width:44px; background:var(--ink) }
+@media (min-width:980px) {
+  .eb-track { padding:12px 6px 30px; scroll-padding:0 }
+  .eb-slide { flex-basis:100%; max-width:none; display:flex; justify-content:center }
+  .eb-slide .eb-ticket { width:min(100%,460px) }
+}
+
+/* o cartão de embarque */
+.eb-ticket { --notch:var(--paper); position:relative; display:block; background:var(--card); color:var(--ink); border-radius:16px; text-decoration:none; overflow:hidden;
+  box-shadow:0 1px 0 rgba(0,0,0,.05), 0 24px 44px -26px rgba(60,40,10,.45); transition:transform .5s cubic-bezier(.2,.8,.2,1), box-shadow .5s }
+@media (hover:hover) { .eb-ticket:hover { transform:translateY(-6px) rotate(-.6deg); box-shadow:0 1px 0 rgba(0,0,0,.05), 0 38px 60px -30px rgba(60,40,10,.55) } }
+.eb-t-head { display:flex; justify-content:space-between; align-items:center; padding:15px 18px; background:var(--ink); color:#fff; font:800 .6875rem/1 var(--sans); letter-spacing:.18em; text-transform:uppercase }
+.eb-t-head b { color:var(--lime); font-weight:800 }
+.eb-t-route { display:grid; grid-template-columns:auto 1fr auto; align-items:end; gap:10px; padding:14px 18px 0 }
+.eb-t-route > span:last-child { text-align:right }
+.eb-t-route b { display:block; font:500 clamp(2.2rem,10vw,3.4rem)/.9 var(--display); letter-spacing:-.01em }
+.eb-t-route small { display:block; margin-top:8px; font:700 .625rem/1 var(--sans); letter-spacing:.16em; text-transform:uppercase; color:var(--mute) }
+.eb-t-route svg { width:100%; height:40px; margin-bottom:22px; overflow:visible }
+.eb-t-route svg path { fill:none; stroke:var(--ink); stroke-width:1.4; stroke-dasharray:3 4; animation:eb-dash 1.6s linear infinite }
+.eb-t-route svg g path { stroke-dasharray:none; stroke-width:1.8; animation:none }
+@keyframes eb-dash { to { stroke-dashoffset:-14 } }
+.eb-t-photo { position:relative; display:block; height:clamp(210px,58vw,330px); margin-top:6px; background:radial-gradient(70% 60% at 50% 70%, #fff 0, rgba(255,255,255,0) 70%), linear-gradient(180deg,var(--card),#ece3d2) }
+.eb-t-photo img { position:absolute; left:50%; bottom:4%; height:94%; width:auto; max-width:92%; object-fit:contain; transform:translateX(-50%); filter:drop-shadow(0 22px 22px rgba(70,50,20,.28)); transition:transform .7s cubic-bezier(.2,.8,.2,1) }
+@media (hover:hover) { .eb-ticket:hover .eb-t-photo img { transform:translateX(-50%) scale(1.04) } }
+.eb-stamp { position:absolute; right:14px; top:12px; width:86px; height:86px; display:grid; place-items:center; text-align:center; border-radius:50%; border:2px solid var(--ink); background:var(--lime); color:#000;
+  font:800 .625rem/1.25 var(--sans); letter-spacing:.14em; text-transform:uppercase; transform:rotate(-12deg); animation:eb-stamp .6s cubic-bezier(.2,.9,.3,1.4) .7s both }
+.eb-stamp.is-last { background:var(--amber) } .eb-stamp.is-promo { background:var(--ink); color:var(--lime); border-color:var(--ink) }
+@keyframes eb-stamp { from { opacity:0; transform:rotate(-30deg) scale(1.8) } }
+.eb-perf { display:block; position:relative; height:0; margin:0 14px; border-top:2px dashed #cfc6b6 }
+.eb-perf::before, .eb-perf::after { content:''; position:absolute; top:-13px; width:24px; height:24px; border-radius:50%; background:var(--notch) }
+.eb-perf::before { left:-27px } .eb-perf::after { right:-27px }
+.eb-t-fields { display:grid; grid-template-columns:1fr 1fr; gap:12px 12px; padding:14px 18px 2px }
+.eb-t-fields small { display:block; font:700 .5625rem/1 var(--sans); letter-spacing:.18em; text-transform:uppercase; color:var(--mute) }
+.eb-t-fields b { display:block; margin-top:5px; font:600 1rem/1.2 var(--sans); color:var(--ink) }
+.eb-t-fare b { font:500 1.5rem/1 var(--display) }
+.eb-t-fields > span:nth-child(4) { display:none }
+.eb-bar { display:block; width:calc(100% - 36px); height:26px; margin:10px 18px 16px; fill:var(--ink) }
+
+/* ---------- painel de partidas ---------- */
+.eb-dep { max-width:1320px; margin:0 auto; padding:56px 16px 20px }
+.eb-dep-head { display:flex; align-items:end; justify-content:space-between; flex-wrap:wrap; gap:10px 30px; padding:0 4px 18px }
+.eb-dep-head p { margin:0; max-width:26em; font:500 .9375rem/1.5 var(--sans); color:var(--mute) }
+.eb-flap { display:flex; flex-wrap:wrap; gap:4px; margin:0; perspective:600px }
+.eb-flap span { position:relative; display:grid; place-items:center; width:clamp(34px,9vw,52px); height:clamp(46px,12vw,68px); border-radius:5px; background:var(--board); color:#fff;
+  font:800 clamp(1.4rem,6vw,2.3rem)/1 var(--sans); text-transform:uppercase; transform-origin:50% 50% }
+.eb-flap span::after { content:''; position:absolute; left:0; right:0; top:50%; height:1px; background:rgba(0,0,0,.85); box-shadow:0 1px 0 rgba(255,255,255,.06) }
+.eb-flap span.sp { background:transparent; width:12px }
+.eb-flap.mv { opacity:1; transform:none }
+.eb-flap.mv span { transform:rotateX(-90deg); opacity:.2 }
+.eb-flap.mv-in span { animation:eb-flip .55s cubic-bezier(.3,1.4,.5,1) both; animation-delay:calc(var(--i) * 70ms) }
+@keyframes eb-flip { 0% { transform:rotateX(-90deg); opacity:.2 } 60% { transform:rotateX(20deg); opacity:1 } 100% { transform:none; opacity:1 } }
+
+.eb-gates { display:flex; gap:8px; overflow-x:auto; padding:2px 4px 16px; scrollbar-width:none }
+.eb-gates::-webkit-scrollbar { display:none }
+.eb-gates button { flex:none; display:inline-flex; align-items:center; gap:8px; height:42px; padding:0 16px; border:1.5px solid var(--ink); border-radius:30px; background:transparent; color:var(--ink); font:700 .875rem/1 var(--sans); cursor:pointer; transition:background .25s, color .25s }
+.eb-gates button span { font-size:.75rem; color:var(--mute); transition:color .25s }
+.eb-gates button.on { background:var(--ink); color:#fff } .eb-gates button.on span { color:var(--lime) }
+
+.eb-board { background:var(--board); color:#fff; border-radius:14px; overflow:hidden; box-shadow:0 30px 60px -40px rgba(0,0,0,.6) }
+.eb-board-head { display:none }
+.eb-rows { list-style:none; margin:0; padding:0 }
+.eb-row { position:relative; display:flex; align-items:center; border-top:1px solid #222225 }
+.eb-row:first-child { border-top:0 }
+.eb-row-link { flex:1; min-width:0; display:grid; grid-template-columns:58px 1fr auto; grid-template-areas:'img main fare' 'img main st'; align-items:center; gap:2px 14px; padding:12px 6px 12px 14px; color:#fff; text-decoration:none; transition:background .25s }
+.eb-row-link:hover { background:#18181a }
+.eb-row-img { grid-area:img; width:58px; height:58px; border-radius:10px; background:radial-gradient(circle at 50% 40%, #f4efe6, #d9d0c1); display:grid; place-items:center; overflow:hidden }
+.eb-row-img img { width:88%; height:88%; object-fit:contain; transition:transform .5s cubic-bezier(.2,.8,.2,1) }
+.eb-row-link:hover .eb-row-img img { transform:scale(1.1) rotate(-3deg) }
+.eb-row-main { grid-area:main; min-width:0 }
+.eb-row-main b { display:block; font:700 1rem/1.2 var(--sans); overflow-wrap:anywhere }
+.eb-row-main small { display:block; margin-top:4px; font:500 .75rem/1.35 var(--sans); color:#9a9aa0 }
+.eb-row-gate { display:none }
+.eb-row-fare { grid-area:fare; justify-self:end; font:700 .9375rem/1 var(--sans); font-variant-numeric:tabular-nums; white-space:nowrap }
+.eb-row-fare s { margin-right:6px; font-weight:500; font-size:.75rem; color:#7d7d83 }
+.eb-st { grid-area:st; justify-self:end; display:inline-flex; align-items:center; gap:6px; font:800 .5625rem/1 var(--sans); letter-spacing:.14em; text-transform:uppercase; color:var(--lime); white-space:nowrap }
+.eb-st::before { content:''; width:6px; height:6px; border-radius:50%; background:currentColor; animation:eb-blink 1.6s steps(2) infinite }
+.eb-st.is-last { color:var(--amber) } .eb-st.is-promo { color:#000; background:var(--lime); padding:4px 7px; border-radius:3px } .eb-st.is-promo::before { display:none }
+.eb-st.is-off { color:#6c6c72 } .eb-st.is-off::before { animation:none }
+.eb-row.is-off .eb-row-main b, .eb-row.is-off .eb-row-fare { color:#77777d }
+@keyframes eb-blink { 50% { opacity:.25 } }
+.eb-row-add { flex:none; width:40px; height:40px; margin-right:12px; border-radius:50%; border:1.5px solid #3a3a3f; background:transparent; color:#fff; font:400 1.375rem/1 var(--sans); cursor:pointer; display:grid; place-items:center; transition:background .25s, color .25s, border-color .25s, transform .2s }
+.eb-row-add:hover { background:var(--lime); border-color:var(--lime); color:#000 } .eb-row-add:active { transform:scale(.9) }
+/* entrada em cascata ao rolar */
+.eb-row.mv { transform:translate3d(0,14px,0) } .eb-row.mv.mv-in { transform:none }
+@media (min-width:760px) {
+  .eb-dep { padding:90px 32px 30px }
+  .eb-board-head { display:grid; grid-template-columns:1fr 150px 140px 160px 64px; gap:20px; padding:16px 24px 14px 100px; border-bottom:1px solid #2a2a2e; font:800 .625rem/1 var(--sans); letter-spacing:.2em; text-transform:uppercase; color:#8e8e94 }
+  .eb-row-link { grid-template-columns:62px 1fr 150px 140px 160px; grid-template-areas:'img main gate fare st'; gap:20px; padding:14px 0 14px 24px }
+  .eb-row-img { width:62px; height:62px }
+  .eb-row-main b { font-size:1.125rem }
+  .eb-row-gate { display:flex; align-items:center; gap:10px; font:800 .8125rem/1 var(--sans); letter-spacing:.12em; color:var(--amber); font-variant-numeric:tabular-nums }
+  .eb-row-gate i { font-style:normal } .eb-row-gate em { font-style:normal; width:26px; height:26px; display:grid; place-items:center; border-radius:4px; background:#222226; color:#fff }
+  .eb-row-fare { justify-self:start; font-size:1rem }
+  .eb-st { justify-self:start; font-size:.625rem }
+  .eb-row-add { margin-right:24px }
+}
+
+/* ---------- check-in olfativo (chamada para o quiz) ---------- */
+.eb-check { max-width:1256px; margin:36px 16px 70px; padding:30px 22px; background:var(--card); border-radius:16px; display:grid; gap:22px; position:relative; box-shadow:0 24px 44px -30px rgba(60,40,10,.4) }
+.eb-check::before { content:''; position:absolute; left:0; right:0; top:0; height:8px; border-radius:16px 16px 0 0; background:repeating-linear-gradient(90deg,var(--ink) 0 18px,var(--lime) 18px 36px) }
+.eb-check small { font:800 .625rem/1 var(--sans); letter-spacing:.2em; text-transform:uppercase; color:var(--mute) }
+.eb-check h2 { margin:8px 0 0; font:500 clamp(2rem,8vw,3.2rem)/1 var(--display) }
+.eb-check p { margin:12px 0 0; max-width:30em; font:500 1rem/1.5 var(--sans); color:#4b463e }
+@media (min-width:980px) { .eb-check { margin:50px auto 110px; padding:44px 48px; grid-template-columns:1fr auto; align-items:end } }
+
+/* ---------- rodapé ---------- */
+.eb-foot { background:var(--ink); color:#cfcfd3; padding:54px 20px 120px }
+.eb-foot-in { max-width:1320px; margin:0 auto; display:grid; gap:36px }
+.eb-foot-logo img { height:52px; width:auto; display:block }
+.eb-foot-brand p { margin:14px 0 20px; max-width:22em; font:500 .9375rem/1.5 var(--sans); color:#a9a9ae }
+.eb-foot-nav { display:flex; flex-direction:column; gap:12px }
+.eb-foot-nav b { font:800 .625rem/1 var(--sans); letter-spacing:.2em; text-transform:uppercase; color:var(--lime); margin-bottom:4px }
+.eb-foot-nav a, .eb-foot-nav span { font:500 .9375rem/1.3 var(--sans); color:#d4d4d8; text-decoration:none }
+.eb-foot-nav a:hover { color:#fff; text-decoration:underline; text-underline-offset:4px }
+.eb-foot-copy { max-width:1320px; margin:44px auto 0; padding-top:20px; border-top:1px solid #2a2a2e; display:flex; justify-content:space-between; gap:12px; font:500 .8125rem/1 var(--sans); color:#7d7d83 }
+.eb-foot-copy a { color:#7d7d83 }
+@media (min-width:760px) { .eb-foot-in { grid-template-columns:1.4fr 1fr 1fr 1fr } .eb-foot { padding:80px 32px 40px } }
+
+/* ---------- barra de baixo no celular ---------- */
+body.ax .mbar a, body.ax .mbar button { color:#c9c9cd } body.ax .mbar a.active { color:var(--lime) }
+
+/* no celular: primeiro o que a loja é, depois o cartão */
+@media (max-width:979px) {
+  .eb-hero { padding-top:22px }
+  .eb-hero-pass { order:1 }
+  .eb-hero h1 { font-size:clamp(2.3rem,9.6vw,3.4rem) }
+  .eb-hero-txt p { margin-top:12px; font-size:.9375rem }
+  .eb-hero-cta { margin-top:18px; gap:18px }
+  .eb-hero-cta .eb-btn { height:50px; padding:0 20px; flex:0 1 auto }
+}
+
+/* ---------- o que saiu do visual antigo ---------- */
+body.ax .ax-header, body.ax .wa-float, body.ax .ax-footer, body.ax .sc-top { display:none !important }
+
+@media (prefers-reduced-motion:reduce) {
+  .eb-slide, .eb-hero h1, .eb-hero-txt p, .eb-hero-cta, .eb-stamp, .eb-flap.mv-in span, .eb-t-route svg path, .eb-st::before { animation:none !important }
+}
+
+/* o painel é escuro mesmo dentro das páginas claras */
+body.ax :is(.lt,.lt-page) .eb-board b, body.ax :is(.lt,.lt-page) .eb-row-link { color:#fff }
+body.ax :is(.lt,.lt-page) .eb-row.is-off .eb-row-main b { color:#77777d }
+body.ax main.ax-page:has(.qz) :is(h1,h2,h3) { color:#fff }

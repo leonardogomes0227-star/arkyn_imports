@@ -4,7 +4,6 @@ import { Link, useLocation } from 'react-router-dom'
 import CartDrawer from './CartDrawer'
 import CompareBar from './CompareBar'
 import MobileBar from './MobileBar'
-import { ScrollBar } from './Festive'
 import Feel from './Feel'
 import Motion from './Motion'
 import Intro from './Intro'
@@ -76,26 +75,19 @@ export default function Layout({ children }: { children: ReactNode }) {
       <Intro />
       <Feel />
       <Motion />
-      <ScrollBar />
-      <header className={scrolled ? 'ax-header is-scrolled' : 'ax-header'}>
-        <div className="ax-topbar sc-top" aria-label="Avisos da loja">
-          <div className="sc-top-in">
-            <span className="sc-top-c">{settings.announcement || 'Envio para todo o Brasil'}<i aria-hidden="true">·</i>Retirada grátis em Coxim</span>
-            <a className="sc-top-r" href={wa} target="_blank" rel="noreferrer">Ajuda</a>
-          </div>
-        </div>
-        <div className="ax-head">
-          <button type="button" className="ax-burger" aria-label="Abrir menu" aria-expanded={menu} aria-controls="ax-menu" onClick={() => setMenu(true)}><span /><span /><span /></button>
-          <Logo />
-          <nav className="ax-nav" aria-label="Principal">
+      <header className={scrolled ? 'eb-top is-scrolled' : 'eb-top'}>
+        <div className="eb-top-in">
+          <button type="button" className="eb-burger" aria-label="Abrir menu" aria-expanded={menu} aria-controls="ax-menu" onClick={() => setMenu(true)}><span /><span /></button>
+          <Logo className="eb-logo" />
+          <nav className="eb-nav" aria-label="Principal">
             {HEAD_NAV.map(([label, to]) => <Link key={to} to={to} aria-current={active(to) ? 'page' : undefined}>{label}</Link>)}
-            <Link to="/quiz" className="ax-quiz" aria-current={loc.pathname === '/quiz' ? 'page' : undefined}>Qual é o seu cheiro?</Link>
+            <Link to="/quiz" aria-current={loc.pathname === '/quiz' ? 'page' : undefined}>Check-in olfativo</Link>
           </nav>
-          <div className="ax-actions">
-            <button type="button" className="ax-icon ax-find" aria-label="Buscar perfumes" onClick={() => setSearch(true)}><IconSearch size={20} /><span>Buscar perfumes…</span></button>
-            <Link to="/favoritos" className="ax-icon ax-fav" aria-label={favs.length ? `Favoritos, ${favs.length}` : 'Favoritos'}><IconHeart size={21} />{favs.length > 0 && <em>{favs.length}</em>}</Link>
-            <button type="button" className="ax-icon ax-bag" aria-label={count ? `Abrir sacola, ${count} ${count === 1 ? 'item' : 'itens'}` : 'Abrir sacola'} onClick={() => setOpen(true)}>
-              <IconBag size={21} />{count > 0 && <em key={count}>{count}</em>}
+          <div className="eb-acts">
+            <button type="button" className="eb-ico" aria-label="Buscar perfumes" onClick={() => setSearch(true)}><IconSearch size={20} /></button>
+            <Link to="/favoritos" className="eb-ico eb-ico-fav" aria-label={favs.length ? `Favoritos, ${favs.length}` : 'Favoritos'}><IconHeart size={20} />{favs.length > 0 && <em>{favs.length}</em>}</Link>
+            <button type="button" className="eb-ico" aria-label={count ? `Abrir sacola, ${count} ${count === 1 ? 'item' : 'itens'}` : 'Abrir sacola'} onClick={() => setOpen(true)}>
+              <IconBag size={20} />{count > 0 && <em key={count}>{count}</em>}
             </button>
           </div>
         </div>
@@ -121,34 +113,34 @@ export default function Layout({ children }: { children: ReactNode }) {
       <CompareBar />
       <MobileBar onSearch={() => setSearch(true)} />
 
-      <footer className="ax-footer">
-        <div className="ax-foot-cta">
-          <div><b>Não sabe qual escolher?</b><span>Diga as notas que você gosta e indicamos pelo WhatsApp.</span></div>
-          <a className="btn-gold" href={wa} target="_blank" rel="noreferrer">Chamar no WhatsApp</a>
-        </div>
-        <div className="ft">
-          <Logo className="ax-foot-logo" />
-          <nav className="ft-nav" aria-label="Rodapé">
+      <footer className="eb-foot">
+        <div className="eb-foot-in">
+          <div className="eb-foot-brand">
+            <Logo className="eb-foot-logo" />
+            <p>Perfumaria árabe e importada. De Coxim – MS para todo o Brasil.</p>
+            <a className="eb-btn eb-btn-lime" href={wa} target="_blank" rel="noreferrer">Falar no WhatsApp</a>
+          </div>
+          <nav className="eb-foot-nav" aria-label="Rodapé">
+            <b>Loja</b>
             {NAV.map(([label, to]) => <Link key={to} to={to}>{label}</Link>)}
-            <Link to="/quiz">Quiz</Link>
+            <Link to="/quiz">Check-in olfativo</Link>
           </nav>
-          <nav className="ft-nav ft-pol" aria-label="Políticas e ajuda">
+          <nav className="eb-foot-nav" aria-label="Políticas e ajuda">
+            <b>Ajuda</b>
             {POLICY_LINKS.map(([label, to]) => <Link key={to} to={to}>{label}</Link>)}
           </nav>
-          <div className="ft-contact">
-            <a href={wa} target="_blank" rel="noreferrer">WhatsApp {phone(settings.whatsapp)}</a>
+          <div className="eb-foot-nav">
+            <b>Contato</b>
+            <a href={wa} target="_blank" rel="noreferrer">{phone(settings.whatsapp)}</a>
             <a href="https://instagram.com/arkyn_imports" target="_blank" rel="noreferrer">@arkyn_imports</a>
             <span>Retirada na loja em Coxim – MS</span>
             {settings.businessAddress && <span>{settings.businessAddress}</span>}
             {settings.cnpj && <span>CNPJ {settings.cnpj}</span>}
           </div>
         </div>
-        <p className="ax-copy"><span>© {new Date().getFullYear()} Arkyn Imports · Coxim – MS</span><Link to="/admin">Área do lojista</Link></p>
+        <p className="eb-foot-copy"><span>© {new Date().getFullYear()} Arkyn Imports</span><Link to="/admin">Área do lojista</Link></p>
       </footer>
 
-      <a className="wa-float" href={wa} target="_blank" rel="noreferrer" aria-label="Falar no WhatsApp">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.2 14.2c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.2-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.1 1 2.1 1.3 2.4 1.5.3.1.4.1.6-.1l.8-1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.1.1.6-.1 1.2z" /></svg>
-      </a>
     </>
   )
 }
