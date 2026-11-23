@@ -136,13 +136,11 @@ export default function Cart() {
 
   return (
     <section className="section ck">
-      <nav className="crumbs" aria-label="Você está em"><Link to="/catalogo">Catálogo</Link> / <span aria-current="page">Finalizar compra</span></nav>
       <h1 className="ck-title">Finalizar compra</h1>
-      <ol className="ck-steps" aria-label="Etapas">
-        <li className={nameErr || phoneErr ? 'on' : 'done'}>Dados</li>
-        <li className={!nameErr && !phoneErr && (needShip || addrErr) ? 'on' : !nameErr && !phoneErr ? 'done' : ''}>Entrega</li>
-        <li className={!nameErr && !phoneErr && !needShip && !addrErr ? 'on' : ''}>Pagamento</li>
-      </ol>
+      <details className="ck-mini">
+        <summary><span className="ck-mini-pics">{lines.slice(0, 3).map(({ p }) => photoOf(p) && <SizedImg key={p.id} src={photoOf(p)!} size={160} alt="" width={40} height={40} />)}</span><span>{lines.reduce((n, l) => n + l.qty, 0)} {lines.reduce((n, l) => n + l.qty, 0) === 1 ? 'item' : 'itens'} · ver pedido</span><b>{brl(total)}</b></summary>
+        <ul>{lines.map(({ p, qty }) => <li key={p.id}><span>{qty}× {p.name}</span><b>{brl(p.price * qty)}</b></li>)}</ul>
+      </details>
 
       <div className="ck-grid">
         <div className="ck-main">
@@ -272,10 +270,7 @@ export default function Cart() {
           {err && <p className="ck-err ck-err-box" role="alert">{err}</p>}
           <button type="button" className={busy ? 'btn block is-busy' : 'btn block'} disabled={busy || needShip} onClick={pay}>{busy ? 'Aguarde…' : 'Pagar com Pix ou cartão'}</button>
           <a className="btn ghost block" href={wa} target="_blank" rel="noreferrer">Finalizar pelo WhatsApp</a>
-          <ul className="ck-trust">
-            <li>Pagamento seguro</li><li>Envio para todo o Brasil</li><li><Link to="/politica/trocas">Troca e devolução</Link></li>
-          </ul>
-          <p className="ck-secure">Pagamento seguro pelo Mercado Pago. Você será levado ao ambiente deles para concluir.</p>
+          <p className="ck-secure">Pagamento seguro pelo Mercado Pago · <Link to="/politica/trocas">Trocas e devoluções</Link></p>
         </aside>
       </div>
       <div className="ck-bar">
