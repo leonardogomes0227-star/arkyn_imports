@@ -6,7 +6,7 @@ import { useLocation } from 'react-router-dom'
 const SEL = [
   '.card', '.hm-br-c', '.hm-info > *', '.sx-p', '.hm-col', '.hm-head', '.sx-h', '.sx-tabs',
   '.pdp-info > *', '.pdp-gallery', '.np-grid li', '.np:not(.np--mini) .np-row', '.cmp-table tr', '.qz-opt', '.qz-fam',
-  '.crumbs', '.page-title', '.toolbar', '.eb-flap', '.eb-row',
+  '.crumbs', '.page-title', '.toolbar', '.eb-flap', '.tc',
 ].join(',')
 
 export default function Motion() {

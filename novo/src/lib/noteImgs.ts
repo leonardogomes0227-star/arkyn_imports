@@ -1,0 +1,2 @@
+// Ingredientes com foto em public/notas/{slug}.webp
+export const NOTE_FILES: string[] = ['acafrao','ambar','baunilha','bergamota','canela','caramelo','cardamomo','cedro','chantilly','chocolate-amargo','coco','flor-de-laranjeira','framboesa','gengibre','hortela','iris','jasmim','lavanda','leite','lichia','limao','maca','manga','maracuja','marshmallow','mel','morango','neroli','noz-moscada','orquidea','patchouli','pera','pessego','pralina','rosa','tabaco','tangerina','toranja']

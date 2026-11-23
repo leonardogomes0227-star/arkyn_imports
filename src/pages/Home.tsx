@@ -1,8 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import BoardingHero from '../components/eb/BoardingHero'
+import CheckinHero from '../components/eb/CheckinHero'
 import { DepartureBoard, FlapTitle } from '../components/eb/Departures'
-import { cutoutFor } from '../lib/cutouts'
 import { CAT_LABEL } from '../lib/search'
 import { useStore } from '../lib/store'
 import { usePageMeta } from '../lib/seo'
@@ -25,9 +24,6 @@ export default function Home() {
   })
 
   const live = products.filter(p => p.stock > 0)
-  const flagged = live.filter(p => p.featured && cutoutFor(p))
-  const pool = live.filter(p => cutoutFor(p) && (p.category === 'masculino' || p.category === 'feminino'))
-  const hero = (flagged.length >= 3 ? flagged : [...flagged, ...pool.filter(p => !flagged.includes(p))]).slice(0, 5)
 
   const cats = (Object.keys(CAT_LABEL) as Category[]).filter(c => products.some(p => p.category === c))
   const [cat, setCat] = useState<Category | ''>('')
@@ -37,12 +33,12 @@ export default function Home() {
 
   return (
     <>
-      <BoardingHero items={hero} />
+      <CheckinHero />
 
       <section className="eb-dep" id="partidas" aria-labelledby="partidas-t">
         <div className="eb-dep-head">
           <FlapTitle text="Partidas" id="partidas-t" />
-          <p>Todos os perfumes da loja, com preço e estoque de verdade.</p>
+          <p>Todos os perfumes da loja. Toque em Embarcar para pôr na sacola.</p>
         </div>
         <div className="eb-gates" role="tablist" aria-label="Filtrar por portão">
           <button type="button" role="tab" aria-selected={!cat} className={!cat ? 'on' : ''} onClick={() => setCat('')}>Todos <span>{products.length}</span></button>
@@ -54,14 +50,6 @@ export default function Home() {
         <DepartureBoard items={board} />
       </section>
 
-      <section className="eb-check" aria-labelledby="check-t">
-        <div>
-          <small>Check-in olfativo</small>
-          <h2 id="check-t">Não sabe para onde ir?</h2>
-          <p>Seis perguntas e você recebe o seu cartão de embarque com os perfumes que mais combinam com você.</p>
-        </div>
-        <Link to="/quiz" className="eb-btn">Fazer o check-in <span aria-hidden="true">→</span></Link>
-      </section>
     </>
   )
 }

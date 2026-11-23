@@ -86,7 +86,7 @@ export default function Layout({ children }: { children: ReactNode }) {
           <div className="eb-acts">
             <button type="button" className="eb-ico" aria-label="Buscar perfumes" onClick={() => setSearch(true)}><IconSearch size={20} /></button>
             <Link to="/favoritos" className="eb-ico eb-ico-fav" aria-label={favs.length ? `Favoritos, ${favs.length}` : 'Favoritos'}><IconHeart size={20} />{favs.length > 0 && <em>{favs.length}</em>}</Link>
-            <button type="button" className="eb-ico" aria-label={count ? `Abrir sacola, ${count} ${count === 1 ? 'item' : 'itens'}` : 'Abrir sacola'} onClick={() => setOpen(true)}>
+            <button type="button" className="eb-ico eb-bag" aria-label={count ? `Abrir sacola, ${count} ${count === 1 ? 'item' : 'itens'}` : 'Abrir sacola'} onClick={() => setOpen(true)}>
               <IconBag size={20} />{count > 0 && <em key={count}>{count}</em>}
             </button>
           </div>
