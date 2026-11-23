@@ -1,6 +1,6 @@
 // Ao adicionar à sacola, a foto do perfume voa até o ícone da sacola (animação nativa, sem biblioteca).
 export function flyToBag(from: HTMLElement | null) {
-  const bag = document.querySelector<HTMLElement>('.ax-bag')
+  const bag = document.querySelector<HTMLElement>('.eb-bag, .ax-bag')
   if (!from || !bag || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
   const a = from.getBoundingClientRect(), b = bag.getBoundingClientRect()
   if (!a.width || !b.width) return
