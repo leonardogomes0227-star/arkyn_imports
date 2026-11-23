@@ -407,3 +407,18 @@ body.ax :is(button, a, .tc, .oc-o) { touch-action:manipulation; -webkit-tap-high
 body.ax .bg-head h2 { color:#fff }
 @media (max-width:760px) { body.ax .pdp-page .crumbs { display:none } }
 body.ax .pdp-bar small, body.ax .pdp-bar b { color:#fff !important } body.ax .pdp-bar small { color:#a9a9ae !important }
+
+/* finalizar compra: resumo compacto no topo do celular */
+.ck-mini { display:none }
+@media (max-width:900px) {
+  .ck-mini { display:block; margin:0 0 16px; background:var(--card); border:1px solid var(--line); border-radius:12px }
+  .ck-mini summary { list-style:none; display:flex; align-items:center; gap:10px; padding:12px 14px; cursor:pointer; font:600 .875rem/1.2 var(--sans); color:var(--ink) }
+  .ck-mini summary::-webkit-details-marker { display:none }
+  .ck-mini summary > span:nth-child(2) { flex:1; text-decoration:underline; text-underline-offset:3px }
+  .ck-mini summary b { font:800 1rem/1 var(--sans) }
+  .ck-mini-pics { display:flex } .ck-mini-pics img { width:36px; height:36px; object-fit:contain; border-radius:8px; background:#fff; border:1px solid var(--line); margin-right:-8px }
+  .ck-mini ul { list-style:none; margin:0; padding:0 14px 12px; border-top:1px dashed #d6ccbb }
+  .ck-mini li { display:flex; justify-content:space-between; gap:10px; padding:10px 0 0; font:500 .875rem/1.3 var(--sans) }
+  body.ax .ck-sum .ck-items { display:none }
+}
+body.ax .ck-bar small { color:#a9a9ae !important } body.ax .ck-bar b { color:#fff !important }
