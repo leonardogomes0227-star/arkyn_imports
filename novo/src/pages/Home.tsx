@@ -14,10 +14,10 @@ const FAMILIES: { id: string; name: string; note: string; img: string }[] = [
 ]
 
 const CAT_TILES: { cat: string; img: string; bg: string }[] = [
-  { cat: 'masculino', img: 'maison-alhambra-victorioso-nero-100ml', bg: '#e9ece8' },
-  { cat: 'feminino', img: 'maison-alhambra-pink-eclipse-100ml', bg: '#f3e7ea' },
-  { cat: 'splash', img: 'lattafa-body-splash-mayar', bg: '#f2ebe0' },
-  { cat: 'skincare', img: 'celimax-the-vita-a-retinal-shot-15ml', bg: '#eceef2' },
+  { cat: 'masculino', img: 'maison-alhambra-victorioso-nero-100ml', bg: 'radial-gradient(80% 70% at 50% 35%,rgba(199,244,1,.14),transparent 70%),#141416' },
+  { cat: 'feminino', img: 'maison-alhambra-pink-eclipse-100ml', bg: 'radial-gradient(80% 70% at 50% 35%,rgba(255,130,175,.18),transparent 70%),#161014' },
+  { cat: 'splash', img: 'lattafa-body-splash-mayar', bg: 'radial-gradient(80% 70% at 50% 35%,rgba(230,190,110,.18),transparent 70%),#15120d' },
+  { cat: 'skincare', img: 'celimax-the-vita-a-retinal-shot-15ml', bg: 'radial-gradient(80% 70% at 50% 35%,rgba(140,200,235,.16),transparent 70%),#0f1316' },
 ]
 
 export default function Home() {
@@ -34,10 +34,14 @@ export default function Home() {
   return (
     <>
       <HeroSlider slides={[
-        { img: 'ele', eyebrow: 'Para ele', title: 'Presença que fica no ambiente', text: 'Amadeirados e especiados das casas árabes mais desejadas.', cta: 'Comprar masculinos', to: '/perfumes?cat=masculino' },
-        { img: 'ela', eyebrow: 'Para ela', title: 'Doce, floral e inesquecível', text: 'Os femininos que estão em todo lugar, com envio para todo o Brasil.', cta: 'Comprar femininos', to: '/perfumes?cat=feminino' },
-        { img: 'splash', eyebrow: 'Body Splash', title: 'Perfume leve para o dia todo', text: 'Linha Lattafa para usar sem medo, do banho à noite.', cta: 'Ver body splash', to: '/perfumes?cat=splash' },
-        { img: 'natal', eyebrow: 'Presentes', title: 'O presente que ninguém esquece', text: 'Perfumes originais, embalados para presente. Retire grátis em Coxim.', cta: 'Escolher presente', to: '/perfumes' },
+        { ids: ['lattafa-asad-elixir-100ml', 'maison-alhambra-victorioso-nero-100ml', 'maison-alhambra-salvo-elixir-60ml'], bg: '#0c0d0e', arch: '#1b1c1f', glow: 'rgba(199,244,1,.14)', accent: '#C7F401',
+          eyebrow: 'Masculinos', title: 'Presença que fica no ambiente', text: 'Amadeirados e especiados das casas árabes mais desejadas.', cta: 'Comprar masculinos', to: '/perfumes?cat=masculino' },
+        { ids: ['lattafa-yara-rose-100ml', 'maison-alhambra-pink-eclipse-100ml', 'lattafa-atheeri-100ml'], bg: '#120b10', arch: '#26141f', glow: 'rgba(255,120,170,.16)', accent: '#ff9cc0',
+          eyebrow: 'Femininos', title: 'Doce, floral e inesquecível', text: 'Os femininos que estão em todo lugar, com envio para todo o Brasil.', cta: 'Comprar femininos', to: '/perfumes?cat=feminino' },
+        { ids: ['lattafa-tharwah-gold-100ml', 'lattafa-fakhar-extrait-gold-100ml', 'al-wataniah-attar-al-wesal-gold-100ml'], bg: '#100d08', arch: '#231c10', glow: 'rgba(226,180,90,.18)', accent: '#e6c27a',
+          eyebrow: 'Coleção ouro', title: 'O luxo da perfumaria árabe', text: 'Frascos dourados, notas de âmbar, baunilha e especiarias.', cta: 'Ver a coleção', to: '/perfumes?fam=doce' },
+        { ids: ['lattafa-body-splash-noble-blush', 'lattafa-body-splash-mayar', 'lattafa-body-splash-yara-tous'], bg: '#0a0f12', arch: '#14212a', glow: 'rgba(120,190,230,.15)', accent: '#9fd6f0',
+          eyebrow: 'Body Splash', title: 'Perfume leve para o dia todo', text: 'Linha Lattafa para usar sem medo, do banho à noite.', cta: 'Ver body splash', to: '/perfumes?cat=splash' },
       ]} />
 
       <section className="nv-perks" aria-label="Vantagens">
@@ -74,10 +78,11 @@ export default function Home() {
       </section>
 
       <section className="nv-duo">
-        {[['ele', 'Masculinos', masc.length, '/perfumes?cat=masculino', 'Intensos, amadeirados e especiados'], ['ela', 'Femininos', fem.length, '/perfumes?cat=feminino', 'Doces, florais e frutados']].map(([img, t, c, to, d]) => (
-          <Link key={String(img)} to={String(to)} className="nv-duo-c">
-            <img src={`/banners/${img}-mobile-720.webp`} alt="" loading="lazy" />
-            <span><small>{c} perfumes</small><b>{t}</b><em>{d}</em><i>Ver coleção →</i></span>
+        {([['Masculinos', masc.length, '/perfumes?cat=masculino', 'Intensos e amadeirados', ['french-avenue-vulcan-feu-100ml', 'lattafa-al-noble-wazeer-100ml'], 'radial-gradient(70% 90% at 80% 60%,rgba(199,244,1,.12),transparent 60%),#121214', 'light'],
+           ['Femininos', fem.length, '/perfumes?cat=feminino', 'Doces, florais e frutados', ['lattafa-yara-rose-100ml', 'lattafa-atheeri-100ml'], 'radial-gradient(70% 90% at 80% 60%,rgba(255,140,180,.16),transparent 60%),#160d13', 'light']] as [string, number, string, string, string[], string, string][]).map(([t, c, to, d, ids, bg, ink]) => (
+          <Link key={t} to={to} className={`nv-duo-c ink-${ink}`} style={{ background: bg }}>
+            <span className="nv-duo-art" aria-hidden="true">{ids.map(id => cutoutFor({ id }) && <img key={id} src={cutoutFor({ id })} alt="" loading="lazy" />)}</span>
+            <span className="nv-duo-txt"><small>{c} perfumes</small><b>{t}</b><em>{d}</em><i>Ver coleção →</i></span>
           </Link>
         ))}
       </section>

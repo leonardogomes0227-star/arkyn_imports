@@ -4,10 +4,13 @@ import { BrowserRouter, Link, Route, Routes, useLocation } from 'react-router-do
 import BagDrawer from './components/BagDrawer'
 import Footer from './components/Footer'
 import Header from './components/Header'
+import Intro from './components/Intro'
+import Reveal from './components/Reveal'
 import { StoreProvider } from './lib/store'
 import Home from './pages/Home'
 import './fonts.css'
 import './site.css'
+import './intro.css'
 
 function Soon() {
   return (
@@ -27,6 +30,8 @@ createRoot(document.getElementById('root')!).render(
     <BrowserRouter>
       <StoreProvider>
         <Top />
+        <Intro />
+        <Reveal />
         <Header />
         <main><Routes><Route path="/" element={<Home />} /><Route path="*" element={<Soon />} /></Routes></main>
         <Footer />

@@ -112,7 +112,7 @@ export default function Header() {
           <div className="nv-acts">
             <a className="nv-help" href={wa} target="_blank" rel="noreferrer"><IChat width={20} height={20} /><span><small>Atendimento</small>WhatsApp</span></a>
             <Link to="/favoritos" className="nv-ico" aria-label={`Favoritos${favs.length ? `, ${favs.length}` : ''}`}><IHeart />{favs.length > 0 && <em>{favs.length}</em>}</Link>
-            <button type="button" className="nv-ico" aria-label={`Sacola${count ? `, ${count} itens` : ''}`} onClick={() => setBag(true)}><IBag />{count > 0 && <em key={count}>{count}</em>}</button>
+            <button type="button" className="nv-ico nv-bag-btn" aria-label={`Sacola${count ? `, ${count} itens` : ''}`} onClick={() => setBag(true)}><IBag />{count > 0 && <em key={count}>{count}</em>}</button>
           </div>
         </div>
         <nav className="nv-nav" aria-label="Categorias">

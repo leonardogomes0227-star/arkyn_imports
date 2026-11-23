@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react'
+import { flyToBag } from '../lib/fly'
 import { Link } from 'react-router-dom'
 import { cutoutFor } from '../lib/cutouts'
 import { brl, famOf, shortName, useStore } from '../lib/store'
@@ -6,19 +7,20 @@ import type { Product } from '../lib/types'
 import { IBag, IChevron, IHeart } from './Icons'
 
 export default function ProductCard({ p, eager = false }: { p: Product; eager?: boolean }) {
-  const { add, favs, toggleFav, settings, setBag } = useStore()
+  const { add, favs, toggleFav, settings } = useStore()
+  const pic = useRef<HTMLImageElement>(null)
   const [added, setAdded] = useState(false)
   const fav = favs.includes(p.id)
   const out = p.stock <= 0
   const sale = !!p.old_price && p.old_price > p.price
   const img = cutoutFor(p) ?? p.image
   const n = settings.installments
-  const buy = () => { add(p.id); setAdded(true); window.setTimeout(() => setAdded(false), 1600); window.setTimeout(() => setBag(true), 350) }
+  const buy = () => { add(p.id); flyToBag(pic.current); setAdded(true); window.setTimeout(() => setAdded(false), 1600) }
   return (
     <article className={out ? 'nv-card out' : 'nv-card'}>
       <div className="nv-card-media">
         <Link to={`/produto/${p.id}`} className="nv-card-img" tabIndex={-1} aria-hidden="true">
-          {img && <img src={img} alt="" width="600" height="600" loading={eager ? 'eager' : 'lazy'} decoding="async" />}
+          {img && <img ref={pic} src={img} alt="" width="600" height="600" loading={eager ? 'eager' : 'lazy'} decoding="async" />}
         </Link>
         <div className="nv-badges">
           {sale && <span className="nv-badge sale">-{Math.round((1 - p.price / p.old_price!) * 100)}%</span>}
