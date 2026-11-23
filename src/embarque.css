@@ -329,3 +329,81 @@ body.ax :is(.lt,.lt-page) .tc-body b, body.ax :is(.lt,.lt-page) .tc-fare b { col
 body.ax :is(.lt,.lt-page) .tc-hd, body.ax :is(.lt,.lt-page) .tc-add { color:#fff }
 body.ax :is(.lt,.lt-page) .tc-hd span:first-child { color:var(--lime) }
 @media (prefers-reduced-motion:reduce) { .oc-print, .oc-pass-ph img, .oc-stamp, .oc-q, .oc-route path { animation:none !important } }
+
+/* =====================================================================
+   SACOLA (gaveta) — bilhete claro
+   ===================================================================== */
+.bg-scrim { position:fixed; inset:0; z-index:240; background:rgba(10,10,12,.5); opacity:0; pointer-events:none; transition:opacity .3s }
+.bg-scrim.on { opacity:1; pointer-events:auto }
+.bg { position:fixed; top:0; right:0; bottom:0; z-index:250; width:min(100vw,430px); display:flex; flex-direction:column; background:var(--paper); color:var(--ink); transform:translateX(102%); transition:transform .45s cubic-bezier(.2,.8,.2,1); box-shadow:-30px 0 60px -30px rgba(0,0,0,.5) }
+.bg.on { transform:none }
+.bg-head { flex:none; display:flex; align-items:center; justify-content:space-between; padding:16px 18px; background:var(--ink); color:#fff }
+.bg-head small { font:800 .5625rem/1 var(--sans); letter-spacing:.2em; text-transform:uppercase; color:var(--lime) }
+.bg-head h2 { margin:4px 0 0; font:500 1.5rem/1 var(--display); color:#fff } .bg-head h2 span { font:600 .875rem/1 var(--sans); color:#a9a9ae }
+.bg-x { width:40px; height:40px; border-radius:50%; border:1px solid #3a3a3f; background:none; color:#fff; font-size:1rem; cursor:pointer }
+.bg-perk { flex:none; margin:14px 16px 0; padding:12px 14px; background:var(--card); border-radius:12px; border:1px solid var(--line) }
+.bg-perk p { margin:0 0 10px; font:500 .875rem/1.35 var(--sans) }
+.bg-perk-bar { position:relative; height:6px; border-radius:3px; background:#e4dbcc }
+.bg-perk-bar i { position:absolute; left:0; top:0; bottom:0; border-radius:3px; background:var(--ink); transition:width .6s cubic-bezier(.2,.8,.2,1) }
+.bg-perk-bar img { position:absolute; top:50%; width:22px; transform:translate(-50%,-55%) rotate(8deg); transition:left .6s cubic-bezier(.2,.8,.2,1) }
+.bg-perk.done { border-color:var(--lime) } .bg-perk.done .bg-perk-bar i { background:var(--lime) }
+.bg-list { flex:1 1 auto; min-height:120px; overflow-y:auto; overscroll-behavior:contain; list-style:none; margin:0; padding:6px 16px }
+.bg-list li { display:grid; grid-template-columns:72px 1fr; gap:12px; padding:12px 0; border-bottom:1px dashed #d6ccbb }
+.bg-img { width:72px; height:72px; border-radius:10px; background:var(--card); display:grid; place-items:center } .bg-img img { width:86%; height:86%; object-fit:contain }
+.bg-info small { font:800 .5625rem/1 var(--sans); letter-spacing:.14em; text-transform:uppercase; color:var(--mute) }
+.bg-info > a { display:block; margin:4px 0 8px; font:500 1.0625rem/1.2 var(--display); color:var(--ink); text-decoration:none }
+.bg-row { display:flex; align-items:center; justify-content:space-between }
+.bg-row b { font:800 .9375rem/1 var(--sans); font-variant-numeric:tabular-nums }
+.bg-step { display:inline-flex; align-items:center; border:1px solid var(--line); border-radius:20px; background:#fff }
+.bg-step button { width:34px; height:32px; border:0; background:none; font:600 1.05rem/1 var(--sans); color:var(--ink); cursor:pointer } .bg-step button:disabled { opacity:.3 }
+.bg-step output { min-width:20px; text-align:center; font:800 .875rem/1 var(--sans) }
+.bg-sug { flex:none; padding:10px 16px 4px; border-top:1px solid var(--line) }
+.bg-sug p { margin:0 0 8px; font:800 .5625rem/1 var(--sans); letter-spacing:.18em; text-transform:uppercase; color:var(--mute) }
+.bg-sug > div { display:grid; grid-template-columns:1fr 1fr; gap:8px }
+.bg-sug-c { position:relative; display:flex; align-items:center; gap:8px; padding:6px 30px 6px 6px; border:1px solid var(--line); border-radius:10px; background:var(--card); text-align:left; cursor:pointer; color:var(--ink); transition:border-color .2s, transform .2s }
+.bg-sug-c:hover { border-color:var(--ink) } .bg-sug-c:active { transform:scale(.97) }
+.bg-sug-c img { width:42px; height:42px; object-fit:contain; flex:none }
+.bg-sug-c b { display:block; font:600 .75rem/1.2 var(--sans) } .bg-sug-c em { font:700 .6875rem/1 var(--sans); font-style:normal; color:var(--mute) }
+.bg-sug-c i { position:absolute; right:6px; top:50%; transform:translateY(-50%); width:22px; height:22px; border-radius:50%; background:var(--ink); color:#fff; display:grid; place-items:center; font:700 .875rem/1 var(--sans); font-style:normal }
+.bg-foot { flex:none; padding:12px 16px calc(14px + env(safe-area-inset-bottom)); background:var(--card); border-top:1px solid var(--line); display:flex; flex-direction:column; gap:8px }
+.bg-tot { display:flex; justify-content:space-between; align-items:baseline } .bg-tot span { font:600 .9375rem/1 var(--sans) } .bg-tot b { font:500 1.6rem/1 var(--display) }
+.bg-tot.sm b { font:700 .9375rem/1 var(--sans) } .bg-foot small { font:500 .75rem/1.3 var(--sans); color:var(--mute) }
+.bg-btn { display:flex; align-items:center; justify-content:center; gap:10px; height:52px; border-radius:2px; background:var(--ink); color:#fff !important; font:800 .75rem/1 var(--sans); letter-spacing:.16em; text-transform:uppercase; text-decoration:none }
+.bg-btn span { color:var(--lime) }
+.bg-more { height:40px; border:0; background:none; font:700 .8125rem/1 var(--sans); color:var(--ink); text-decoration:underline; text-underline-offset:4px; cursor:pointer }
+.bg-empty { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:30px; gap:8px }
+.bg-empty img { width:60px; opacity:.7; margin-bottom:6px } .bg-empty b { font:500 1.5rem/1.1 var(--display) } .bg-empty p { margin:0 0 12px; color:var(--mute) }
+.bg-empty .bg-btn { padding:0 26px }
+/* com a sacola aberta: avisos e barra de baixo saem da frente */
+body.bag-open .ax-toasts, body.bag-open .mbar, body.bag-open .wa-float { opacity:0; pointer-events:none }
+.ax-drawer, .ax-drawer + * { }
+
+/* =====================================================================
+   PRODUTO — enxuto
+   ===================================================================== */
+body.ax .pdp-word { display:none }
+.pdp-prof { margin:6px 0 0; font:600 .8125rem/1.3 var(--sans); letter-spacing:.04em; color:var(--mute) }
+.pdp-pair { margin:16px 0 4px; padding:14px; border-radius:12px; background:var(--card); border:1px dashed #cfc6b6 }
+.pdp-pair p { margin:0 0 10px; font:800 .5625rem/1 var(--sans); letter-spacing:.18em; text-transform:uppercase; color:var(--mute) }
+.pdp-pair > div { display:flex; align-items:center; gap:12px }
+.pdp-pair-img { width:64px; height:64px; flex:none; border-radius:10px; background:#fff; display:grid; place-items:center } .pdp-pair-img img { width:86%; height:86%; object-fit:contain }
+.pdp-pair small { display:block; font:800 .5625rem/1 var(--sans); letter-spacing:.14em; text-transform:uppercase; color:var(--mute) }
+.pdp-pair b { display:block; margin:3px 0; font:500 1.0625rem/1.2 var(--display); color:var(--ink) } .pdp-pair em { font:700 .8125rem/1 var(--sans); font-style:normal; color:var(--ink) }
+.pdp-pair button { width:100%; height:46px; margin-top:12px; border:1.5px solid var(--ink); border-radius:2px; background:transparent; color:var(--ink); font:800 .6875rem/1 var(--sans); letter-spacing:.12em; text-transform:uppercase; cursor:pointer; transition:background .2s, color .2s }
+.pdp-pair button:hover { background:var(--ink); color:#fff }
+.pdp-acts { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin:6px 0 14px }
+.pdp-acts > * { display:flex; align-items:center; justify-content:center; gap:6px; height:44px; border:1px solid var(--line); border-radius:22px; background:var(--card); color:var(--ink) !important; font:700 .8125rem/1 var(--sans); text-decoration:none; cursor:pointer }
+.pdp-acts .on { border-color:var(--ink) }
+.pdp-ship1 { margin:0 0 10px; font:500 .875rem/1.45 var(--sans); color:#4b463e }
+body.ax .pdp-trust, body.ax .pdp-ship { display:none }
+
+/* =====================================================================
+   NADA SE MEXE SEM QUERER
+   ===================================================================== */
+body.ax img { -webkit-user-drag:none; user-select:none; -webkit-touch-callout:none }
+body.ax :is(button, a, .tc, .oc-o) { touch-action:manipulation; -webkit-tap-highlight-color:transparent }
+.eb-gates { flex-wrap:wrap; overflow:visible }
+.oc-route, .oc-pass, .tc-ph { user-select:none }
+body.ax .bg-head h2 { color:#fff }
+@media (max-width:760px) { body.ax .pdp-page .crumbs { display:none } }
+body.ax .pdp-bar small, body.ax .pdp-bar b { color:#fff !important } body.ax .pdp-bar small { color:#a9a9ae !important }
