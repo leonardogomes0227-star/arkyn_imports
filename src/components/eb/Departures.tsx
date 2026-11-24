@@ -6,9 +6,9 @@ import { useToast } from '../Toast'
 import { photoOf } from '../../lib/cutouts'
 import { brl, useStore } from '../../lib/store'
 import type { Product } from '../../lib/types'
-import { famOf, flightOf, gateOf, shortName, statusOf, volumeOf } from './flight'
+import { famOf, shortName, statusOf, volumeOf } from './flight'
 
-/** Um produto como bilhete de passagem: faixa do voo, foto, picote, nome, casa, família, tarifa e embarque. */
+/** Um produto em formato de bilhete: faixa da marca, foto, picote, nome, família, preço e compra. */
 export function TicketCard({ p, i = 0 }: { p: Product; i?: number }) {
   const { add, setOpen } = useStore()
   const { toast } = useToast()
@@ -21,21 +21,21 @@ export function TicketCard({ p, i = 0 }: { p: Product; i?: number }) {
   return (
     <li className={`tc is-${st}`} style={{ '--i': Math.min(i, 8) } as CSSProperties}>
       <Link to={`/produto/${p.id}`} className="tc-link">
-        <span className="tc-hd"><span>{flightOf(p.id)}</span><span>Portão {gateOf(p)}</span></span>
+        <span className="tc-hd"><span>{p.brand}</span><span>{vol ? `${vol} ml` : ''}</span></span>
         <span className="tc-ph" ref={pic}>
           {img && <SizedImg src={img} size={480} width={480} height={480} alt={`${p.brand} ${p.name}`} loading={i < 4 ? 'eager' : 'lazy'} decoding="async" />}
           {st !== 'go' && <em className={`tc-tag is-${st}`}>{label}</em>}
         </span>
         <span className="tc-perf" aria-hidden="true" />
         <span className="tc-body">
-          <small>{p.brand}</small>
+          <small>{fam}</small>
           <b>{shortName(p.name)}</b>
-          <span className="tc-meta">{[fam, vol && `${vol} ml`].filter(Boolean).join(' · ')}</span>
+          {p.notes?.length ? <span className="tc-meta">{p.notes.slice(0, 3).join(' · ')}</span> : null}
         </span>
       </Link>
       <span className="tc-foot">
-        <span className="tc-fare"><small>Tarifa</small>{p.old_price && p.old_price > p.price && <s>{brl(p.old_price)}</s>}<b>{brl(p.price)}</b></span>
-        {st !== 'off' ? <button type="button" className="tc-add" aria-label={`Adicionar ${p.name} à sacola`} onClick={buy}>Embarcar</button> : <span className="tc-off">Esgotado</span>}
+        <span className="tc-fare"><small>Preço</small>{p.old_price && p.old_price > p.price && <s>{brl(p.old_price)}</s>}<b>{brl(p.price)}</b></span>
+        {st !== 'off' ? <button type="button" className="tc-add" aria-label={`Adicionar ${p.name} à sacola`} onClick={buy}>Adicionar</button> : <span className="tc-off">Esgotado</span>}
       </span>
     </li>
   )

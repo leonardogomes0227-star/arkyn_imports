@@ -3,14 +3,14 @@ import { Link } from 'react-router-dom'
 import { cutoutFor } from '../../lib/cutouts'
 import { brl, useStore } from '../../lib/store'
 import type { Product } from '../../lib/types'
-import { flightOf, gateOf, shortName } from './flight'
+import { shortName, volumeOf } from './flight'
 
-/** Faixa de partidas ao vivo: corre devagar como painel de aeroporto; cada nome abre o perfume. */
+/** Faixa com os perfumes da loja correndo devagar; cada nome abre o perfume. */
 export function LiveTicker({ items }: { items: Product[] }) {
   if (!items.length) return null
   const row = items.map(p => (
     <Link key={p.id} to={`/produto/${p.id}`} tabIndex={-1}>
-      <b>{flightOf(p.id)}</b> {shortName(p.name).toUpperCase()} <i>{p.stock <= 3 ? 'ÚLTIMAS' : `PORTÃO ${gateOf(p)}`}</i>
+      {shortName(p.name).toUpperCase()} <b>{brl(p.price)}</b>{p.stock <= 3 && <i>ÚLTIMAS UNIDADES</i>}
     </Link>
   ))
   return (
@@ -23,14 +23,13 @@ export function LiveTicker({ items }: { items: Product[] }) {
 function MiniPass({ p }: { p: Product }) {
   return (
     <>
-      <span className="fh-h"><span>{flightOf(p.id)}</span><b>Portão {gateOf(p)}</b></span>
-      <span className="fh-rt"><span>DXB</span><span>BR</span></span>
+      <span className="fh-h"><span>{p.brand}</span><b>{volumeOf(p.name) ? `${volumeOf(p.name)} ml` : ''}</b></span>
       <span className="fh-ph">
         <img src={cutoutFor(p)} alt="" draggable={false} />
         <em className="fh-stamp">{p.stock <= 3 ? <>Últimas<br />unidades</> : <>Pronta<br />entrega</>}</em>
       </span>
       <span className="fh-pf" />
-      <span className="fh-n"><b>{shortName(p.name)}</b><small>{p.brand} · {brl(p.price)}</small></span>
+      <span className="fh-n"><b>{shortName(p.name)}</b><small>{brl(p.price)}</small></span>
     </>
   )
 }
@@ -69,7 +68,7 @@ export default function FanHero() {
           onMouseEnter={() => setHold(true)} onMouseLeave={() => setHold(false)}
           onTouchStart={e => { start.current = e.touches[0].clientX; setHold(true) }}
           onTouchEnd={e => { const d = e.changedTouches[0].clientX - start.current; if (Math.abs(d) > 40) setK(v => (v + (d < 0 ? 1 : -1) + n) % n); setHold(false) }}>
-          <p className="fh-kick">Perfumaria árabe · {products.filter(p => p.stock > 0).length} voos hoje</p>
+          <p className="fh-kick">Perfumaria árabe · {products.filter(p => p.stock > 0).length} perfumes</p>
           <svg className="fh-route" viewBox="0 0 400 300" preserveAspectRatio="none" aria-hidden="true"><path d="M-10 200 C 90 80, 230 10, 410 40" /></svg>
           <img className="fh-plane" src="/intro/aviao.webp" alt="" aria-hidden="true" draggable={false} />
           <div className="fh-fan">
@@ -82,10 +81,10 @@ export default function FanHero() {
           <div className="fh-dots" aria-hidden="true">{pool.map((p, i) => <i key={p.id} className={i === k ? 'on' : ''} />)}</div>
         </div>
         <div className="fh-txt">
-          <h1 id="fh-t">Perfumes árabes que <em>embarcam</em> para a sua casa.</h1>
+          <h1 id="fh-t">Perfumes árabes <em>originais</em>, direto para a sua casa.</h1>
           <div className="fh-cta">
-            <button type="button" className="fh-a" onClick={scrollToCheckin}>Check-in · 30s <span aria-hidden="true">→</span></button>
-            <a href="#partidas" className="fh-b">Ver partidas</a>
+            <button type="button" className="fh-a" onClick={scrollToCheckin}>Descubra o seu · 30s <span aria-hidden="true">→</span></button>
+            <a href="#perfumes" className="fh-b">Ver perfumes</a>
           </div>
           <ul className="fh-trust"><li>Originais</li><li>Todo o Brasil</li><li>Retirada em Coxim</li></ul>
         </div>

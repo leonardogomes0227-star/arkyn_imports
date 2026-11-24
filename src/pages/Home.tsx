@@ -2,14 +2,13 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import CheckinHero from '../components/eb/CheckinHero'
 import FanHero from '../components/eb/FanHero'
-import { DepartureBoard, FlapTitle } from '../components/eb/Departures'
+import { DepartureBoard } from '../components/eb/Departures'
 import { CAT_LABEL } from '../lib/search'
 import { useStore } from '../lib/store'
 import { usePageMeta } from '../lib/seo'
 import type { Category } from '../lib/types'
 
-// A página inteira é uma ideia só: cada perfume é um voo do Oriente para o Brasil.
-// 1) o cartão de embarque do destaque; 2) o painel de partidas com tudo o que há na loja; 3) o check-in olfativo.
+// Começo com o leque de perfumes, o "descubra o seu perfume" e a vitrine com todos os perfumes da loja.
 export default function Home() {
   const { products, settings } = useStore()
   const origin = typeof window !== 'undefined' ? window.location.origin : ''
@@ -37,12 +36,12 @@ export default function Home() {
       <FanHero />
       <CheckinHero />
 
-      <section className="eb-dep" id="partidas" aria-labelledby="partidas-t">
+      <section className="eb-dep" id="perfumes" aria-labelledby="perfumes-t">
         <div className="eb-dep-head">
-          <FlapTitle text="Partidas" id="partidas-t" />
-          <p>Todos os perfumes da loja. Toque em Embarcar para pôr na sacola.</p>
+          <h2 className="eb-dep-t" id="perfumes-t">Nossos perfumes</h2>
+          <p>Originais, com envio para todo o Brasil e retirada grátis em Coxim.</p>
         </div>
-        <div className="eb-gates" role="tablist" aria-label="Filtrar por portão">
+        <div className="eb-gates" role="tablist" aria-label="Filtrar por categoria">
           <button type="button" role="tab" aria-selected={!cat} className={!cat ? 'on' : ''} onClick={() => setCat('')}>Todos <span>{products.length}</span></button>
           {cats.map(c => {
             const n = products.filter(p => p.category === c).length

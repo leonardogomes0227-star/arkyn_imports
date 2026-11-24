@@ -5,7 +5,7 @@ import { flyToBag } from '../../lib/fly'
 import { brl, useStore } from '../../lib/store'
 import type { Product } from '../../lib/types'
 import { useToast } from '../Toast'
-import { famOf, flightOf, gateOf, shortName } from './flight'
+import { famOf, shortName, volumeOf } from './flight'
 
 // Começo do site: "check-in olfativo". Três toques e a impressora solta o cartão de embarque
 // com o perfume da loja que mais combina. Antes de responder, o bilhete passa por todos os perfumes.
@@ -33,12 +33,7 @@ function Pass({ p, pct }: { p: Product; pct?: number }) {
   const notes = p.notes ?? []
   return (
     <div className="oc-pass">
-      <div className="oc-pass-hd"><span>Voo {flightOf(p.id)} · Portão {gateOf(p)}</span><b>{pct ? `${pct}% combina` : 'Embarque'}</b></div>
-      <div className="oc-pass-route">
-        <span><b>DXB</b><small>Dubai</small></span>
-        <svg viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true"><path d="M2 26 C 30 2, 70 2, 98 20" /></svg>
-        <span><b>Você</b><small>Todo o Brasil</small></span>
-      </div>
+      <div className="oc-pass-hd"><span>{p.brand}{volumeOf(p.name) ? ` · ${volumeOf(p.name)} ml` : ''}</span><b>{pct ? `${pct}% combina` : ''}</b></div>
       <div className="oc-pass-ph">
         {cutoutFor(p) && <img key={p.id} src={cutoutFor(p)} alt="" />}
         <span className="oc-stamp">{p.stock <= 3 ? <>Últimas<br />unidades</> : <>Pronta<br />entrega</>}</span>
@@ -48,7 +43,7 @@ function Pass({ p, pct }: { p: Product; pct?: number }) {
       <div className="oc-pass-f">
         <span><small>Saída</small><b>{notes[0] ?? '—'}</b></span>
         <span><small>Fundo</small><b>{notes[notes.length - 1] ?? '—'}</b></span>
-        <span><small>Tarifa</small><b>{brl(p.price)}</b></span>
+        <span><small>Preço</small><b>{brl(p.price)}</b></span>
       </div>
     </div>
   )
@@ -95,9 +90,9 @@ export default function CheckinHero() {
   return (
     <section className="oc" id="checkin" aria-labelledby="oc-t">
       <div className="oc-left">
-        <p className="oc-kick">Check-in olfativo · {pool.length} perfumes a bordo</p>
+        <p className="oc-kick">Descubra o seu perfume · {pool.length} opções</p>
         <h2 id="oc-t" className="oc-h">Para onde o seu perfume vai <em>te levar?</em></h2>
-        <p className="oc-sub">Três toques e a gente imprime o seu cartão de embarque com o perfume que combina com você.</p>
+        <p className="oc-sub">Três toques e a gente mostra o perfume da loja que combina com você.</p>
 
         <div className="oc-route" aria-hidden="true">
           <svg viewBox="0 0 350 34" preserveAspectRatio="none"><path d="M6 18 C 90 4, 180 32, 344 12" /></svg>
@@ -136,15 +131,15 @@ export default function CheckinHero() {
               )}
               <div className="oc-nav">
                 {step > 0 ? <button type="button" className="oc-back" onClick={() => setStep(step - 1)}>← Voltar</button> : <span />}
-                {step === 2 && <button type="button" className="oc-go" disabled={!done} onClick={print}>Imprimir bilhete <span aria-hidden="true">→</span></button>}
+                {step === 2 && <button type="button" className="oc-go" disabled={!done} onClick={print}>Ver meu perfume <span aria-hidden="true">→</span></button>}
               </div>
             </div>
           ) : (
             <div className="oc-q oc-done">
-              <small>Check-in feito</small>
-              <h2>Encontramos o seu voo.</h2>
+              <small>Pronto</small>
+              <h2>Encontramos o seu perfume.</h2>
               <p>{who === 'todos' ? 'Para qualquer pessoa' : who === 'masculino' ? 'Para ele' : 'Para ela'} · {when === 'ambos' ? 'dia e noite' : when === 'dia' ? 'de dia' : 'à noite'} · {fams.find(f => f.id === fam)?.name.toLowerCase()}</p>
-              <div className="oc-nav"><button type="button" className="oc-back" onClick={redo}>↺ Refazer o check-in</button><a href="#partidas" className="oc-back">Ver todos os voos ↓</a></div>
+              <div className="oc-nav"><button type="button" className="oc-back" onClick={redo}>↺ Refazer</button><a href="#perfumes" className="oc-back">Ver todos os perfumes ↓</a></div>
             </div>
           )}
         </div>
@@ -156,10 +151,10 @@ export default function CheckinHero() {
           <div className="oc-print" key={top.p.id}>
             <div ref={pic}><Pass p={top.p} pct={top.s} /></div>
             <div className="oc-act">
-              <button type="button" className="oc-buy" onClick={() => buy(top.p)}>Embarcar</button>
+              <button type="button" className="oc-buy" onClick={() => buy(top.p)}>Adicionar à sacola</button>
               <Link to={`/produto/${top.p.id}`} className="oc-see">Ver perfume</Link>
             </div>
-            <p className="oc-alt-t">Outros voos para você</p>
+            <p className="oc-alt-t">Também combinam com você</p>
             <div className="oc-alts">
               {ranked.slice(1, 3).map(({ p, s }) => (
                 <Link key={p.id} to={`/produto/${p.id}`} className="oc-mini">
@@ -172,7 +167,7 @@ export default function CheckinHero() {
         ) : pool.length > 0 && (
           <div className="oc-idle" aria-live="off">
             <div className="oc-print" key={pool[idle].id}><Pass p={pool[idle]} /></div>
-            <p className="oc-idle-t">Faça o check-in para imprimir o seu bilhete</p>
+            <p className="oc-idle-t">Responda as perguntas para ver o seu perfume</p>
           </div>
         )}
       </div>

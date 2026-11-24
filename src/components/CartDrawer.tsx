@@ -63,7 +63,7 @@ export default function CartDrawer() {
       <div className={open ? 'bg-scrim on' : 'bg-scrim'} onClick={close} />
       <aside ref={box} className={open ? 'bg on' : 'bg'} role="dialog" aria-modal="true" aria-label="Sua sacola" aria-hidden={!open}>
         <header className="bg-head">
-          <div><small>Sua bagagem</small><h2>Sacola{items > 0 && <span> · {items} {items === 1 ? 'item' : 'itens'}</span>}</h2></div>
+          <div><small>Seu pedido</small><h2>Sacola{items > 0 && <span> · {items} {items === 1 ? 'item' : 'itens'}</span>}</h2></div>
           <button type="button" className="bg-x" onClick={close} aria-label="Fechar sacola">✕</button>
         </header>
 
@@ -71,7 +71,7 @@ export default function CartDrawer() {
           <div className="bg-empty">
             <img src="/intro/aviao.webp" alt="" />
             <b>Sua sacola está vazia</b>
-            <p>Faça o check-in olfativo ou escolha um voo nas partidas.</p>
+            <p>Descubra o seu perfume ou escolha um na vitrine.</p>
             <Link to="/" className="bg-btn" onClick={close}>Ver os perfumes</Link>
           </div>
         ) : <>
@@ -104,7 +104,7 @@ export default function CartDrawer() {
 
           {suggest.length > 0 && (
             <div className="bg-sug">
-              <p>Leve junto na viagem</p>
+              <p>Leve junto</p>
               <div>
                 {suggest.map(x => (
                   <button key={x.id} type="button" className="bg-sug-c" tabIndex={open ? 0 : -1} onClick={() => add(x.id, false)} aria-label={`Adicionar ${x.name}`}>

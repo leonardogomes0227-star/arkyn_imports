@@ -500,3 +500,6 @@ body.ax .card .thumb.cut img.m { filter:drop-shadow(0 12px 12px rgba(70,50,20,.2
 /* bilhete: foto com respiro em cima e embaixo, nenhuma caixa encosta na borda */
 .tc-ph img { inset:auto; left:50%; top:50%; width:80%; height:80%; transform:translate(-50%,-50%) }
 @media (hover:hover) { .tc:hover .tc-ph img { transform:translate(-50%,-50%) scale(1.05) } }
+/* título da vitrine (sem o painel de aeroporto) */
+.eb-dep-t { margin:0; font:500 clamp(2rem,7vw,3rem)/1 var(--display); color:var(--ink) }
+.fh-tick a b { margin-left:6px } .fh-tick a i { margin-left:8px }
