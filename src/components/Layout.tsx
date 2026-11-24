@@ -81,7 +81,7 @@ export default function Layout({ children }: { children: ReactNode }) {
           <Logo className="eb-logo" />
           <nav className="eb-nav" aria-label="Principal">
             {HEAD_NAV.map(([label, to]) => <Link key={to} to={to} aria-current={active(to) ? 'page' : undefined}>{label}</Link>)}
-            <Link to="/quiz" aria-current={loc.pathname === '/quiz' ? 'page' : undefined}>Check-in olfativo</Link>
+            <Link to="/quiz" aria-current={loc.pathname === '/quiz' ? 'page' : undefined}>Descubra seu perfume</Link>
           </nav>
           <div className="eb-acts">
             <button type="button" className="eb-ico" aria-label="Buscar perfumes" onClick={() => setSearch(true)}><IconSearch size={20} /></button>

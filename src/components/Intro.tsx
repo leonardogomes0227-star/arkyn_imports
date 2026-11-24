@@ -30,7 +30,7 @@ function Flap({ ch, stop }: { ch: string; stop: number }) {
   return <span className={c === ch ? 'in-flap ok' : 'in-flap'}><b key={c}>{c}</b></span>
 }
 
-/** Abertura: rota Dubai → Brasil desenhada pelo avião, painel de embarque que forma ARKYN,
+/** Abertura: o avião da marca desenha a rota, um painel de letras forma ARKYN,
  *  a logo com brilho metálico e a tela se destacando pelo picote, como um bilhete. */
 export default function Intro() {
   const [phase, setPhase] = useState<'on' | 'tear' | 'done'>(() => (seen() ? 'done' : 'on'))
@@ -85,8 +85,6 @@ export default function Intro() {
           <path id="in-path" d={route} pathLength={1} />
           <circle className="in-dot a" cx={ax} cy={y} r="4" />
           <circle className="in-dot b" cx={bx} cy={y} r="4" />
-          <text className="in-code a" x={ax} y={y + 26} textAnchor="middle">DXB</text>
-          <text className="in-code b" x={bx} y={y + 26} textAnchor="middle">BRA</text>
           <image href="/intro/aviao.webp" width={pw} height={pw * 0.79} x={-pw / 2} y={-pw * 0.4}>
             <animateMotion dur="1.35s" begin="0.25s" fill="freeze" rotate="auto" calcMode="spline" keyPoints="0;1" keyTimes="0;1" keySplines=".5 0 .2 1"><mpath href="#in-path" /></animateMotion>
           </image>
@@ -95,7 +93,7 @@ export default function Intro() {
           <div className="in-board">{stage >= 1 && [...WORD].map((ch, i) => <Flap key={i} ch={ch} stop={420 + i * 130} />)}</div>
           <div className="in-logo"><img src="/intro/logo-arkyn.webp" alt="" width="1200" height="706" /><i className="in-shine" style={{ WebkitMaskImage: 'url(/intro/logo-arkyn.webp)', maskImage: 'url(/intro/logo-arkyn.webp)' } as CSSProperties} /></div>
           <p className="in-tag">Perfumaria árabe &amp; importada</p>
-          <p className="in-sub"><span>Embarque liberado</span><i /><span>Para todo o Brasil</span></p>
+          <p className="in-sub"><span>Produtos originais</span><i /><span>Para todo o Brasil</span></p>
         </div>
       </div>
       <button type="button" className="in-skip" onClick={e => { e.stopPropagation(); setPhase('tear') }}>Pular</button>

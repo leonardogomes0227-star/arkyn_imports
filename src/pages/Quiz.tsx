@@ -9,8 +9,8 @@ import { usePageMeta } from '../lib/seo'
 import { brl, useStore } from '../lib/store'
 import type { Product } from '../lib/types'
 
-// Consultoria olfativa em 6 etapas, apresentada como uma viagem: o avião anda pela rota a cada resposta
-// e o resultado sai como cartão de embarque. A pontuação usa só dados reais do catálogo (família, momento, notas, preço).
+// Consultoria olfativa em 6 etapas: o avião da marca anda pela linha de progresso a cada resposta
+// e o resultado sai em formato de bilhete. A pontuação usa só dados reais do catálogo (família, momento, notas, preço).
 
 type Who = 'eu' | 'presente'
 type Gender = 'masculino' | 'feminino' | 'any'
@@ -124,9 +124,9 @@ export default function Quiz() {
           <div className="qz-intro">
             <small className="gh-eyebrow">Consultoria olfativa Arkyn</small>
             <h1>Descubra o perfume que é a sua cara.</h1>
-            <p>Seis etapas rápidas: para quem é, quando vai usar, a família que te atrai, as notas que você ama e as que evita, a intensidade e quanto quer investir. No fim você recebe um cartão de embarque com os perfumes do catálogo que mais combinam, e o porquê.</p>
+            <p>Seis etapas rápidas: para quem é, quando vai usar, a família que te atrai, as notas que você ama e as que evita, a intensidade e quanto quer investir. No fim você recebe os perfumes do catálogo que mais combinam com você, e o porquê.</p>
             <ul><li><b>6</b> etapas</li><li><b>1</b> minuto</li><li><b>{pool.length}</b> perfumes analisados</li></ul>
-            <button type="button" className="hx-btn" onClick={() => go(1)}>Começar a viagem<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg></button>
+            <button type="button" className="hx-btn" onClick={() => go(1)}>Começar<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg></button>
           </div>
         )}
 
@@ -222,12 +222,12 @@ export default function Quiz() {
         </>)}
 
         {step === 7 && thinking && (
-          <div className="qz-thinking" role="status"><img src="/intro/aviao.webp" alt="" /><p>Traçando a sua rota olfativa…</p></div>
+          <div className="qz-thinking" role="status"><img src="/intro/aviao.webp" alt="" /><p>Escolhendo os seus perfumes…</p></div>
         )}
 
         {step === 7 && !thinking && (
           <div className="qz-result">
-            <small className="gh-eyebrow">Seu cartão de embarque</small>
+            <small className="gh-eyebrow">Sua seleção</small>
             <h1>{results.length ? 'Estes são os perfumes que mais combinam com você.' : 'Não achamos uma combinação no catálogo agora.'}</h1>
             {results.map((r, i) => {
               const src = cutoutFor(r.p) ?? r.p.image
@@ -237,11 +237,11 @@ export default function Quiz() {
                 <article key={r.p.id} className={i === 0 ? 'qz-pass first' : 'qz-pass'} style={{ '--d': `${i * 140}ms` } as CSSProperties}>
                   <Link to={`/produto/${r.p.id}`} className="qz-pass-img">{src ? <SizedImg src={src} size={480} width={420} height={420} alt={`${r.p.brand} ${r.p.name}`} /> : null}</Link>
                   <div className="qz-pass-body">
-                    <div className="qz-pass-top"><span>Arkyn Air · {i === 0 ? 'Primeira opção' : `Opção ${i + 1}`}</span><b className="qz-pct" style={{ '--p': `${Math.min(100, r.pct)}%` } as CSSProperties}>{Math.min(100, r.pct)}%<small>combina</small></b></div>
+                    <div className="qz-pass-top"><span>Arkyn · {i === 0 ? 'Primeira opção' : `Opção ${i + 1}`}</span><b className="qz-pct" style={{ '--p': `${Math.min(100, r.pct)}%` } as CSSProperties}>{Math.min(100, r.pct)}%<small>combina</small></b></div>
                     <small className="qz-brand">{r.p.brand}</small>
                     <h2><Link to={`/produto/${r.p.id}`}>{r.p.name}</Link></h2>
                     <dl>
-                      <div><dt>Passageiro</dt><dd>{passenger}</dd></div>
+                      <div><dt>Para</dt><dd>{passenger}</dd></div>
                       <div><dt>Família</dt><dd>{fams}</dd></div>
                       <div><dt>Momento</dt><dd>{moms}</dd></div>
                       <div><dt>Rastro</dt><dd>{POWER[powerOf(r.p) - 1][1]}</dd></div>
