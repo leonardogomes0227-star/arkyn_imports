@@ -25,10 +25,11 @@ const CUT = new Set([
 ])
 
 // PHOTO_V muda quando as fotos são refeitas, para o navegador não mostrar a versão antiga guardada
-const PHOTO_V = 5
+const PHOTO_V = 6
 export const cutoutOf = (id: string) => (CUT.has(id) ? `/hero/${id}.webp?v=${PHOTO_V}` : undefined)
 
 /** Sempre usa o recorte limpo quando ele existe (mesmo se o painel tiver uma foto com fundo branco). */
-export const cutoutFor = (p: { id: string }) => cutoutOf(p.id)
+// recorte feito à mão (public/hero) ou recorte automático enviado pelo painel (pasta recortes/ do banco)
+export const cutoutFor = (p: { id: string; image?: string | null }) => cutoutOf(p.id) ?? (p.image && p.image.includes('/recortes/') ? p.image : undefined)
 /** Foto para mostrar: recorte limpo ou, sem recorte, a foto do cadastro. */
-export const photoOf = (p: { id: string; image?: string | null }) => cutoutOf(p.id) ?? p.image ?? undefined
+export const photoOf = (p: { id: string; image?: string | null }) => cutoutFor(p) ?? p.image ?? undefined
