@@ -497,3 +497,6 @@ body.ax .card .thumb.cut img.m { filter:drop-shadow(0 12px 12px rgba(70,50,20,.2
 .fh-r { transform:rotate(11deg) translateX(56%) scale(.9) }
 .fh-l .fh-ph img { left:40%; max-width:80% } .fh-r .fh-ph img { left:60%; max-width:80% }
 @media (max-width:979px) { .fh-l { transform:rotate(-10deg) translateX(-52%) scale(.84) } .fh-r { transform:rotate(10deg) translateX(52%) scale(.84) } }
+/* bilhete: foto com respiro em cima e embaixo, nenhuma caixa encosta na borda */
+.tc-ph img { inset:auto; left:50%; top:50%; width:80%; height:80%; transform:translate(-50%,-50%) }
+@media (hover:hover) { .tc:hover .tc-ph img { transform:translate(-50%,-50%) scale(1.05) } }
