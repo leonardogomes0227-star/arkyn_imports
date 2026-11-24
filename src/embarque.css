@@ -487,3 +487,13 @@ body.ax .fh-tick a { color:#d7d7da !important } body.ax .fh-tick a b { color:var
   .fh-cta { margin-top:14px } .fh-cta > * { height:48px }
 }
 @media (max-width:979px) and (max-height:700px) { .fh-stage { height:300px } .fh-t { --w:136px } .fh-fan { top:54px } .fh-rt { font-size:1rem } .fh-n b { font-size:.8125rem } .fh-stamp { width:46px; height:46px } }
+
+/* fotos sem mancha: a sombra preta do visual escuro antigo vira uma sombra leve e quente no papel claro */
+body.ax .pdp-img, body.ax .lt-page .pdp-img { background:radial-gradient(60% 55% at 50% 62%,#fff,rgba(255,255,255,0) 72%),linear-gradient(180deg,var(--card),#ece3d2); box-shadow:none; border-radius:14px }
+body.ax .pdp-img.cut img { padding:7% 8% 5%; filter:drop-shadow(0 16px 16px rgba(70,50,20,.22)) }
+body.ax .card .thumb.cut img.m { filter:drop-shadow(0 12px 12px rgba(70,50,20,.22)) }
+/* leque: os bilhetes dos lados mais afastados, para o frasco deles aparecer inteiro */
+.fh-l { transform:rotate(-11deg) translateX(-56%) scale(.9) }
+.fh-r { transform:rotate(11deg) translateX(56%) scale(.9) }
+.fh-l .fh-ph img { left:40%; max-width:80% } .fh-r .fh-ph img { left:60%; max-width:80% }
+@media (max-width:979px) { .fh-l { transform:rotate(-10deg) translateX(-52%) scale(.84) } .fh-r { transform:rotate(10deg) translateX(52%) scale(.84) } }

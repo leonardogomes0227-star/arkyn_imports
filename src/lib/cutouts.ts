@@ -25,7 +25,7 @@ const CUT = new Set([
 ])
 
 // PHOTO_V muda quando as fotos são refeitas, para o navegador não mostrar a versão antiga guardada
-const PHOTO_V = 4
+const PHOTO_V = 5
 export const cutoutOf = (id: string) => (CUT.has(id) ? `/hero/${id}.webp?v=${PHOTO_V}` : undefined)
 
 /** Sempre usa o recorte limpo quando ele existe (mesmo se o painel tiver uma foto com fundo branco). */
