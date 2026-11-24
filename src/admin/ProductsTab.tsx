@@ -32,9 +32,39 @@ export default function ProductsTab({ stockMode = false }: { stockMode?: boolean
     setEdit(null); setMsg(''); reload()
   }
   async function remove(id: string) { if (confirm('Excluir este produto?')) { await supabase!.from('products').delete().eq('id', id); reload() } }
+  // Foto nova com a mesma estética da loja: o próprio navegador tira o fundo (sem custo), corta as sobras,
+  // padroniza o tamanho e envia para recortes/. Se falhar, envia a original (no bilhete o fundo branco "some").
+  const [autoCut, setAutoCut] = useState(true)
+  const [cutting, setCutting] = useState(false)
+  async function toCleanWebp(blob: Blob): Promise<Blob> {
+    const bmp = await createImageBitmap(blob)
+    const c = document.createElement('canvas'); c.width = bmp.width; c.height = bmp.height
+    const g = c.getContext('2d')!; g.drawImage(bmp, 0, 0)
+    const d = g.getImageData(0, 0, c.width, c.height).data
+    let x0 = c.width, y0 = c.height, x1 = 0, y1 = 0
+    for (let y = 0; y < c.height; y++) for (let x = 0; x < c.width; x++) if (d[(y * c.width + x) * 4 + 3] > 24) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y }
+    if (x1 <= x0 || y1 <= y0) return blob
+    const w = x1 - x0 + 1, h = y1 - y0 + 1, k = Math.min(1, 1200 / Math.max(w, h))
+    const o = document.createElement('canvas'); o.width = Math.round(w * k); o.height = Math.round(h * k)
+    o.getContext('2d')!.drawImage(c, x0, y0, w, h, 0, 0, o.width, o.height)
+    return await new Promise(r => o.toBlob(b => r(b ?? blob), 'image/webp', 0.9))
+  }
   async function upload(file: File) {
-    const name = `${Date.now()}-${slug(file.name.replace(/\.[^.]+$/, ''))}.${file.name.split('.').pop()}`
-    const { error } = await supabase!.storage.from('produtos').upload(name, file)
+    const base = `${Date.now()}-${slug(file.name.replace(/\.[^.]+$/, ''))}`
+    let body: Blob = file, name = `${base}.${file.name.split('.').pop()}`
+    if (autoCut) {
+      setCutting(true); setMsg('Tirando o fundo da foto… pode levar uns 20 segundos na primeira vez.')
+      try {
+        const { removeBackground } = await import('@imgly/background-removal')
+        body = await toCleanWebp(await removeBackground(file, { output: { format: 'image/png' } }))
+        name = `recortes/${base}.webp`
+        setMsg('')
+      } catch {
+        setMsg('Não deu para tirar o fundo automaticamente; enviei a foto original. Prefira foto com fundo branco.')
+      }
+      setCutting(false)
+    }
+    const { error } = await supabase!.storage.from('produtos').upload(name, body, { contentType: body.type || undefined })
     if (error) return setMsg(error.message)
     setEdit(x => x && { ...x, image: supabase!.storage.from('produtos').getPublicUrl(name).data.publicUrl })
   }
@@ -71,8 +101,9 @@ export default function ProductsTab({ stockMode = false }: { stockMode?: boolean
         <label>Descrição<textarea rows={3} value={edit.description ?? ''} onChange={e => setEdit({ ...edit, description: e.target.value })} /></label>
         <label>Notas (separadas por vírgula)<input value={(edit.notes ?? []).join(', ')} onChange={e => setEdit({ ...edit, notes: list(e.target.value) })} /></label>
         <label>Perfil para filtros e quiz (doce, amadeirado, fresco, floral, especiado, intenso, dia, noite)<input value={(edit.tags ?? []).join(', ')} onChange={e => setEdit({ ...edit, tags: list(e.target.value) })} /></label>
-        <label>Foto<input type="file" accept="image/*" onChange={e => e.target.files?.[0] && upload(e.target.files[0])} /></label>
-        {edit.image && <img className="adm-thumb big" src={edit.image} alt="" />}
+        <label>Foto<input type="file" accept="image/*" disabled={cutting} onChange={e => e.target.files?.[0] && upload(e.target.files[0])} /></label>
+        <label className="chk"><input type="checkbox" checked={autoCut} onChange={e => setAutoCut(e.target.checked)} /> Tirar o fundo automaticamente (recomendado)</label>
+        {edit.image && <div className="adm-prev"><small>Como vai aparecer na loja</small><span><img src={edit.image} alt="" /></span></div>}
         <label className="chk"><input type="checkbox" checked={edit.active !== false} onChange={e => setEdit({ ...edit, active: e.target.checked })} /> Visível na loja</label>
         <label className="chk"><input type="checkbox" checked={!!edit.featured} onChange={e => setEdit({ ...edit, featured: e.target.checked })} /> Destaque na Home</label>
         {msg && <p className="err">{msg}</p>}

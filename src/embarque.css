@@ -503,3 +503,34 @@ body.ax .card .thumb.cut img.m { filter:drop-shadow(0 12px 12px rgba(70,50,20,.2
 /* título da vitrine (sem o painel de aeroporto) */
 .eb-dep-t { margin:0; font:500 clamp(2rem,7vw,3rem)/1 var(--display); color:var(--ink) }
 .fh-tick a b { margin-left:6px } .fh-tick a i { margin-left:8px }
+
+/* =====================================================================
+   ETAPA 2 — famílias com foto, preço e ordenação
+   ===================================================================== */
+.vt-fams { max-width:1320px; margin:0 auto; padding:56px 20px 0; text-align:center }
+.vt-fams h2 { margin:0; font:500 clamp(1.9rem,6.4vw,2.8rem)/1.05 var(--display); color:var(--ink) }
+.vt-fams > p { margin:8px 0 22px; font:500 .9375rem/1.4 var(--sans); color:var(--mute) }
+.vt-fams > div { display:grid; grid-template-columns:repeat(3,1fr); gap:16px 10px; justify-items:center }
+.vt-fam { display:flex; flex-direction:column; align-items:center; gap:4px; background:none; border:0; padding:0; cursor:pointer; color:var(--ink) }
+.vt-fam span { width:clamp(84px,24vw,128px); aspect-ratio:1; border-radius:50%; overflow:hidden; box-shadow:0 0 0 1px var(--line), 0 14px 24px -16px rgba(60,40,10,.5); transition:box-shadow .3s, transform .3s cubic-bezier(.2,.8,.2,1) }
+.vt-fam img { width:100%; height:100%; object-fit:cover; transition:transform .8s cubic-bezier(.2,.8,.2,1) }
+.vt-fam b { margin-top:6px; font:500 1.0625rem/1.1 var(--display) } .vt-fam small { font:600 .6875rem/1 var(--sans); color:var(--mute) }
+@media (hover:hover) { .vt-fam:hover span { transform:translateY(-3px) } .vt-fam:hover img { transform:scale(1.08) } }
+.vt-fam.on span { box-shadow:0 0 0 3px var(--ink), 0 0 0 6px var(--lime) }
+@media (min-width:760px) { .vt-fams > div { grid-template-columns:repeat(5,1fr); max-width:900px; margin:0 auto } }
+.vt-more { display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; padding:0 4px 16px }
+.vt-chips { display:flex; flex-wrap:wrap; gap:6px }
+.vt-chips button { height:36px; padding:0 12px; border:1px solid var(--line); border-radius:18px; background:var(--card); color:var(--ink); font:600 .8125rem/1 var(--sans); cursor:pointer }
+.vt-chips button.on { background:var(--ink); color:#fff; border-color:var(--ink) }
+.vt-sort { display:flex; align-items:center; gap:8px; font:600 .8125rem/1 var(--sans); color:var(--mute) }
+.vt-sort select { height:36px; padding:0 10px; border:1px solid var(--line); border-radius:18px; background:var(--card); color:var(--ink); font:600 .8125rem/1 var(--sans) }
+.vt-on { margin:0 4px 14px; font:500 .875rem/1 var(--sans); color:var(--ink) } .vt-on button { border:0; background:none; color:var(--mute); text-decoration:underline; cursor:pointer }
+.vt-empty { padding:40px 20px; text-align:center; background:var(--card); border-radius:12px } .vt-empty p { margin:0 0 12px } .vt-empty button { height:42px; padding:0 18px; border:0; background:var(--ink); color:#fff; font:800 .6875rem/1 var(--sans); letter-spacing:.12em; text-transform:uppercase; cursor:pointer }
+body.ax .vt-fam b, body.ax .vt-fams h2 { color:var(--ink) }
+
+/* produto novo sem recorte: foto de fundo branco "some" no papel do bilhete (multiply) */
+.tc-ph img:not([src*='/hero/']), .oc-pass-ph img:not([src*='/hero/']), .fh-ph img:not([src*='/hero/']), body.ax .pdp-img:not(.cut) img { mix-blend-mode:multiply; filter:none }
+.vt-fams > div { grid-template-columns:repeat(min(var(--n,3), 4),1fr) }
+@media (max-width:420px) { .vt-fam span { width:clamp(68px,19vw,90px) } .vt-fam b { font-size:.9375rem } }
+@media (min-width:760px) { .vt-fams > div { grid-template-columns:repeat(var(--n,5),1fr); max-width:calc(var(--n,5) * 180px) } }
+body.ax .vt-sort select { background:var(--card) !important; color:var(--ink) !important; border:1px solid var(--line) !important; -webkit-appearance:auto; appearance:auto; box-shadow:none !important }

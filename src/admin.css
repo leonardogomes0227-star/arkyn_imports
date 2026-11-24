@@ -89,3 +89,7 @@
 .adm input,.adm select,.adm textarea,.adm-wrap input { border:1px solid #e0d8c7; background:#fff; padding:10px 12px; border-radius:8px }
 .adm input[type=checkbox],.adm-wrap input[type=checkbox] { padding:0; border-radius:0 }
 .adm .chk { font-family:var(--sans) }
+.adm-prev { margin:8px 0 12px } .adm-prev small { display:block; margin-bottom:6px; font-size:.75rem; opacity:.7 }
+.adm-prev span { display:grid; place-items:center; width:200px; aspect-ratio:1; border-radius:12px; background:radial-gradient(60% 60% at 50% 65%,#fff,transparent 70%),linear-gradient(180deg,#fbf8f2,#ece3d2) }
+.adm-prev img { width:84%; height:84%; object-fit:contain; mix-blend-mode:multiply; filter:drop-shadow(0 10px 10px rgba(70,50,20,.22)) }
+.adm-prev img[src*='/recortes/'] { mix-blend-mode:normal }
