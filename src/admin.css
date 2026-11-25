@@ -13,7 +13,7 @@
 .muted { color:var(--a-mute) }
 
 /* ---------- estrutura ---------- */
-.adm { display:grid; grid-template-columns:248px 1fr; min-height:100vh; background:var(--a-paper) }
+.adm { display:grid; grid-template-columns:248px minmax(0,1fr); overflow-x:clip; min-height:100vh; background:var(--a-paper) }
 .adm-side { position:sticky; top:0; height:100vh; display:flex; flex-direction:column; padding:20px 14px 16px; background:#0b0b0c; color:#c9c6bd }
 .adm-brand { display:flex; align-items:center; gap:10px; padding:2px 8px 18px; margin-bottom:12px; border-bottom:1px solid #222225 }
 .adm-brand img { width:46px; height:46px; object-fit:contain; border-radius:10px; background:#000 }
@@ -113,12 +113,12 @@
 
 /* ---------- celular ---------- */
 @media (max-width:900px) {
-  .adm { grid-template-columns:1fr }
+  .adm { grid-template-columns:minmax(0,1fr) } .adm-side, .adm-main, .adm-body, .adm-top { min-width:0; max-width:100vw }
   .adm-side { position:sticky; top:0; z-index:20; height:auto; flex-direction:row; align-items:center; gap:8px; padding:8px 10px }
   .adm-brand { padding:0 6px 0 0; margin:0; border:0 } .adm-brand div { display:none } .adm-brand img { width:38px; height:38px }
   .adm-side nav { flex-direction:row; flex:1; overflow-x:auto; scrollbar-width:none } .adm-side nav::-webkit-scrollbar { display:none }
   .adm-side nav button { flex:none; white-space:nowrap; padding:9px 12px } .adm-side nav button.on::before { left:10px; right:10px; top:auto; bottom:2px; width:auto; height:3px; border-radius:3px }
-  .adm-foot { border:0; padding:0; gap:10px; flex:none } .adm-foot a { display:none }
+  .adm-foot { border:0; padding:0; gap:10px; flex:none } .adm-foot a { display:none } .adm-foot .link { min-height:40px; padding:0 8px }
   .adm-top { padding:16px 16px 0 } .adm-top h1 { font-size:1.55rem } .adm-top .muted { display:none }
   .adm-body { padding:12px 16px 40px } .adm-warn { margin:8px 16px 0 }
   .dsh-hello h2 { font-size:1.5rem } .dsh-stats { grid-template-columns:1fr 1fr } .dsh-stats .hero { grid-column:1 / -1 } .dsh-stats b { font-size:1.5rem }
