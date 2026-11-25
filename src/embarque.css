@@ -553,3 +553,14 @@ body.ax .pdp-img, body.ax .lt-page .pdp-img { background:#fff !important; border
 body.ax .pdp-img img, body.ax .pdp-img.cut img, body.ax .pdp-img.clean img { object-fit:contain !important; padding:0 !important; filter:none !important; mix-blend-mode:normal !important; width:100%; height:100% }
 .pdp-pair-img, .bg-img, .bg-sug-c img, .dsh-top img, .dsh-stock img, .adm-thumb { background:#fff !important }
 .pdp-pair-img img, .bg-img img { mix-blend-mode:normal; filter:none; object-fit:contain }
+
+/* bilhete em celular estreito: preço em cima, botão em linha própria, nada sai da caixa */
+@media (max-width:440px) {
+  .tc-foot { flex-direction:column; align-items:stretch; gap:8px }
+  .tc-add { width:100%; height:38px }
+  .tc-fare { flex-direction:row; align-items:baseline; gap:6px; flex-wrap:wrap }
+  .tc-fare small { width:100% }
+}
+.tc, .tc * { min-width:0 }
+.tc-body b, .tc-meta { overflow-wrap:anywhere }
+.tc-hd { gap:8px } .tc-hd span { white-space:nowrap } .tc-hd span:first-child { overflow:hidden; text-overflow:ellipsis; min-width:0 } .tc-hd span:last-child { flex:none }

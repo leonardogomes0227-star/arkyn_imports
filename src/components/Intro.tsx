@@ -6,9 +6,11 @@ const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 // linha do tempo (ms)
 const T_FLAP = 1150, T_LOGO = 2950, T_TEAR = 4700, T_END = 5600
 
-// Toca toda vez que o site é aberto ou recarregado pela página inicial. Dentro do site (trocar de página) não repete.
+// Toca toda vez que o site é aberto ou recarregado, em qualquer página. Só fica de fora o painel e o retorno do pagamento.
+// Dentro do site (trocar de página) não repete, porque o componente continua montado.
 function seen() {
-  return typeof window === 'undefined' || window.location.pathname !== '/'
+  if (typeof window === 'undefined') return true
+  return /^\/(admin|pedido|carrinho)(\/|$)/.test(window.location.pathname)
 }
 function markSeen() { try { sessionStorage.setItem(KEY, String(Date.now())) } catch { /* navegação privada */ } }
 
@@ -36,6 +38,7 @@ export default function Intro() {
   const [stage, setStage] = useState(0) // 1 painel · 2 logo
   const [vw, setVw] = useState({ w: 390, h: 844 })
   const timers = useRef<number[]>([])
+  const armed = useRef(false) // toque ou tecla só pulam depois de 1,6 s (evita pular sem querer)
 
   useEffect(() => {
     if (phase !== 'on') return
@@ -54,10 +57,21 @@ export default function Intro() {
     const img = new Image(); img.src = '/intro/logo-arkyn.webp'
     const fb = window.setTimeout(start, 1200)
     Promise.all([img.decode?.().catch(() => undefined), document.fonts?.ready]).then(() => { window.clearTimeout(fb); start() })
-    const skip = () => setPhase('tear')
+    const skip = () => { if (armed.current) setPhase('tear') }
+    const arm = window.setTimeout(() => { armed.current = true }, 1600)
+    // vigia: aconteça o que acontecer, em 9 s a intro fecha e libera o site
+    const guard = window.setTimeout(() => setPhase(p => (p === 'on' ? 'tear' : p)), 9000)
+    const guard2 = window.setTimeout(() => { document.documentElement.style.overflow = ''; setPhase('done') }, 11500)
     window.addEventListener('keydown', skip)
-    return () => { timers.current.forEach(window.clearTimeout); timers.current = []; window.clearTimeout(fb); window.removeEventListener('keydown', skip); document.documentElement.style.overflow = prev }
+    return () => { timers.current.forEach(window.clearTimeout); timers.current = []; window.clearTimeout(fb); window.clearTimeout(arm); window.clearTimeout(guard); window.clearTimeout(guard2); window.removeEventListener('keydown', skip); document.documentElement.style.overflow = prev }
   }, [phase])
+
+  // voltar de outra aba/app com a página guardada: recarrega para a intro tocar de novo
+  useEffect(() => {
+    const back = (e: PageTransitionEvent) => { if (e.persisted && !seen()) window.location.reload() }
+    window.addEventListener('pageshow', back)
+    return () => window.removeEventListener('pageshow', back)
+  }, [])
 
   useEffect(() => {
     if (phase !== 'tear') return
@@ -75,7 +89,7 @@ export default function Intro() {
   const pw = mob ? 44 : 62
 
   return (
-    <div className={phase === 'tear' ? 'in-intro tear' : 'in-intro'} role="presentation" onClick={() => setPhase('tear')}>
+    <div className={phase === 'tear' ? 'in-intro tear' : 'in-intro'} role="presentation" onClick={() => { if (armed.current) setPhase('tear') }}>
       <div className="in-half top" aria-hidden="true" />
       <div className="in-half bot" aria-hidden="true" />
       <div className="in-perf" aria-hidden="true" />
