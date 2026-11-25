@@ -3,7 +3,7 @@ import { supabase } from '../lib/supabase'
 import type { Product } from '../lib/types'
 
 export interface Order {
-  id: number; customer_name: string; phone: string; delivery: string
+  id: number; customer_name: string; phone: string | null; delivery: string
   items: { id: string; qty: number }[]; total: number; status: string; created_at: string
   notes?: string | null; tracking?: string | null; payment?: string | null; source?: string | null; shipping?: number | null; discount?: number | null; coupon?: string | null
   address?: { cep?: string; street?: string; number?: string; complement?: string; district?: string; city?: string; uf?: string } | null; shipping_service?: string | null
@@ -23,7 +23,7 @@ export const copy = async (text: string) => { try { await navigator.clipboard.wr
 export const slug = (s: string) => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
 export const list = (s: string) => s.split(',').map(x => x.trim()).filter(Boolean)
 export const digits = (s: string) => s.replace(/\D/g, '')
-export const waLink = (phone: string, text = '') => `https://wa.me/55${digits(phone)}${text ? `?text=${encodeURIComponent(text)}` : ''}`
+export const waLink = (phone: string | null, text = '') => `https://wa.me/55${digits(phone ?? '')}${text ? `?text=${encodeURIComponent(text)}` : ''}`
 
 export function downloadCsv(name: string, rows: (string | number | null | undefined)[][]) {
   const esc = (v: unknown) => `"${String(v ?? '').replace(/"/g, '""')}"`

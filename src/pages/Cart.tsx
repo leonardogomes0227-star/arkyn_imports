@@ -72,13 +72,6 @@ export default function Cart() {
 
   useEffect(() => { track.beginCheckout(lines.map(l => ({ id: l.p.id, name: l.p.name, brand: l.p.brand, price: l.p.price, qty: l.qty }))) /* eslint-disable-next-line react-hooks/exhaustive-deps */ }, [])
 
-  // guarda o carrinho de quem já informou o telefone (a loja pode chamar no WhatsApp se não finalizar)
-  useEffect(() => {
-    if (phone.replace(/\D/g, '').length < 10 || !cart.length) return
-    const t = window.setTimeout(() => { fetch('/api/lead', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, phone, items: cart }) }).catch(() => null) }, 1500)
-    return () => window.clearTimeout(t)
-  }, [phone, name, cartKey]) // eslint-disable-line react-hooks/exhaustive-deps
-
   const needAddr = method !== 'pickup'
   const addrErr = needAddr && (!addr.street.trim() || !addr.number.trim() || !addr.district.trim()) ? 'Preencha rua, número e bairro.' : ''
   const qtyTotal = lines.reduce((t, l) => t + l.qty, 0)
@@ -124,7 +117,7 @@ export default function Cart() {
       })
       const d = await r.json()
       if (!r.ok || !d.url) throw new Error(d.error || 'Falha ao iniciar pagamento')
-      try { localStorage.setItem('lastOrder', JSON.stringify({ id: d.orderId, phone })) } catch { /* ignore */ }
+      try { localStorage.setItem('lastOrder', JSON.stringify({ id: d.orderId })) } catch { /* ignore */ }
       window.location.href = d.url // a sacola só esvazia quando o pagamento volta aprovado/pendente (veja /pedido)
     } catch (e) {
       const msg = (e as Error).message

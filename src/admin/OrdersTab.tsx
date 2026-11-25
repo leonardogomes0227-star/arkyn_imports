@@ -65,7 +65,7 @@ export default function OrdersTab() {
           </div>
           {open === o.id && (
             <>
-              <p>{o.phone} · {o.delivery === 'pickup' ? 'Retirada' : `Entrega em ${o.delivery}`}{o.payment ? ` · ${o.payment}` : ''}{o.source === 'manual' ? ' · venda manual' : ''}</p>
+              <p>{o.phone || 'dados pessoais apagados'} · {o.delivery === 'pickup' ? 'Retirada' : `Entrega em ${o.delivery}`}{o.payment ? ` · ${o.payment}` : ''}{o.source === 'manual' ? ' · venda manual' : ''}</p>
               {o.address?.street && <p><b>Enviar para:</b> {o.address.street}, {o.address.number}{o.address.complement ? ` ${o.address.complement}` : ''} · {o.address.district} · {o.address.city}/{o.address.uf} · CEP {o.address.cep}{o.shipping_service ? ` · ${o.shipping_service}` : ''}{o.shipping != null ? ` · frete ${brl(Number(o.shipping))}` : ''}</p>}
               <div className="adm-row" style={{ gap: 6, justifyContent: 'flex-start' }}>
                 {([
@@ -73,7 +73,7 @@ export default function OrdersTab() {
                   ['Cobrar pagamento', `Olá ${o.customer_name}! Seu pedido #${o.id} (${brl(Number(o.total))}) está aguardando o pagamento. Posso te ajudar a finalizar?`],
                   ['Pronto p/ retirada', `Olá ${o.customer_name}! Seu pedido #${o.id} já está pronto para retirada. Pode vir buscar quando quiser!`],
                   ['Saiu para entrega', `Olá ${o.customer_name}! Seu pedido #${o.id} saiu para entrega${o.tracking ? ` (rastreio: ${o.tracking})` : ''}. Acompanhe em ${location.origin}/pedido (número ${o.id} e seu telefone).`],
-                ] as const).map(([l, t]) => <a key={l} className="btn ghost" style={{ padding: '6px 10px', fontSize: 11 }} href={waLink(o.phone, t)} target="_blank" rel="noreferrer">{l}</a>)}
+                ] as const).filter(() => !!o.phone).map(([l, t]) => <a key={l} className="btn ghost" style={{ padding: '6px 10px', fontSize: 11 }} href={waLink(o.phone, t)} target="_blank" rel="noreferrer">{l}</a>)}
                 <button className="btn ghost" style={{ padding: '6px 10px', fontSize: 11 }} onClick={() => printOrder(o)}>IMPRIMIR</button>
               </div>
               <ul>{o.items.map(i => <li key={i.id}>{i.qty}x {name(i.id)}</li>)}</ul>
