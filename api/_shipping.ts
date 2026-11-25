@@ -77,7 +77,11 @@ async function melhorEnvio(toCep: string, lines: QLine[], s: Settings): Promise<
         days: Number(x.custom_delivery_time ?? x.delivery_time) || 0,
       }))
       .sort((a: ShipOption, b: ShipOption) => a.price - b.price)
-    return opts.length ? opts.slice(0, 4) : null
+    // as 3 mais baratas + os Correios (PAC/SEDEX), que o cliente costuma querer, mesmo se não forem das mais baratas
+    const top = opts.slice(0, 3)
+    for (const o of opts) if (/correios/i.test(o.label) && !top.includes(o) && top.length < 5) top.push(o)
+    top.sort((a, b) => a.price - b.price)
+    return top.length ? top : null
   } catch { return null }
 }
 
