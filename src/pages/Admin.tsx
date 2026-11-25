@@ -60,7 +60,7 @@ function Login({ inline = false }: { inline?: boolean }) {
   return (
     <div className={inline ? '' : 'adm-wrap'}>
       <form className="adm-box login" onSubmit={submit}>
-        <img src="/logo.jpg" alt="Arkyn" className="login-logo" />
+        <img src="/brand/logo-xs.webp" alt="Arkyn" className="login-logo" />
         <h2>{inline ? 'Entre para ver esta área' : 'Painel Arkyn'}</h2>
         {inline && <p className="muted">Pedidos, clientes e cupons têm dados sensíveis, por isso exigem login.</p>}
         <input type="email" placeholder="E-mail" value={email} onChange={e => setEmail(e.target.value.trim())} required />
@@ -68,7 +68,7 @@ function Login({ inline = false }: { inline?: boolean }) {
         <label className="chk" style={{ alignSelf: 'flex-start', fontSize: 13 }}><input type="checkbox" style={{ width: 'auto' }} checked={showPass} onChange={e => setShowPass(e.target.checked)} /> Mostrar senha</label>
         {err && <p className="err">{err}</p>}
         <button className="btn">ENTRAR</button>
-        <small className="muted">Projeto Supabase deste site: <b>{(url || '').replace(/^https?:\/\//, '').replace('.supabase.co', '')}</b></small>
+        
       </form>
     </div>
   )
@@ -96,7 +96,7 @@ function Panel({ session, onLogout }: { session: Session | null; onLogout: () =>
   return (
     <div className="adm">
       <aside className="adm-side">
-        <div className="adm-brand"><img src="/logo.jpg" alt="" /><div><b>ARKYN</b><small>PAINEL</small></div></div>
+        <div className="adm-brand"><img src="/brand/logo-xxs.webp" alt="" /><div><b>ARKYN</b><small>PAINEL</small></div></div>
         <nav>
           {TABS.map(t => (
             <button key={t.id} className={tab === t.id ? 'on' : ''} onClick={() => setTab(t.id)}>
@@ -108,7 +108,7 @@ function Panel({ session, onLogout }: { session: Session | null; onLogout: () =>
       </aside>
       <section className="adm-main">
         <div className="adm-top"><h1>{cur.label}</h1>{session && <span className="muted">{session.user.email}</span>}</div>
-        {!session && <div className="adm-warn">Modo sem senha: quem tiver o link /admin edita produtos e configurações. Ative o login antes de divulgar o site.</div>}
+        
         <div className="adm-body" key={tab}>{body()}</div>
       </section>
     </div>
