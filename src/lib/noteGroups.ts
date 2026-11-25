@@ -12,10 +12,10 @@ export const GROUPS: NoteGroup[] = [
 
 const MAP: Record<string, string> = {
   'limão': 'citricas', 'limão siciliano': 'citricas', 'bergamota': 'citricas', 'tangerina': 'citricas', 'toranja': 'citricas', 'hortelã': 'citricas', 'lavanda': 'citricas', 'sálvia': 'citricas',
-  'maçã': 'frutas', 'pera': 'frutas', 'pêssego': 'frutas', 'manga': 'frutas', 'maracujá': 'frutas', 'lichia': 'frutas', 'abacaxi': 'frutas', 'romã': 'frutas', 'morango': 'frutas', 'framboesa': 'frutas', 'coco': 'frutas',
-  'jasmim': 'flores', 'íris': 'flores', 'orquídea': 'flores', 'rosa': 'flores', 'flor de laranjeira': 'flores', 'tuberosa': 'flores', 'neroli': 'flores', 'flores brancas': 'flores',
+  'maçã': 'frutas', 'pera': 'frutas', 'pêssego': 'frutas', 'manga': 'frutas', 'maracujá': 'frutas', 'lichia': 'frutas', 'abacaxi': 'frutas', 'romã': 'frutas', 'cereja': 'frutas', 'morango': 'frutas', 'framboesa': 'frutas', 'coco': 'frutas',
+  'jasmim': 'flores', 'íris': 'flores', 'orquídea': 'flores', 'rosa': 'flores', 'flor de laranjeira': 'flores', 'tuberosa': 'flores', 'neroli': 'flores', 'ylang-ylang': 'flores', 'lírio': 'flores', 'peônia': 'flores', 'gardênia': 'flores', 'flores brancas': 'flores',
   'açafrão': 'especiarias', 'canela': 'especiarias', 'cardamomo': 'especiarias', 'gengibre': 'especiarias', 'noz-moscada': 'especiarias', 'pimenta rosa': 'especiarias',
-  'baunilha': 'doces', 'caramelo': 'doces', 'chocolate amargo': 'doces', 'fava tonka': 'doces', 'leite': 'doces', 'mel': 'doces', 'praliné': 'doces', 'chantilly': 'doces', 'marshmallow': 'doces',
+  'baunilha': 'doces', 'caramelo': 'doces', 'chocolate amargo': 'doces', 'fava tonka': 'doces', 'leite': 'doces', 'mel': 'doces', 'praliné': 'doces', 'cacau': 'doces', 'merengue': 'doces', 'amêndoa': 'doces', 'leite de rosas': 'doces', 'chantilly': 'doces', 'marshmallow': 'doces',
   'cedro': 'madeiras', 'sândalo': 'madeiras', 'vetiver': 'madeiras', 'patchouli': 'madeiras', 'tabaco': 'madeiras', 'incenso': 'madeiras', 'âmbar': 'madeiras', 'madeira âmbar': 'madeiras', 'almíscar': 'madeiras', 'oud': 'madeiras', 'benjoim': 'madeiras',
 }
 
