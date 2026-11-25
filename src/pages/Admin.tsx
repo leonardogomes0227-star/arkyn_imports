@@ -6,9 +6,7 @@ import { key, supabase, url } from '../lib/supabase'
 import Dashboard from '../admin/Dashboard'
 import OrdersTab from '../admin/OrdersTab'
 import ProductsTab from '../admin/ProductsTab'
-import CustomersTab from '../admin/CustomersTab'
 import CouponsTab from '../admin/CouponsTab'
-import LeadsTab from '../admin/LeadsTab'
 import ReviewsTab from '../admin/ReviewsTab'
 import SettingsTab from '../admin/SettingsTab'
 import NewSale from '../admin/NewSale'
@@ -20,7 +18,7 @@ const REQUIRE_LOGIN = (import.meta.env as Record<string, string | undefined>).VI
 const TABS: { id: string; label: string; icon: string; protected?: boolean }[] = [
   { id: 'dash', label: 'Dashboard', icon: '📊', protected: true }, { id: 'sale', label: 'Nova venda', icon: '🛒', protected: true }, { id: 'orders', label: 'Pedidos', icon: '🧾', protected: true },
   { id: 'products', label: 'Produtos', icon: '🧴' }, { id: 'stock', label: 'Estoque', icon: '📦' },
-  { id: 'customers', label: 'Clientes', icon: '👥', protected: true }, { id: 'coupons', label: 'Cupons', icon: '🏷️', protected: true }, { id: 'leads', label: 'Carrinhos', icon: '🛍️', protected: true }, { id: 'reviews', label: 'Avaliações', icon: '⭐', protected: true },
+  { id: 'coupons', label: 'Cupons', icon: '🏷️', protected: true }, { id: 'reviews', label: 'Avaliações', icon: '⭐', protected: true },
   { id: 'tools', label: 'Ferramentas', icon: '🧰', protected: true }, { id: 'settings', label: 'Configurações', icon: '⚙️' },
 ]
 
@@ -86,9 +84,7 @@ function Panel({ session, onLogout }: { session: Session | null; onLogout: () =>
       case 'tools': return <Tools />
       case 'products': return <ProductsTab />
       case 'stock': return <ProductsTab stockMode />
-      case 'customers': return <CustomersTab />
       case 'coupons': return <CouponsTab />
-      case 'leads': return <LeadsTab />
       case 'reviews': return <ReviewsTab />
       default: return <SettingsTab />
     }

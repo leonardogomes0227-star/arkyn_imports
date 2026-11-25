@@ -1,4 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
+import { tooMany } from './_rate.js'
 
 const SB = process.env.SUPABASE_URL
 const SK = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -22,6 +23,7 @@ export async function validateCoupon(codeRaw: string, subtotal: number): Promise
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Método inválido' })
+  if (tooMany(req, 'coupon', 30)) return res.status(429).json({ ok: false, discount: 0, error: 'Muitas tentativas. Aguarde alguns minutos.' })
   const { code, subtotal } = req.body as { code: string; subtotal: number }
   res.json(await validateCoupon(code, Number(subtotal) || 0))
 }

@@ -4,6 +4,7 @@ import { validateCoupon } from './coupon.js'
 import { loadCatalog } from './shipping.js'
 import { bundleDiscount } from '../src/lib/pricing.js'
 import { onlyDigits, quoteShipping } from './_shipping.js'
+import { tooMany } from './_rate.js'
 
 const SB = process.env.SUPABASE_URL
 const SK = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -12,6 +13,7 @@ const sb = (path: string, init?: RequestInit) =>
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Método inválido' })
+  if (tooMany(req, 'checkout', 12)) return res.status(429).json({ error: 'Muitas tentativas. Aguarde alguns minutos ou fale pelo WhatsApp.' })
   const token = process.env.MP_ACCESS_TOKEN
   if (!token) return res.status(500).json({ error: 'MP_ACCESS_TOKEN não configurado' })
 
@@ -86,13 +88,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const delivery = method === 'ship' ? `${addr!.city}/${addr!.uf}` : method
     const addrText = addr ? `${shipLabel} · ${addr.street}, ${addr.number}${addr.complement ? ' ' + addr.complement : ''} · ${addr.district} · ${addr.city}/${addr.uf} · CEP ${addr.cep}` : ''
     const giftText = gift ? ` · PRESENTE: ${gift}` : ''
-    const base = { customer_name: name, phone, delivery, items, total, status: 'pending' }
+    const base = { customer_name: name, phone, phone_last4: phone.replace(/\D/g, '').slice(-4), delivery, items, total, status: 'pending' }
     const extra = { subtotal, shipping, discount, coupon: cp?.ok ? coupon!.trim().toUpperCase() : null }
     let r = await sb('orders', { method: 'POST', body: JSON.stringify({ ...base, ...extra, address: addr, shipping_service: shipLabel, notes: giftText.replace(/^ · /, '') || null }) })
     // bancos sem a migração do frete (supabase/frete.sql): guarda o endereço em "notes"
     if (!r.ok) r = await sb('orders', { method: 'POST', body: JSON.stringify({ ...base, ...extra, notes: addrText + giftText }) })
     if (!r.ok) r = await sb('orders', { method: 'POST', body: JSON.stringify({ ...base, notes: addrText + giftText }) })
     if (!r.ok) r = await sb('orders', { method: 'POST', body: JSON.stringify(base) })
+    if (!r.ok) return res.status(500).json({ error: 'Não foi possível registrar o pedido. Tente novamente.' })
     const o = await r.json()
     if (o?.[0]?.id) orderId = String(o[0].id)
   }
@@ -109,7 +112,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     method: 'POST',
     headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      items: mpItems, external_reference: orderId, payer: { name },
+      items: mpItems, external_reference: orderId, payer: { name }, statement_descriptor: 'ARKYN IMPORTS',
       back_urls: { success: `${site}/pedido`, failure: `${site}/carrinho`, pending: `${site}/pedido` }, auto_return: 'approved',
       payment_methods: settings.installments > 1 ? { installments: settings.installments } : undefined,
       notification_url: `${site}/api/webhook`,
@@ -117,6 +120,5 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   })
   const pref = await mp.json()
   if (!mp.ok) return res.status(502).json({ error: pref.message || 'Erro no Mercado Pago' })
-  if (SB && SK) fetch(`${SB}/rest/v1/leads?phone=eq.${phone.replace(/\D/g, '')}`, { method: 'DELETE', headers: { apikey: SK, Authorization: `Bearer ${SK}` } }).catch(() => null)
   res.json({ url: pref.init_point, orderId })
 }

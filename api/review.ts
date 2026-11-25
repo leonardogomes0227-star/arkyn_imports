@@ -22,8 +22,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (!orderId || last4.length < 4) return res.json({ ok: false, error: 'Informe o número do pedido e o seu telefone.' })
 
   const h = { apikey: SK, Authorization: `Bearer ${SK}`, 'Content-Type': 'application/json' }
-  const o = (await (await fetch(`${SB}/rest/v1/orders?id=eq.${orderId}&select=phone,status,items`, { headers: h })).json().catch(() => []))?.[0]
-  const bought = o && String(o.phone ?? '').replace(/\D/g, '').slice(-4) === last4 && PAID.includes(o.status) && (o.items ?? []).some((i: { id: string }) => i.id === productId)
+  const o = (await (await fetch(`${SB}/rest/v1/orders?id=eq.${orderId}&select=phone,phone_last4,status,items`, { headers: h })).json().catch(() => []))?.[0]
+  const bought = o && String(o.phone_last4 || o.phone || '').replace(/\D/g, '').slice(-4) === last4 && PAID.includes(o.status) && (o.items ?? []).some((i: { id: string }) => i.id === productId)
   if (!bought) return res.json({ ok: false, error: 'Não encontramos uma compra paga desse perfume com esses dados.' })
 
   const dup = await (await fetch(`${SB}/rest/v1/reviews?order_id=eq.${orderId}&product_id=eq.${encodeURIComponent(productId)}&select=id`, { headers: h })).json().catch(() => [])

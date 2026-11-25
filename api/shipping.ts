@@ -1,4 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
+import { tooMany } from './_rate.js'
 import { DEFAULT_SETTINGS, SEED_PRODUCTS } from '../src/lib/seed.js'
 import type { Product, Settings } from '../src/lib/types'
 import { quoteShipping } from './_shipping.js'
@@ -21,6 +22,7 @@ export async function loadCatalog(): Promise<{ products: Product[]; settings: Se
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') return res.status(405).json({ ok: false, error: 'Método inválido' })
+  if (tooMany(req, 'ship', 40)) return res.status(429).json({ ok: false, error: 'Muitas consultas. Aguarde alguns minutos.' })
   const { cep, items } = req.body as { cep: string; items: { id: string; qty: number }[] }
   const { products, settings } = await loadCatalog()
   const lines = (items || []).flatMap(i => {
