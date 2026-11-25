@@ -87,15 +87,16 @@ export const DEFAULT_SETTINGS: Settings = {
   shipping: [{ city: 'Coxim', price: 0 }], // TODO: confirmar cidades e valores
   originCep: '79400000', // Coxim - MS
   freeShippingOutsideFrom: 0,
-  shipHandlingFee: 0,
+  shipHandlingFee: 5,
   itemWeightG: 450,
-  // Valores de referência (1 kg, a partir de MS). Ajuste no painel > Configurações.
+  // Valores de referência (1 kg, a partir de Coxim - MS), com folga de segurança sobre o preço usual dos Correios (PAC).
+  // Cada kg a mais custa +35% do valor base; a embalagem entra em "shipHandlingFee". Ajuste no painel > Configurações.
   shipRegions: [
-    { key: 'MS', label: 'Mato Grosso do Sul', price: 22, days: 4 },
-    { key: 'CO', label: 'Centro-Oeste (GO, MT, DF)', price: 28, days: 5 },
-    { key: 'SE', label: 'Sudeste', price: 32, days: 6 },
-    { key: 'S', label: 'Sul', price: 34, days: 7 },
-    { key: 'NE', label: 'Nordeste', price: 42, days: 9 },
-    { key: 'N', label: 'Norte', price: 48, days: 11 },
+    { key: 'MS', label: 'Mato Grosso do Sul', price: 26, days: 4 },
+    { key: 'CO', label: 'Centro-Oeste (GO, MT, DF)', price: 36, days: 6 },
+    { key: 'SE', label: 'Sudeste', price: 42, days: 7 },
+    { key: 'S', label: 'Sul', price: 46, days: 8 },
+    { key: 'NE', label: 'Nordeste', price: 58, days: 11 },
+    { key: 'N', label: 'Norte', price: 68, days: 14 },
   ],
 }

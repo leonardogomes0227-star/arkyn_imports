@@ -36,8 +36,8 @@ function tableOptions(uf: string, lines: QLine[], s: Settings): ShipOption[] {
   const regions = s.shipRegions?.length ? s.shipRegions : DEFAULT_SETTINGS.shipRegions!
   const r = regions.find(x => x.key === (REGION[uf] ?? 'N')) ?? regions[regions.length - 1]
   const kg = Math.max(1, Math.ceil(weightG(lines, s) / 1000))
-  // cada kg adicional custa ~20% do valor base
-  const price = round2(r.price + (kg - 1) * r.price * 0.2 + (s.shipHandlingFee ?? 0))
+  // cada kg adicional custa +35% do valor base (os Correios sobem nessa faixa); a embalagem soma por cima
+  const price = Math.ceil(r.price + (kg - 1) * r.price * 0.35 + (s.shipHandlingFee ?? 0))
   return [{ id: 'tabela', label: 'Envio padrão', price, days: r.days, estimated: true }]
 }
 
