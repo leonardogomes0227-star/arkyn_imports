@@ -1,5 +1,5 @@
 import { POLICY_LINKS } from '../pages/Policy'
-import { useEffect, useState, type ReactNode } from 'react'
+import { Component, useEffect, useState, type ReactNode } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import CartDrawer from './CartDrawer'
 import CompareBar from './CompareBar'
@@ -7,6 +7,9 @@ import MobileBar from './MobileBar'
 import Feel from './Feel'
 import Motion from './Motion'
 import Intro from './Intro'
+// se a intro tiver qualquer erro, ela some sozinha e o site abre normal
+class IntroGuard extends Component<{ children: ReactNode }, { f: boolean }> { state = { f: false }; static getDerivedStateFromError() { return { f: true } } componentDidCatch() { document.documentElement.style.overflow = '' } render() { return this.state.f ? null : this.props.children } }
+const IntroSafe = () => <IntroGuard><Intro /></IntroGuard>
 import SearchOverlay from './SearchOverlay'
 import { IconBag, IconHeart, IconSearch } from './Icons'
 import { useStore } from '../lib/store'
@@ -72,7 +75,7 @@ export default function Layout({ children }: { children: ReactNode }) {
   return (
     <>
       <a className="ax-skip" href="#conteudo">Pular para o conteúdo</a>
-      <Intro />
+      <IntroSafe />
       <Feel />
       <Motion />
       <header className={scrolled ? 'eb-top is-scrolled' : 'eb-top'}>

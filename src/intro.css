@@ -50,3 +50,7 @@
 .in-skip { position:absolute; z-index:2; right:clamp(16px,3vw,36px); bottom:clamp(20px,4vh,40px); padding:10px 16px; border:1px solid rgba(198,198,198,.3); border-radius:2px; background:transparent; color:#c6c6c6; font:700 .6875rem/1 var(--sans,system-ui); letter-spacing:.2em; text-transform:uppercase; cursor:pointer; transition:opacity .3s, color .2s, border-color .2s }
 .in-skip:hover { color:#C7F401; border-color:#C7F401 }
 .in-intro.tear .in-skip { opacity:0 }
+
+/* trava de segurança só com CSS: mesmo se o script falhar, depois de 12 s a intro sai da frente */
+.in-intro { animation:in-failsafe .01s linear 12s forwards }
+@keyframes in-failsafe { to { opacity:0; visibility:hidden; pointer-events:none } }
