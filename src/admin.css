@@ -116,7 +116,7 @@
   .adm { grid-template-columns:minmax(0,1fr) } .adm-side, .adm-main, .adm-body, .adm-top { min-width:0; max-width:100vw }
   .adm-side { position:sticky; top:0; z-index:20; height:auto; flex-direction:row; align-items:center; gap:8px; padding:8px 10px }
   .adm-brand { padding:0 6px 0 0; margin:0; border:0 } .adm-brand div { display:none } .adm-brand img { width:38px; height:38px }
-  .adm-side nav { flex-direction:row; flex:1; overflow-x:auto; scrollbar-width:none } .adm-side nav::-webkit-scrollbar { display:none }
+  .adm-side nav { flex-direction:row; flex:1; overflow-x:auto; scrollbar-width:none; -webkit-mask-image:linear-gradient(90deg,#000 90%,transparent); mask-image:linear-gradient(90deg,#000 90%,transparent); overscroll-behavior-x:contain } .adm-side nav::-webkit-scrollbar { display:none }
   .adm-side nav button { flex:none; white-space:nowrap; padding:9px 12px } .adm-side nav button.on::before { left:10px; right:10px; top:auto; bottom:2px; width:auto; height:3px; border-radius:3px }
   .adm-foot { border:0; padding:0; gap:10px; flex:none } .adm-foot a { display:none } .adm-foot .link { min-height:40px; padding:0 8px }
   .adm-top { padding:16px 16px 0 } .adm-top h1 { font-size:1.55rem } .adm-top .muted { display:none }
