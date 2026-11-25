@@ -4,6 +4,10 @@ import type { Category, Gender, Product, Settings } from './types'
 // Fotos em public/produtos-net/<id>.webp (+ versões reduzidas em s160/ e s480/).
 
 const TAGS: Record<string, string[]> = {
+  'lattafa-body-splash-mayar': ['doce', 'dia'],
+  'lattafa-body-splash-yara-tous': ['doce', 'floral', 'dia'],
+  'lattafa-body-splash-noble-blush': ['doce', 'floral', 'dia'],
+  'lattafa-body-splash-fakhar': ['floral', 'dia'],
   'lattafa-yara-rose-100ml': ['doce', 'floral', 'dia'],
   'maison-alhambra-victorioso-nero-100ml': ['doce', 'especiado', 'noite'],
   'lattafa-fakhar-extrait-gold-100ml': ['doce', 'amadeirado', 'intenso', 'noite'],
@@ -25,23 +29,26 @@ const TAGS: Record<string, string[]> = {
 
 // Notas olfativas (resumo dos anúncios dos revendedores); produtos sem lista clara ficam de fora
 const NOTES: Record<string, string[]> = {
+  'lattafa-body-splash-fakhar': ['Romã', 'Lírio', 'Tuberosa', 'Jasmim', 'Peônia', 'Rosa', 'Baunilha', 'Almíscar', 'Sândalo'],
+  'lattafa-body-splash-noble-blush': ['Leite de rosas', 'Amêndoa', 'Merengue', 'Sândalo', 'Baunilha', 'Almíscar'],
+  'lattafa-body-splash-mayar': ['Morango', 'Bergamota', 'Cereja', 'Cacau', 'Baunilha', 'Patchouli', 'Âmbar'],
   'maison-alhambra-victorioso-nero-100ml': ['Limão', 'Pimenta rosa', 'Lavanda', 'Incenso', 'Baunilha', 'Âmbar'],
-  'lattafa-fakhar-extrait-gold-100ml': ['Maçã', 'Gengibre', 'Bergamota', 'Lavanda', 'Fava tonka', 'Vetiver'],
+  'lattafa-fakhar-extrait-gold-100ml': ['Toranja', 'Pimenta rosa', 'Cardamomo', 'Tuberosa', 'Âmbar', 'Couro'],
   'lattafa-al-noble-wazeer-100ml': ['Hortelã', 'Bergamota', 'Íris', 'Chocolate amargo', 'Baunilha', 'Sândalo'],
-  'lattafa-asad-elixir-100ml': ['Pimenta rosa', 'Açafrão', 'Toranja', 'Tabaco', 'Baunilha', 'Patchouli'],
+  'lattafa-asad-elixir-100ml': ['Pimenta rosa', 'Açafrão', 'Toranja', 'Tabaco', 'Cedro', 'Baunilha', 'Patchouli', 'Âmbar'],
   'maison-alhambra-salvo-elixir-60ml': ['Canela', 'Noz-moscada', 'Cardamomo', 'Toranja', 'Lavanda', 'Âmbar'],
   'french-avenue-vulcan-feu-100ml': ['Manga', 'Limão', 'Gengibre', 'Jasmim', 'Fava tonka', 'Cedro'],
   'maison-alhambra-pink-eclipse-100ml': ['Bergamota', 'Tangerina', 'Pera', 'Jasmim', 'Baunilha', 'Almíscar'],
-  'lattafa-dalal-100ml': ['Tangerina', 'Maçã', 'Jasmim', 'Baunilha', 'Almíscar'],
+  'lattafa-dalal-100ml': ['Maçã', 'Tangerina', 'Ylang-ylang', 'Jasmim', 'Flor de laranjeira', 'Baunilha', 'Almíscar'],
   'al-wataniah-attar-al-wesal-gold-100ml': ['Toranja', 'Bergamota', 'Lavanda', 'Canela', 'Baunilha', 'Âmbar'],
   'armaf-club-de-nuit-maleka-105ml': ['Lichia', 'Bergamota', 'Pimenta rosa', 'Praliné', 'Sândalo', 'Âmbar'],
   'lattafa-atheeri-100ml': ['Maracujá', 'Orquídea', 'Jasmim', 'Baunilha', 'Madeira âmbar'],
   'lattafa-eclaire-100ml': ['Caramelo', 'Leite', 'Mel', 'Baunilha', 'Praliné', 'Almíscar'],
-  'lattafa-afeef-100ml': ['Bergamota', 'Pimenta rosa', 'Pêssego', 'Jasmim', 'Sândalo', 'Âmbar'],
+  'lattafa-afeef-100ml': ['Pêssego', 'Pimenta rosa', 'Bergamota', 'Tuberosa', 'Jasmim', 'Flor de laranjeira', 'Sândalo', 'Âmbar', 'Praliné'],
   // notas tiradas da própria descrição do produto
-  'lattafa-tharwah-gold-100ml': ['Lavanda', 'Flor de laranjeira', 'Jasmim', 'Baunilha'],
+  'lattafa-tharwah-gold-100ml': ['Lavanda', 'Bergamota', 'Flor de laranjeira', 'Jasmim', 'Baunilha', 'Âmbar', 'Vetiver'],
   'paris-corner-marshmallow-blush-100ml': ['Morango', 'Framboesa', 'Chantilly', 'Marshmallow'],
-  'lattafa-body-splash-yara-tous': ['Manga', 'Coco', 'Flores brancas'],
+  'lattafa-body-splash-yara-tous': ['Manga', 'Coco', 'Maracujá', 'Jasmim', 'Flor de laranjeira', 'Baunilha', 'Almíscar'],
 }
 
 const p = (id: string, brand: string, name: string, price: number, category: Category, gender: Gender, description: string): Product =>
