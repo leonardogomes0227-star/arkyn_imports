@@ -6,10 +6,9 @@ const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 // linha do tempo (ms)
 const T_FLAP = 1150, T_LOGO = 2950, T_TEAR = 4700, T_END = 5600
 
-// Abre sempre que a pessoa entra pela página inicial; não repete se ela viu há menos de 2 minutos.
+// Toca toda vez que o site é aberto ou recarregado pela página inicial. Dentro do site (trocar de página) não repete.
 function seen() {
-  if (typeof window === 'undefined' || window.location.pathname !== '/') return true
-  try { return Date.now() - Number(sessionStorage.getItem(KEY) || 0) < 120000 } catch { return false }
+  return typeof window === 'undefined' || window.location.pathname !== '/'
 }
 function markSeen() { try { sessionStorage.setItem(KEY, String(Date.now())) } catch { /* navegação privada */ } }
 
