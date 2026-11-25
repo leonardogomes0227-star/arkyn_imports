@@ -25,8 +25,9 @@ const CUT = new Set([
 ])
 
 // PHOTO_V muda quando as fotos são refeitas, para o navegador não mostrar a versão antiga guardada
-const PHOTO_V = 9
-export const cutoutOf = (id: string) => (CUT.has(id) ? `/hero/${id}.webp?v=${PHOTO_V}` : undefined)
+const PHOTO_V = 10
+// Foto completa da loja, com o fundo dela (sem recorte): public/produtos-net
+export const cutoutOf = (id: string) => (CUT.has(id) ? `/produtos-net/${id}.webp?v=${PHOTO_V}` : undefined)
 
 /** Sempre usa o recorte limpo quando ele existe (mesmo se o painel tiver uma foto com fundo branco). */
 // recorte feito à mão (public/hero) ou recorte automático enviado pelo painel (pasta recortes/ do banco)
