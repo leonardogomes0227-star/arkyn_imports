@@ -24,7 +24,7 @@ export default function StockTab() {
   const shown = useMemo(() => items
     .filter(p => `${p.brand} ${p.name}`.toLowerCase().includes(q.toLowerCase()))
     .filter(p => f === 'todos' || (f === 'esgotado' ? p.stock <= 0 : p.stock > 0 && p.stock <= LOW_STOCK))
-    .sort((a, b) => a.stock - b.stock || a.brand.localeCompare(b.brand)), [items, q, f])
+    .sort((a, b) => a.brand.localeCompare(b.brand) || a.name.localeCompare(b.name)), [items, q, f])
 
   async function set(p: Product, n: number, force = false) {
     const stock = Math.max(0, Math.min(9999, Math.round(n) || 0))
