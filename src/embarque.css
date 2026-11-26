@@ -564,3 +564,6 @@ body.ax .pdp-img img, body.ax .pdp-img.cut img, body.ax .pdp-img.clean img { obj
 .tc, .tc * { min-width:0 }
 .tc-body b, .tc-meta { overflow-wrap:anywhere }
 .tc-hd { gap:8px } .tc-hd span { white-space:nowrap } .tc-hd span:first-child { overflow:hidden; text-overflow:ellipsis; min-width:0 } .tc-hd span:last-child { flex:none }
+
+/* celular estreito: a marca no cabeçalho do bilhete cabe inteira (sem reticências) */
+@media (max-width:430px) { body.ax .tc-hd { padding:9px 9px; gap:6px; letter-spacing:.07em; font-size:.5rem } }
