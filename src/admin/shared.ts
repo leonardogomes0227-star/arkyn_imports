@@ -25,13 +25,6 @@ export const list = (s: string) => s.split(',').map(x => x.trim()).filter(Boolea
 export const digits = (s: string) => s.replace(/\D/g, '')
 export const waLink = (phone: string | null, text = '') => `https://wa.me/55${digits(phone ?? '')}${text ? `?text=${encodeURIComponent(text)}` : ''}`
 
-export function downloadCsv(name: string, rows: (string | number | null | undefined)[][]) {
-  const esc = (v: unknown) => `"${String(v ?? '').replace(/"/g, '""')}"`
-  const blob = new Blob(['﻿' + rows.map(r => r.map(esc).join(';')).join('\n')], { type: 'text/csv;charset=utf-8' })
-  const a = document.createElement('a')
-  a.href = URL.createObjectURL(blob); a.download = name; a.click()
-  URL.revokeObjectURL(a.href)
-}
 
 export function useOrders() {
   const [orders, setOrders] = useState<Order[]>([])

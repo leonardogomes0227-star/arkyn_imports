@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { supabase } from '../lib/supabase'
 import { brl } from '../lib/store'
-import { downloadCsv, PAID, STATUS, statusLabel, useAllProducts, useOrders, waLink, type Order } from './shared'
+import { PAID, STATUS, statusLabel, useAllProducts, useOrders, waLink, type Order } from './shared'
 
 export default function OrdersTab() {
   const { orders, setOrders, loading, reload } = useOrders()
@@ -36,12 +36,6 @@ export default function OrdersTab() {
     await supabase!.from('orders').update(p).eq('id', o.id)
     setOrders(os => os.map(x => x.id === o.id ? { ...x, ...p } : x))
   }
-  function exportCsv() {
-    downloadCsv('pedidos.csv', [
-      ['Pedido', 'Data', 'Cliente', 'Telefone', 'Entrega', 'Itens', 'Subtotal', 'Frete', 'Desconto', 'Cupom', 'Total', 'Status', 'Rastreio'],
-      ...shown.map(o => [o.id, new Date(o.created_at).toLocaleString('pt-BR'), o.customer_name, o.phone, o.delivery === 'pickup' ? 'Retirada' : o.delivery,
-        o.items.map(i => `${i.qty}x ${name(i.id)}`).join(' | '), (Number(o.total) - Number(o.shipping || 0) + Number(o.discount || 0)).toFixed(2), Number(o.shipping || 0).toFixed(2), Number(o.discount || 0).toFixed(2), o.coupon, Number(o.total).toFixed(2), statusLabel(o.status), o.tracking])])
-  }
 
   if (loading) return <p className="muted">Carregando…</p>
   return (
@@ -54,7 +48,7 @@ export default function OrdersTab() {
             {STATUS.map(([v, l]) => <option key={v} value={v}>{l} ({orders.filter(o => o.status === v).length})</option>)}
           </select>
         </div>
-        <span><button className="btn ghost" onClick={reload}>ATUALIZAR</button> <button className="btn ghost" onClick={exportCsv}>EXPORTAR CSV</button></span>
+        <span><button className="btn ghost" onClick={reload}>ATUALIZAR</button></span>
       </div>
       {!shown.length && <p className="muted">Nenhum pedido encontrado.</p>}
       {shown.map(o => (

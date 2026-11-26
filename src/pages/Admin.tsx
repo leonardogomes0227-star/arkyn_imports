@@ -5,6 +5,7 @@ import type { Session } from '@supabase/supabase-js'
 import { key, supabase, url } from '../lib/supabase'
 import Dashboard from '../admin/Dashboard'
 import OrdersTab from '../admin/OrdersTab'
+import StockTab from '../admin/StockTab'
 import ProductsTab from '../admin/ProductsTab'
 import CouponsTab from '../admin/CouponsTab'
 import ReviewsTab from '../admin/ReviewsTab'
@@ -83,7 +84,7 @@ function Panel({ session, onLogout }: { session: Session | null; onLogout: () =>
       case 'orders': return <OrdersTab />
       case 'tools': return <Tools />
       case 'products': return <ProductsTab />
-      case 'stock': return <ProductsTab stockMode />
+      case 'stock': return <StockTab />
       case 'coupons': return <CouponsTab />
       case 'reviews': return <ReviewsTab />
       default: return <SettingsTab />

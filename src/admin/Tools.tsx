@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { supabase } from '../lib/supabase'
-import { copy, downloadCsv, money, useAllProducts } from './shared'
+import { copy, money, useAllProducts } from './shared'
 import type { Product } from '../lib/types'
 
 const SECTIONS: [Product['category'], string][] = [['masculino', '🖤 PERFUMES MASCULINOS'], ['feminino', '🌸 PERFUMES FEMININOS'], ['splash', '💎 SPLASH & MINIATURAS'], ['skincare', '🧴 SKINCARE']]
@@ -105,7 +105,6 @@ function Restock({ items, setMsg }: { items: Product[]; setMsg: (s: string) => v
       {low.map(p => <div className="adm-row" key={p.id} style={{ marginBottom: 2 }}><span>{p.brand} {p.name}</span><span><b style={{ color: p.stock <= 0 ? '#b3261e' : '#a15c00' }}>{p.stock}</b> · comprar <b>{Math.max(0, target - p.stock)}</b></span></div>)}
       {!!low.length && <div className="adm-row" style={{ marginTop: 10 }}>
         <button className="btn" onClick={async () => setMsg((await copy(text)) ? 'Lista copiada!' : 'Não consegui copiar.')}>COPIAR LISTA</button>
-        <button className="btn ghost" onClick={() => downloadCsv('reposicao.csv', [['Marca', 'Produto', 'Estoque', 'Comprar'], ...low.map(p => [p.brand, p.name, p.stock, Math.max(0, target - p.stock)])])}>EXPORTAR CSV</button>
       </div>}
     </div>
   )
