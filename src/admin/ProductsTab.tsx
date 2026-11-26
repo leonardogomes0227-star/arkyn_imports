@@ -3,7 +3,7 @@ import { supabase } from '../lib/supabase'
 import { SEED_PRODUCTS } from '../lib/seed'
 import { brl } from '../lib/store'
 import type { Category, Gender, Product } from '../lib/types'
-import { downloadCsv, list, LOW_STOCK, slug, useAllProducts } from './shared'
+import { list, LOW_STOCK, slug, useAllProducts } from './shared'
 
 const EMPTY: Product = { id: '', name: '', brand: '', price: 0, stock: 0, category: 'masculino', gender: 'masculino', family: '', notes: [], tags: [], image: '', active: true, featured: false, old_price: null, description: '', cost: null }
 const CATS: [Category, string][] = [['masculino', 'Masculino'], ['feminino', 'Feminino'], ['splash', 'Splash/Miniatura'], ['skincare', 'Skincare']]
@@ -122,7 +122,6 @@ export default function ProductsTab({ stockMode = false }: { stockMode?: boolean
         </div>
         <span>
           {!stockMode && <button className="btn" onClick={() => { setEdit({ ...EMPTY }); setIsNew(true) }}>+ NOVO PRODUTO</button>}{' '}
-          <button className="btn ghost" onClick={() => downloadCsv(stockMode ? 'estoque.csv' : 'produtos.csv', [['Marca', 'Nome', 'Categoria', 'Preço', 'Preço antigo', 'Estoque', 'Visível'], ...shown.map(p => [p.brand, p.name, p.category, p.price, p.old_price, p.stock, p.active === false ? 'não' : 'sim'])])}>EXPORTAR CSV</button>
         </span>
       </div>
       {!items.length && <button className="btn ghost" onClick={importSeed}>IMPORTAR PRODUTOS DE EXEMPLO</button>}
